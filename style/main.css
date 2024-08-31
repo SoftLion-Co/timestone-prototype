@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Besley&family=Open+Sans&family=Roboto:wght@300;400;500&display=swap");
+@import-normalize;
+.container {
+  max-width: 320px;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+@media (min-width: 375px) {
+  .container {
+    max-width: 480px;
+    padding: 0 20px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 738px;
+    padding: 0 15px;
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1080px;
+    padding: 0 100px;
+  }
+}
+@media (min-width: 1600px) {
+  .container {
+    max-width: 1400px;
+    padding: 0 100px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: "Roboto";
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+li {
+  list-style: none;
+}/*# sourceMappingURL=main.css.map */
