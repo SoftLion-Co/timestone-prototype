@@ -19,7 +19,15 @@ const config: Config = {
       backgroundImage: {},
       boxShadow: {},
       dropShadow: {},
-      colors: {},
+      colors: {
+        amethyst: "#7B51A6",
+        silver: "#939393",
+        pearl: "#F9FAFE",
+        coral: "#FF8585",
+        onyx: "#000000",
+        snow: "#ffffff",
+        charcoal: "#202020",
+      },
       keyframes: {
         pulse: {},
       },
