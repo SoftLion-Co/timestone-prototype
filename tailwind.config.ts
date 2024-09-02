@@ -21,6 +21,7 @@ const config: Config = {
       dropShadow: {},
       colors: {
         amethyst: "#7B51A6",
+        darkerAmethyst: "#6C399E",
         silver: "#939393",
         pearl: "#F9FAFE",
         coral: "#FF8585",

@@ -4,7 +4,7 @@ interface ButtonProps {
   text: string;
   className?: string;
   type?: "button" | "submit" | "reset";
-  background?: "amethyst" | "transparent";
+  background?: "amethyst" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
 }
@@ -19,10 +19,14 @@ const Button: FC<ButtonProps> = ({
 }) => {
   const finalBackground = bordered ? "transparent" : background;
   const backgroundClass =
-    finalBackground === "amethyst" ? "bg-amethyst" : "bg-transparent";
+    finalBackground === "amethyst"
+      ? "bg-amethyst"
+      : finalBackground === "onyx"
+      ? "bg-onyx"
+      : "bg-transparent";
 
   const textClass =
-    finalBackground === "amethyst"
+    finalBackground === "amethyst" || finalBackground === "onyx"
       ? "text-white"
       : bordered
       ? "text-amethyst"
@@ -34,6 +38,8 @@ const Button: FC<ButtonProps> = ({
 
   const hoverClass = bordered
     ? "hover:bg-amethyst hover:text-white focus:bg-amethyst focus:text-white transition-colors duration-300"
+    : finalBackground === "amethyst"
+    ? "hover:bg-darkerAmethyst focus:bg-darkerAmethyst transition-colors duration-300"
     : "";
 
   return (
