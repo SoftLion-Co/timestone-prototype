@@ -1,4 +1,7 @@
 import React, { FC } from "react";
+import Image from "next/image";
+import Cube from "@/images/vectors/cube.svg";
+import Profile from "@/images/vectors/profile.svg";
 
 interface ButtonProps {
   text: string;
@@ -7,6 +10,7 @@ interface ButtonProps {
   background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
+  icon?: "cube" | "profile";
 }
 
 const Button: FC<ButtonProps> = ({
@@ -16,6 +20,7 @@ const Button: FC<ButtonProps> = ({
   background = "darkBurgundy",
   bordered = false,
   fullWidth = false,
+  icon,
 }) => {
   const finalBackground = bordered ? "transparent" : background;
   const backgroundClass =
@@ -42,11 +47,38 @@ const Button: FC<ButtonProps> = ({
     ? "hover:bg-darkMaroon focus:bg-darkMaroon transition-colors duration-300"
     : "";
 
+  const renderIcon = () => {
+    if (icon === "cube") {
+      return (
+        <Image
+          src={Cube}
+          alt="Cube"
+          width={20}
+          height={20}
+          className="mr-2 inline-block"
+        />
+      );
+    }
+    if (icon === "profile") {
+      return (
+        <Image
+          src={Profile}
+          alt="Profile"
+          width={20}
+          height={20}
+          className="mr-2 inline-block"
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <button
-      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} w-max py-[16px] px-[24px] rounded-[6px]`}
+      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} w-max py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
       type={type}
     >
+      {renderIcon()}
       {text}
     </button>
   );
