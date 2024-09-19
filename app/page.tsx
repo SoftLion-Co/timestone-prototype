@@ -1,4 +1,4 @@
-import NewsSection from "./sections/home-page/NewsSectio";
+import NewsSection from "./sections/home-page/NewsSection";
 
 export default function Home() {
   return <>
