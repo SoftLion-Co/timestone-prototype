@@ -4,7 +4,7 @@ interface ButtonProps {
   text: string;
   className?: string;
   type?: "button" | "submit" | "reset";
-  background?: "amethyst" | "transparent" | "onyx";
+  background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
 }
@@ -13,38 +13,38 @@ const Button: FC<ButtonProps> = ({
   text,
   className,
   type = "button",
-  background = "amethyst",
+  background = "darkBurgundy",
   bordered = false,
   fullWidth = false,
 }) => {
   const finalBackground = bordered ? "transparent" : background;
   const backgroundClass =
-    finalBackground === "amethyst"
-      ? "bg-amethyst"
+    finalBackground === "darkBurgundy"
+      ? "bg-darkBurgundy"
       : finalBackground === "onyx"
       ? "bg-onyx"
       : "bg-transparent";
 
   const textClass =
-    finalBackground === "amethyst" || finalBackground === "onyx"
+    finalBackground === "darkBurgundy" || finalBackground === "onyx"
       ? "text-white"
       : bordered
-      ? "text-amethyst"
+      ? "text-darkBurgundy"
       : "";
 
-  const borderClass = bordered ? "border border-amethyst border-solid" : "";
+  const borderClass = bordered ? "border border-darkBurgundy border-solid" : "";
 
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const hoverClass = bordered
-    ? "hover:bg-amethyst hover:text-white focus:bg-amethyst focus:text-white transition-colors duration-300"
-    : finalBackground === "amethyst"
-    ? "hover:bg-darkerAmethyst focus:bg-darkerAmethyst transition-colors duration-300"
+    ? "hover:bg-darkBurgundy hover:text-white focus:bg-darkBurgundy focus:text-white transition-colors duration-300"
+    : finalBackground === "darkBurgundy"
+    ? "hover:bg-darkMaroon focus:bg-darkMaroon transition-colors duration-300"
     : "";
 
   return (
     <button
-      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px]`}
+      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} w-max py-[16px] px-[24px] rounded-[6px]`}
       type={type}
     >
       {text}
