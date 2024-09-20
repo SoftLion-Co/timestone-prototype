@@ -10,6 +10,7 @@ interface ButtonProps {
   background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
+  onClick?: () => void;
   icon?: "cube" | "profile";
 }
 
@@ -20,6 +21,7 @@ const Button: FC<ButtonProps> = ({
   background = "darkBurgundy",
   bordered = false,
   fullWidth = false,
+  onClick,
   icon,
 }) => {
   const finalBackground = bordered ? "transparent" : background;
@@ -77,6 +79,7 @@ const Button: FC<ButtonProps> = ({
     <button
       className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} w-max py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
       type={type}
+      onClick={onClick}
     >
       {renderIcon()}
       {text}
