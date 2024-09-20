@@ -10,13 +10,16 @@ const config: Config = {
     extend: {
       fontFamily: {
         lato: ["Lato", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       fontSize: {
         default: ["14px", { lineHeight: "18px" }],
         xs: ["16px", { lineHeight: "22px" }],
         xl: ["22px", { lineHeight: "32px" }],
       },
-      backgroundImage: {},
+      backgroundImage: {
+        "news-section": "url('/images/news-section/bg-news-section.svg')",
+      },
       boxShadow: {},
       dropShadow: {},
       colors: {
@@ -28,6 +31,18 @@ const config: Config = {
         onyx: "#000000",
         snow: "#ffffff",
         charcoal: "#202020",
+
+        //new colors
+        
+        darkBurgundy: "#680A0A",
+        darkBurgundyOpacity: "#680A0A60",
+        darkMaroon: "#420808",
+        vividRed: "#EF2A2A",
+        cream: "#F2DEBA",
+        // silver: "#939393",
+        // onyx: "#000000",
+        // snow: "#ffffff",
+        // charcoal: "#202020",
       },
       keyframes: {
         pulse: {},
@@ -40,7 +55,6 @@ const config: Config = {
       md: "768px",
       lg: "1024px",
       xl: "1440px",
-      "2xl": "1920px",
     },
     container: {
       center: true,
@@ -49,7 +63,6 @@ const config: Config = {
         sm: "20px",
         lg: "40px",
         xl: "60px",
-        "2xl": "80px",
       },
     },
   },
