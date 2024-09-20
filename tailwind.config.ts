@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         lato: ["Lato", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       fontSize: {
         default: ["14px", { lineHeight: "18px" }],
@@ -17,7 +18,7 @@ const config: Config = {
         xl: ["22px", { lineHeight: "32px" }],
       },
       backgroundImage: {
-        'news-section': "url('/images/news-section/bg-news-section.svg')",
+        "news-section": "url('/images/news-section/bg-news-section.svg')",
       },
       boxShadow: {},
       dropShadow: {},
@@ -30,6 +31,18 @@ const config: Config = {
         onyx: "#000000",
         snow: "#ffffff",
         charcoal: "#202020",
+
+        //new colors
+        
+        darkBurgundy: "#680A0A",
+        darkBurgundyOpacity: "#680A0A60",
+        darkMaroon: "#420808",
+        vividRed: "#EF2A2A",
+        cream: "#F2DEBA",
+        // silver: "#939393",
+        // onyx: "#000000",
+        // snow: "#ffffff",
+        // charcoal: "#202020",
       },
       keyframes: {
         pulse: {},

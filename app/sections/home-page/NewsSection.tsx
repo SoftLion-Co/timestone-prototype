@@ -46,11 +46,11 @@ const NewsSection = () => {
   };
 
   return (
-    <section className="bg-darkerAmethyst/60 relative">
+    <section className="bg-darkBurgundy/60 relative">
       <div className="container relative text-snow flex flex-col gap-[30px] items-center py-[60px] text-center">
-        <h1 className="font-bold text-[28px] xl:text-[36px] xl:w-[80%]">
+        <h3 className="font-bold text-[28px] xl:text-[36px] xl:w-[80%]">
           Don't Miss Your Chance To Get Free Giveaway Sing Up To Our Newsletter
-        </h1>
+        </h3>
 
         <p className="text-[10px] xl:text-default">
           We will inform you about coming Giveaways, Offers, Online Store
