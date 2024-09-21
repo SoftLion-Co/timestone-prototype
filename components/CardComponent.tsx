@@ -4,27 +4,7 @@ import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
 import Basket from '@/images/test-card-component/busket.svg';
-
-type CardProps = {
-  product_id: string;
-  model: string;
-  price: number;
-  photo_url: StaticImageData;
-  type: 'Watch' | 'Strap';
-  country: string;
-  case: string;
-  case_size: number;
-  case_color: string;
-  straps: string;
-  strap_color: string;
-  dial_color: string;
-  coating: string;
-  glass: string;
-  water_resistance: string;
-  movement: string;
-  instantaneus_rate: string;
-  standard_battery_life: string;
-};
+import { CardProps } from '@/config/types';
 
 const handleAddToBasket = (
   e: React.MouseEvent<HTMLButtonElement>,

@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         lato: ['Lato', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
+        spaceage: ['Space Age', 'sans-serif'],
       },
       fontSize: {
         default: ['14px', { lineHeight: '18px' }],
