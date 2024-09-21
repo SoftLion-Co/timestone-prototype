@@ -1,7 +1,11 @@
+import Hero from "@/app/sections/home-page/HeroSection";
+import News from "@/app/sections/home-page/NewsSection";
+
 export default function Home() {
   return (
     <>
-      <div className="mx-auto mt-20 flex justify-center items-center"></div>
+      <Hero />
+      <News />
     </>
   );
 }
