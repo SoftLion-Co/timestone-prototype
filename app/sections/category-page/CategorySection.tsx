@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePagination } from '@mantine/hooks';
 
+import { Select } from '@mantine/core';
+
 import { CARD_INFORMATION } from '@/config/constants';
 import CardComponent from '@/components/CardComponent';
 import ArrowDown from '@/images/test-cotegory-page/arrow-down-filter.svg';
@@ -39,11 +41,11 @@ const CategorySection = () => {
   };
 
   return (
-    <section className="pt-[43px] px-[60px] flex-1">
-      <div className="flex flex-col justify-center items-center gap-5 lg:justify-end lg:flex-row">
+    <section className="pt-[43px] pb-[70px] px-[60px] flex-1">
+      <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
         <div className="relative">
           <select
-            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none"
+            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none cursor-pointer"
             value={filters.country}
             onChange={handleChangeCountry}>
             <option value="">Countries</option>
@@ -56,9 +58,14 @@ const CategorySection = () => {
           </div>
         </div>
 
+        <Select
+          label="Your favorite library"
+          placeholder="Pick value"
+          data={['React', 'Angular', 'Vue', 'Svelte']}
+        />
         <div className="relative">
           <select
-            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none"
+            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none cursor-pointer"
             value={filters.sortedBy}
             onChange={handleChangeSorting}>
             <option value="">Sort By</option>
@@ -72,12 +79,12 @@ const CategorySection = () => {
         </div>
       </div>
 
-      <div className="mt-[32px] flex flex-wrap gap-[30px] justify-center lg:justify-between">
+      <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {visibleProducts.map((cardProps) => (
           <CardComponent {...cardProps} key={cardProps.product_id} />
         ))}
       </div>
-      <div className="flex items-center justify-center gap-2 ml-auto my-[70px]">
+      <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
         {pagination.range.map((range) =>
           range === 'dots' ? (
             <button

@@ -238,7 +238,7 @@ const CategoryAsideFilters = () => {
       </aside>
 
       {/* mobile filters */}
-      <div className="bg-pearl xl:hidden">
+      <div className="bg-pearl sticky z-50 top-0 xl:hidden">
         <div className="container">
           <form onSubmit={handleSubmitFormForMobile}>
             {isOpen && (
