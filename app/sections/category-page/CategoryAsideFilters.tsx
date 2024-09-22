@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
-import ArrowUp from '@/images/test-cotegory-page/arrow-up.svg';
+import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
 
@@ -238,7 +238,7 @@ const CategoryAsideFilters = () => {
       </aside>
 
       {/* mobile filters */}
-      <div className="bg-pearl xl:hidden">
+      <div className="bg-pearl sticky z-50 top-0 xl:hidden">
         <div className="container">
           <form onSubmit={handleSubmitFormForMobile}>
             {isOpen && (
@@ -261,14 +261,15 @@ const CategoryAsideFilters = () => {
                   <div className="bg-white flex items-center w-fit rounded-sm overflow-hidden">
                     <button
                       className={`py-[14px] px-[52px] rounded-sm ${
-                        productType === 'watches' && 'bg-amethyst text-white'
+                        productType === 'watches' &&
+                        'bg-darkBurgundy text-white'
                       }`}
                       onClick={(e) => handleProductType(e, 'watches')}>
                       Watches
                     </button>
                     <button
                       className={`py-[14px] px-[52px] rounded-sm ${
-                        productType === 'straps' && 'bg-amethyst text-white'
+                        productType === 'straps' && 'bg-darkBurgundy text-white'
                       }`}
                       onClick={(e) => handleProductType(e, 'straps')}>
                       Straps
@@ -333,7 +334,7 @@ const CategoryAsideFilters = () => {
               )}
 
               <button
-                className="w-[55px] h-[55px] rounded-md border border-amethyst flex items-center justify-center hover:bg-white duration-300"
+                className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
                 onClick={handleOpenFilterClick}>
                 <Image src={ArrowUp} alt="arrow up" className="object-fit" />
               </button>

@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import { usePagination } from '@mantine/hooks';
 
-import { CARD_INFORMATION } from '@/config/constants';
-import CardComponent from '@/components/CardComponent';
-import ArrowDown from '@/images/test-cotegory-page/arrow-down-filter.svg';
-
 import { useFilters } from '@/hooks/useFilters';
+
+import { CARD_INFORMATION } from '@/config/constants';
+
+import CardComponent from '@/components/CardComponent';
+import CustomSelect from '@/components/test-select/SelectComponent';
 
 const CategorySection = () => {
   const { filters, dispatch } = useFilters();
@@ -30,54 +30,46 @@ const CategorySection = () => {
     },
   });
 
-  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch({ type: 'SET_COUNTRY', payload: e.target.value });
+  const handleChangeCountry = (value: string) => {
+    dispatch({ type: 'SET_COUNTRY', payload: value });
   };
 
-  const handleChangeSorting = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch({ type: 'SET_SORTING', payload: e.target.value });
+  const handleChangeSorting = (value: string) => {
+    dispatch({ type: 'SET_SORTING', payload: value });
   };
 
   return (
-    <section className="pt-[43px] px-[60px] flex-1">
-      <div className="flex flex-col justify-center items-center gap-5 lg:justify-end lg:flex-row">
-        <div className="relative">
-          <select
-            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none"
-            value={filters.country}
-            onChange={handleChangeCountry}>
-            <option value="">Countries</option>
-            <option value="Ukraine">Ukraine</option>
-            <option value="USA">USA</option>
-            <option value="Germany">Germany</option>
-          </select>
-          <div className="absolute top-1/2 left-[26px] -translate-y-1/2">
-            <Image src={ArrowDown} alt="arrow down" />
-          </div>
-        </div>
+    <section className="pt-[43px] pb-[70px] px-[60px] flex-1">
+      <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
+        <CustomSelect
+          left
+          placeholder="Countries"
+          options={[
+            { value: 'USA', label: 'USA' },
+            { value: 'Ukraine', label: 'Ukraine' },
+            { value: 'Germany', label: 'Germany' },
+          ]}
+          onSelect={handleChangeCountry}
+        />
 
-        <div className="relative">
-          <select
-            className="bg-pearl text-silver text-[14px] pr-[30px] pl-[56px] py-[22px] appearance-none"
-            value={filters.sortedBy}
-            onChange={handleChangeSorting}>
-            <option value="">Sort By</option>
-            <option value="Top">Top</option>
-            <option value="HighestPrice">Higest Price</option>
-            <option value="LowestPrice">Lowest Price</option>
-          </select>
-          <div className="absolute top-1/2 left-[26px] -translate-y-1/2">
-            <Image src={ArrowDown} alt="arrow down" />
-          </div>
-        </div>
+        <CustomSelect
+          left
+          placeholder="Sort By"
+          options={[
+            { value: 'Top', label: 'Top' },
+            { value: 'HighestPrice', label: 'Highest Price' },
+            { value: 'LowestPrice', label: 'Lowest Price' },
+          ]}
+          onSelect={handleChangeSorting}
+        />
       </div>
 
-      <div className="mt-[32px] flex flex-wrap gap-[30px] justify-center lg:justify-between">
+      <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {visibleProducts.map((cardProps) => (
           <CardComponent {...cardProps} key={cardProps.product_id} />
         ))}
       </div>
-      <div className="flex items-center justify-center gap-2 ml-auto my-[70px]">
+      <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
         {pagination.range.map((range) =>
           range === 'dots' ? (
             <button
@@ -89,7 +81,7 @@ const CategorySection = () => {
             <button
               className={`h-[28px] w-[28px] rounded-sm text-center text-[10px] ${
                 pagination.active === range
-                  ? 'bg-amethyst text-white'
+                  ? 'bg-darkBurgundy text-white'
                   : 'bg-pearl text-silver hover:font-bold'
               }`}
               key={range}
