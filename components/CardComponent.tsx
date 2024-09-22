@@ -1,9 +1,9 @@
 'use client';
 
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
-import Basket from '@/images/test-card-component/busket.svg';
+import Basket from '@/images/card-component/busket.svg';
 import { CardProps } from '@/config/types';
 
 const handleAddToBasket = (
@@ -31,7 +31,7 @@ const CardComponent: FC<CardProps> = ({
           alt={`image of ${model}`}
           className="object-fit w-[255px] h-[300px]"
         />
-        <div className="absolute hidden top-0 left-0 w-full h-full group-hover:flex items-center justify-center flex-col gap-4 bg-amethyst bg-opacity-85">
+        <div className="absolute hidden top-0 left-0 w-full h-full group-hover:flex items-center justify-center flex-col gap-4 bg-darkBurgundy bg-opacity-85">
           <Image
             src={Basket}
             width={45}
