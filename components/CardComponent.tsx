@@ -31,7 +31,7 @@ const CardComponent: FC<CardProps> = ({
           alt={`image of ${model}`}
           className="object-fit w-[255px] h-[300px]"
         />
-        <div className="absolute hidden top-0 left-0 w-full h-full group-hover:flex items-center justify-center flex-col gap-4 bg-darkBurgundy bg-opacity-85">
+        <div className="absolute hidden top-0 left-0 w-full h-full group-hover:flex items-center justify-center flex-col gap-4 bg-darkBurgundy bg-opacity-85 transition-transform duration-300">
           <Image
             src={Basket}
             width={45}

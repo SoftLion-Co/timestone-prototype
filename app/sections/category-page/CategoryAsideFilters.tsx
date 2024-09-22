@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
@@ -107,7 +108,7 @@ const CategoryAsideFilters = () => {
   return (
     <>
       {/* pc filters */}
-      <aside className="hidden xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px] h-fit">
+      <aside className="hidden xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form onSubmit={handleSubmitFormForPc}>
           <div className="pb-5 text-silver text-[12px] font-poppins">
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5">
@@ -242,7 +243,11 @@ const CategoryAsideFilters = () => {
         <div className="container">
           <form onSubmit={handleSubmitFormForMobile}>
             {isOpen && (
-              <div className="pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]">
+              <motion.div
+                className="pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}>
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5 px-[15px]">
                   <h4 className=" text-black font-semibold ">Search</h4>
                   <input
@@ -318,7 +323,7 @@ const CategoryAsideFilters = () => {
                     <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#707885] to-[#363636]"></button>
                   </div>
                 </label>
-              </div>
+              </motion.div>
             )}
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
@@ -336,7 +341,13 @@ const CategoryAsideFilters = () => {
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
                 onClick={handleOpenFilterClick}>
-                <Image src={ArrowUp} alt="arrow up" className="object-fit" />
+                <Image
+                  src={ArrowUp}
+                  alt="arrow up"
+                  className={`object-fit transition-transform ${
+                    isOpen ? '' : 'rotate-180'
+                  }`}
+                />
               </button>
             </div>
           </form>
