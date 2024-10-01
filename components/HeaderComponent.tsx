@@ -1,24 +1,24 @@
-"use client";
-import React, { FC } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import Logo from "@/images/vectors/logo.svg";
-import Basket from "@/images/vectors/basket.svg";
-import Profile from "@/images/vectors/profile.svg";
+'use client';
+import React, { FC } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import Logo from '@/images/vectors/logo.svg';
+import Basket from '@/images/vectors/basket.svg';
+import Profile from '@/images/vectors/profile.svg';
 
-import MainButton from "@/components/ButtonComponent";
+import MainButton from '@/components/ButtonComponent';
 
-import { Modal, Button, ActionIcon } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import Close from "@/images/vectors/close.svg";
-import Burger from "@/images/vectors/burger.svg";
+import { Modal, Button, ActionIcon } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import Close from '@/images/vectors/close.svg';
+import Burger from '@/images/vectors/burger.svg';
 
 const navData = [
-  { link: "/", text: "Watches" },
-  { link: "/", text: "Accessories" },
-  { link: "/", text: "Jewelry" },
-  { link: "/", text: "Brand" },
-  { link: "/", text: "Watches" },
+  { link: '/ua/category-page', text: 'Watches' },
+  { link: '/', text: 'Accessories' },
+  { link: '/', text: 'Jewelry' },
+  { link: '/', text: 'Brand' },
+  { link: '/', text: 'Watches' },
 ];
 
 const Header = () => {
@@ -27,16 +27,14 @@ const Header = () => {
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}
-      >
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}>
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
             {navData.map((item, index) => (
               <Link
                 key={index}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
-              >
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
                 {item.text}
               </Link>
             ))}
@@ -83,34 +81,32 @@ const Header = () => {
           fullScreen
           withCloseButton={false}
           radius={0}
-          transitionProps={{ transition: "scale-x", duration: 200 }}
+          transitionProps={{ transition: 'scale-x', duration: 200 }}
           className="xl:hidden"
           styles={{
             body: {
-              padding: "0",
+              padding: '0',
             },
             content: {
-              backgroundColor: "#ffffff",
+              backgroundColor: '#ffffff',
               zIndex: 9999,
-              position: "fixed",
+              position: 'fixed',
               top: 0,
               left: 0,
-              width: "100%",
-              height: "100%",
+              width: '100%',
+              height: '100%',
             },
             header: {
-              backgroundColor: "#ffffff",
+              backgroundColor: '#ffffff',
             },
-          }}
-        >
+          }}>
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]"
-            >
+              className="w-[24px] h-[24px]">
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>
