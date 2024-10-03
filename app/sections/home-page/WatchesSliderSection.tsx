@@ -140,9 +140,10 @@ const SliderSection = () => {
           </Carousel>
         </div>
 
-        <div className="mt-[80px] text-center sm:text-right sm:mt-[90px]">
-          <Button text="Design Your Watch" className="w-[208px]" />
-        </div>
+        <Button
+          text="Design Your Watch"
+          className="mt-[80px] mx-auto sm:mx-0 sm:ml-auto sm:mt-[90px]"
+        />
       </div>
     </section>
   );
