@@ -6,6 +6,6 @@ export default function Home() {
   <>
     <SliderSection />
     <OurMissionSection />
-  </>
+    </>
   );
 }
