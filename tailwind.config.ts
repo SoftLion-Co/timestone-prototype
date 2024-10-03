@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         lato: ["Lato", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       fontSize: {
         default: ["14px", { lineHeight: "18px" }],
