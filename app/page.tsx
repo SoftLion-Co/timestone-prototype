@@ -1,11 +1,12 @@
-import SliderSection from "@/app/sections/home-page/WatchesSliderSection";
-import OurMissionSection from "@/app/sections/home-page/OurMissionSection";
+import News from "@/app/sections/home-page/NewsSection";
+import Login from "@/app/sections/authorization-page/LoginSection";
 
 export default function Home() {
   return (
     <>
-      <SliderSection />
-      <OurMissionSection />
+      <Login />
+      <News/>
+     
     </>
   );
 }
