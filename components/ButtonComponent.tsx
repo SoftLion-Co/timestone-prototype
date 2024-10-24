@@ -77,7 +77,7 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} w-max py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
+      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
       type={type}
       onClick={onClick}
     >
