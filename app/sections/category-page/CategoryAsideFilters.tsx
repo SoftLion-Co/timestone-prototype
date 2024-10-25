@@ -1,24 +1,121 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
+import { CardProps } from '@/config/types';
+import { getProducts } from '@/lib/products';
 
-const CategoryAsideFilters = () => {
+const CategoryAsideFilters = ({
+  handleUpdateProducts,
+  handleChangeTotalProducts,
+}: {
+  handleUpdateProducts: (newProducts: CardProps[]) => void;
+  handleChangeTotalProducts: (num: number) => void;
+}) => {
   const [searchText, setSearchText] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
   const [productType, setProductType] = useState<string>('');
   const [watchesColor, setWatchesColor] = useState<string[]>([]);
   const [strapsColor, setStrapsColor] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
 
   const { filters, dispatch } = useFilters();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  // get products
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getProducts();
+
+      const selectedFilters = {
+        productType: filters.productType,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        searchText: filters.searchText,
+      };
+
+      const selectedOptions = {
+        colors: filters.watchesColor,
+        countries: filters.countries,
+        strapsColor: filters.strapsColor,
+      };
+
+      let hasNext = data.pageInfo.hasNextPage;
+      let end = data.pageInfo.endCursor;
+      let sum = data.products.length;
+      let allProducts = [...data.products];
+
+      while (hasNext) {
+        const newData = await getProducts(
+          selectedFilters,
+          selectedOptions,
+          end
+        );
+        sum += newData.products.length;
+        hasNext = newData.pageInfo.hasNextPage;
+        end = newData.pageInfo.endCursor;
+        allProducts.push(...newData.products);
+      }
+
+      handleUpdateProducts(allProducts);
+      handleChangeTotalProducts(sum);
+    };
+
+    getData();
+  }, []);
+
+  // get filtered products
+  useEffect(() => {
+    const getData = async () => {
+      const selectedFilters = {
+        productType: filters.productType,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        searchText: filters.searchText,
+      };
+
+      const selectedOptions = {
+        colors: filters.watchesColor,
+        countries: filters.countries,
+        strapsColor: filters.strapsColor,
+      };
+
+      const data = await getProducts(selectedFilters, selectedOptions);
+
+      let allProducts = [...data.products];
+
+      let hasNext = data.pageInfo.hasNextPage;
+      let end = data.pageInfo.endCursor;
+      let sum = data.products.length;
+
+      while (hasNext) {
+        const newData = await getProducts({
+          filters: selectedFilters,
+          options: selectedOptions,
+          pageCursor: end,
+        });
+
+        sum += newData.products.length;
+        hasNext = newData.pageInfo.hasNextPage;
+        end = newData.pageInfo.endCursor;
+        allProducts.push(...newData.filteredProducts);
+      }
+
+      handleUpdateProducts(allProducts);
+      handleChangeTotalProducts(sum);
+
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    };
+
+    getData();
+  }, [filters]);
 
   // open and close filters
   const handleOpenFilterClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -68,7 +165,7 @@ const CategoryAsideFilters = () => {
     );
   };
 
-  // set watch colors
+  // set straps colors
   const handleSetStrapsColor = (
     e: React.MouseEvent<HTMLButtonElement>,
     value: string
@@ -81,6 +178,22 @@ const CategoryAsideFilters = () => {
     );
   };
 
+  // set countries
+  const handleSetCountries = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    country: string
+  ) => {
+    if (e.target.checked) {
+      setCountries((countries) => [...countries, country]);
+    } else {
+      setCountries(countries.filter((c) => c !== country));
+    }
+  };
+
+  useEffect(() => {
+    console.log(countries);
+  }, [countries]);
+
   // submit filters
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,16 +204,23 @@ const CategoryAsideFilters = () => {
     dispatch({ type: 'SET_PRODUCT_TYPE', payload: productType });
     dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
     dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
+    dispatch({ type: 'SET_COUNTRIES', payload: countries });
+
+    console.log(`applied`);
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     dispatch({ type: 'SET_SEARCH_TEXT', payload: searchText });
     dispatch({ type: 'SET_MIN_PRICE', payload: minPrice });
     dispatch({ type: 'SET_MAX_PRICE', payload: maxPrice });
     dispatch({ type: 'SET_PRODUCT_TYPE', payload: productType });
     dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
     dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
+    dispatch({ type: 'SET_COUNTRIES', payload: countries });
+
+    console.log(`applied`);
 
     setIsOpen(false);
   };
@@ -120,6 +240,33 @@ const CategoryAsideFilters = () => {
                 value={searchText}
                 onChange={handleSearchText}
               />
+            </label>
+
+            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
+              <h4 className=" text-black font-semibold ">Select Countries</h4>
+              <div className="flex flex-col justify-start items-start gap-1">
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleSetCountries(e, 'USA')}
+                  />
+                  <span>USA</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleSetCountries(e, 'Ukraine')}
+                  />
+                  <span>Ukraine</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleSetCountries(e, 'Germany')}
+                  />
+                  <span>Germany</span>
+                </div>
+              </div>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
@@ -163,26 +310,26 @@ const CategoryAsideFilters = () => {
               <h4 className=" text-black font-semibold">Case Color</h4>
               <div className="flex gap-3">
                 <button
-                  onClick={(e) => handleSetWatchesColor(e, 'black')}
+                  onClick={(e) => handleSetWatchesColor(e, 'Black')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A] ${
                     watchesColor.length !== 0 &&
-                    watchesColor.indexOf('black') === -1
+                    watchesColor.indexOf('Black') === -1
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
                 <button
-                  onClick={(e) => handleSetWatchesColor(e, 'silver')}
+                  onClick={(e) => handleSetWatchesColor(e, 'Silver')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#e3e3e3] to-[#7B838F] ${
                     watchesColor.length !== 0 &&
-                    watchesColor.indexOf('silver') === -1
+                    watchesColor.indexOf('Silver') === -1
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
                 <button
-                  onClick={(e) => handleSetWatchesColor(e, 'blue')}
+                  onClick={(e) => handleSetWatchesColor(e, 'Blue')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#58B2CE] to-[#023C96] ${
                     watchesColor.length !== 0 &&
-                    watchesColor.indexOf('blue') === -1
+                    watchesColor.indexOf('Blue') === -1
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
@@ -261,6 +408,35 @@ const CategoryAsideFilters = () => {
 
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
                   <h4 className=" text-black font-semibold ">
+                    Select Countries
+                  </h4>
+                  <div className="flex flex-col justify-start items-start gap-1">
+                    <div className="flex gap-2">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => handleSetCountries(e, 'USA')}
+                      />
+                      <span>USA</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => handleSetCountries(e, 'Ukraine')}
+                      />
+                      <span>Ukraine</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => handleSetCountries(e, 'Germany')}
+                      />
+                      <span>Germany</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
+                  <h4 className=" text-black font-semibold ">
                     Select Products
                   </h4>
                   <div className="bg-white flex items-center w-fit rounded-sm overflow-hidden">
@@ -303,24 +479,73 @@ const CategoryAsideFilters = () => {
                   </div>
                 </label>
 
-                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px] ">
+                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
                   <h4 className=" text-black font-semibold">Case Color</h4>
                   <div className="flex gap-3">
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A]"></button>
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#e3e3e3] to-[#7B838F]"></button>
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#58B2CE] to-[#023C96]"></button>
+                    <button
+                      onClick={(e) => handleSetWatchesColor(e, 'black')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A] ${
+                        watchesColor.length !== 0 &&
+                        watchesColor.indexOf('black') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
+                    <button
+                      onClick={(e) => handleSetWatchesColor(e, 'silver')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#e3e3e3] to-[#7B838F] ${
+                        watchesColor.length !== 0 &&
+                        watchesColor.indexOf('silver') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
+                    <button
+                      onClick={(e) => handleSetWatchesColor(e, 'blue')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#58B2CE] to-[#023C96] ${
+                        watchesColor.length !== 0 &&
+                        watchesColor.indexOf('blue') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
                   </div>
                 </label>
 
-                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px] ">
+                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
                   <h4 className=" text-black font-semibold">
                     Filter By Strap Colors
                   </h4>
                   <div className="flex gap-3">
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#D39138] to-[#B95371]"></button>
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#2D9B87] to-[#AF29CB]"></button>
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#2184CE] to-[#9020AD]"></button>
-                    <button className="w-10 h-10 rounded-md bg-gradient-to-bl from-[#707885] to-[#363636]"></button>
+                    <button
+                      onClick={(e) => handleSetStrapsColor(e, 'orange')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#D39138] to-[#B95371] ${
+                        strapsColor.length !== 0 &&
+                        strapsColor.indexOf('orange') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
+                    <button
+                      onClick={(e) => handleSetStrapsColor(e, 'purple-green')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2D9B87] to-[#AF29CB] ${
+                        strapsColor.length !== 0 &&
+                        strapsColor.indexOf('purple-green') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
+                    <button
+                      onClick={(e) => handleSetStrapsColor(e, 'purple-blue')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2184CE] to-[#9020AD] ${
+                        strapsColor.length !== 0 &&
+                        strapsColor.indexOf('purple-blue') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
+                    <button
+                      onClick={(e) => handleSetStrapsColor(e, 'black')}
+                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#707885] to-[#363636] ${
+                        strapsColor.length !== 0 &&
+                        strapsColor.indexOf('black') === -1
+                          ? 'opacity-50'
+                          : 'opacity-100'
+                      }`}></button>
                   </div>
                 </label>
               </motion.div>

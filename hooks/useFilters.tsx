@@ -1,7 +1,11 @@
 'use client';
 
-import { CardProps } from '@/config/types';
 import { createContext, useReducer, useContext } from 'react';
+
+interface FiltersContextType {
+  filters: FiltersState;
+  dispatch: React.Dispatch<FiltersAction>;
+}
 
 interface FiltersState {
   searchText: string;
@@ -10,7 +14,7 @@ interface FiltersState {
   productType: string;
   watchesColor: string[];
   strapsColor: string[];
-  country: string;
+  countries: string[];
   sortedBy: string;
 }
 
@@ -21,7 +25,7 @@ const initialFilters: FiltersState = {
   productType: '',
   watchesColor: [],
   strapsColor: [],
-  country: '',
+  countries: [],
   sortedBy: '',
 };
 
@@ -32,7 +36,7 @@ type FiltersAction =
   | { type: 'SET_PRODUCT_TYPE'; payload: string }
   | { type: 'TOGGLE_WATCH_COLOR'; payload: string[] }
   | { type: 'TOGGLE_STRAP_COLOR'; payload: string[] }
-  | { type: 'SET_COUNTRY'; payload: string }
+  | { type: 'SET_COUNTRIES'; payload: string[] }
   | { type: 'SET_SORTING'; payload: string };
 
 const filtersReducer = (
@@ -58,19 +62,14 @@ const filtersReducer = (
         ...state,
         strapsColor: action.payload,
       };
-    case 'SET_COUNTRY':
-      return { ...state, country: action.payload };
+    case 'SET_COUNTRIES':
+      return { ...state, countries: action.payload };
     case 'SET_SORTING':
       return { ...state, sortedBy: action.payload };
     default:
       return state;
   }
 };
-
-interface FiltersContextType {
-  filters: FiltersState;
-  dispatch: React.Dispatch<FiltersAction>;
-}
 
 const FiltersContext = createContext<FiltersContextType | undefined>(undefined);
 
