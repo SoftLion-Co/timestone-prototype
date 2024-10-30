@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import Title from "@/components/TitleComponents";
 import FormComponent from "@/components/FormComponent";
 import Input from "@/components/InputComponent";
@@ -9,25 +9,57 @@ import Image from "next/image";
 import Checkbox from "@/components/CheckboxComponent";
 import { motion } from "framer-motion";
 import CartComponent from "@/components/CartComponent";
+import { CreateOrder } from "@/services/OrderService";
 
 const CheckoutSection = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [selectedOption, setSelectedOption] = useState<string | null>("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [shippingValue, setshippingValue] = useState({});
+  const [checkError, setCheckError] = useState("");
+
   const options = [
-    { value: "ukraine", label: "Ukraine" },
-    { value: "poland", label: "Poland" },
-    { value: "usa", label: "USA" },
+    { value: "UA", label: "Ukraine" },
+    { value: "PL", label: "Poland" },
+    { value: "USA", label: "USA" },
   ];
 
-  const handleSelect = (value: string) => {
-    console.log("Selected value:", value);
-  };
-
-  const handleChange = (option: string) => {
+  const handleChange = (option: SetStateAction<string | null>) => {
     setSelectedOption(option);
+    setCheckError("");
+
+    if (option === "UPS Standard") {
+      setshippingValue({
+        shippingLines: [
+          {
+            code: "Standard",
+            title: "Standard",
+            priceSet: {
+              shopMoney: {
+                amount: "00.00",
+                currrencyCode: "UAH",
+              },
+            },
+          },
+        ],
+      });
+    } else if (option === "UPS Express") {
+      setshippingValue({
+        shippingLines: [
+          {
+            code: "Express",
+            title: "Express",
+            priceSet: {
+              shopMoney: {
+                amount: "49.99",
+                currrencyCode: "UAH",
+              },
+            },
+          },
+        ],
+      });
+    }
   };
-
-  const [isOpen, setIsOpen] = useState(true);
-  const [selectedOption, setSelectedOption] = useState("UPS Express");
-
   type FormValues = {
     email: string;
     firstName: string;
@@ -37,6 +69,7 @@ const CheckoutSection = () => {
     city: string;
     phoneNumber: string;
     zipCode: string;
+    country: string;
   };
 
   type FormErrors = {
@@ -52,6 +85,7 @@ const CheckoutSection = () => {
     city: "",
     phoneNumber: "",
     zipCode: "",
+    country: "",
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -63,10 +97,10 @@ const CheckoutSection = () => {
     city: null,
     phoneNumber: null,
     zipCode: null,
+    country: null,
   });
 
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
+  const updateField = (name: string, value: string) => {
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -77,6 +111,15 @@ const CheckoutSection = () => {
       ...prevErrors,
       [name]: error,
     }));
+  };
+
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    updateField(name, value);
+  };
+
+  const handleSelect = (value: string) => {
+    updateField("country", value);
   };
 
   const validateEmail = (email: string) => {
@@ -106,44 +149,89 @@ const CheckoutSection = () => {
         if (!value) return "Enter zip code";
         if (!/^\d{5}$/.test(value)) return "Enter valid zip code";
         return null;
+      case "country":
+        if (!value) return "Select a country";
+        return null;
       default:
         return null;
     }
   };
 
-  const handleSubmit = () => {
+  const handleContinue = () => {
+    const newErrors = {} as FormErrors;
     let hasErrors = false;
 
-    const newErrors = Object.keys(formValues).reduce((acc, field) => {
-      const error = validateField(
-        field as keyof FormValues,
-        formValues[field as keyof FormValues]
-      );
+    Object.entries(formValues).forEach(([key, value]) => {
+      const error = validateField(key as keyof FormValues, value);
       if (error) {
         hasErrors = true;
-        acc[field as keyof FormValues] = error;
-      } else {
-        acc[field as keyof FormValues] = null;
+        newErrors[key as keyof FormValues] = error;
       }
-      return acc;
-    }, {} as FormErrors);
+    });
 
     setFormErrors(newErrors);
 
     if (!hasErrors) {
-      console.log("Valid form:", formValues);
+      setIsVisible(true);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedOption) {
+      setCheckError("Select shipping method");
     }
 
-    setFormValues({
-      email: "",
-      firstName: "",
-      lastName: "",
-      address1: "",
-      address2: "",
-      city: "",
-      phoneNumber: "",
-      zipCode: "",
-    });
+    if (selectedOption) {
+      try {
+        const data = {
+          currency: "UAH",
+          email: formValues.email,
+          phone: formValues.phoneNumber,
+          shippingAddress: {
+            firstName: formValues.firstName,
+            lastName: formValues.lastName,
+            address1: formValues.address1,
+            address2: formValues.address2,
+            city: formValues.city,
+            zip: formValues.zipCode,
+            countryCode: formValues.country,
+          },
+          shippingValue,
+
+          // lineItems: [
+          //   {
+          //     title: "Molumenzeit S 7",
+          //     priceSet: {
+          //       shopMoney: {
+          //         amount: 15000,
+          //         currencyCode: "UAH",
+          //       },
+          //     },
+          //     quantity: 2,
+          //   },
+          // ],
+        };
+        const response = await CreateOrder(data, {
+          sendReceipt: "true",
+          sendFulfilmentReceipt: "true",
+          inventoryBehaviour: "BYPASS",
+        });
+
+        setFormValues({
+          email: "",
+          firstName: "",
+          lastName: "",
+          address1: "",
+          address2: "",
+          city: "",
+          phoneNumber: "",
+          zipCode: "",
+          country: "",
+        });
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
   };
 
   return (
@@ -151,7 +239,7 @@ const CheckoutSection = () => {
       <Title text="checkout" />
 
       <div className="container flex flex-col gap-[30px] justify-center py-[50px] lg:flex-wrap lg:flex-row-reverse lg:gap-[50px]">
-        <div className="flex flex-col order-1 lg:order-1 mini:mx-auto lg:mx-0 mini:w-[400px] md:w-[500px] lg:w-[400px] xl:w-[500px]">
+        <div className="flex flex-col lg:order-1 mini:mx-auto lg:mx-0 mini:w-[400px] md:w-[500px] lg:w-[400px] xl:w-[500px]">
           {isOpen && (
             <motion.div
               className="bordered-[10px] shadow-lg rounded-lg px-[20px]"
@@ -184,21 +272,7 @@ const CheckoutSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col order-2 lg:order-3 mini:mx-auto lg:mx-0">
-          <p className="text-[20px] font-semibold">Apply Coupon</p>
-          <Input
-            type="text"
-            bordered
-            placeholder="Coupon Code"
-            fullWidth
-            className="md:w-[500px] lg:w-[400px] mini:w-[420px] xl:w-[500px]"
-          />
-        </div>
-
-        <FormComponent
-          title="Basic Info"
-          className="order-3 lg:order-2 relative"
-        >
+        <FormComponent title="Basic Info" className="lg:order-2 relative">
           <Input
             name="email"
             placeholder="Email"
@@ -302,17 +376,23 @@ const CheckoutSection = () => {
             options={options}
             onSelect={handleSelect}
             className="mini:w-[80%]"
+            error={formErrors.country}
           />
 
           <Button
             text="Continue"
             className="mini:w-[80%] w-[100%]"
             type="button"
-            onClick={handleSubmit}
+            onClick={handleContinue}
           />
         </FormComponent>
 
-        <FormComponent title="Shipping" className="order-4 lg:order-4">
+        <FormComponent
+          title="Shipping"
+          className={`lg:order-3 transition-opacity duration-0.3 ${
+            isVisible ? "opacity-100" : "opacity-50 pointer-events-none"
+          }`}
+        >
           <Checkbox
             label="UPS Express"
             description="UPS Express 2-3 working days"
@@ -328,11 +408,15 @@ const CheckoutSection = () => {
             checked={selectedOption == "UPS Standard"}
             onChange={() => handleChange("UPS Standard")}
           />
+          {checkError && (
+            <p className="text-[14px] text-darkBurgundy">{checkError}</p>
+          )}
 
           <Button
-            text="Continue"
+            text="Create order"
             className="mini:w-[80%] w-[100%]"
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
           />
         </FormComponent>
       </div>
@@ -341,3 +425,19 @@ const CheckoutSection = () => {
 };
 
 export default CheckoutSection;
+
+{
+  /*
+        // Купон, у подальшому буде реалізація
+        <div className="flex flex-col order-2 lg:order-3 mini:mx-auto lg:mx-0">
+          <p className="text-[20px] font-semibold">Apply Coupon</p>
+          <Input
+            type="text"
+            bordered
+            placeholder="Coupon Code"
+            fullWidth
+            className="md:w-[500px] lg:w-[400px] mini:w-[420px] xl:w-[500px]"
+          />
+          <Button text="Check Coupon" className="my-[15px]" />
+        </div> */
+}

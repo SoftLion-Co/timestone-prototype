@@ -133,7 +133,7 @@ const InputComponent: FC<InputProps> = ({
           onChange={onChange}
         />
       )}
-      {error && <span className="text-darkBurgundy">{error}</span>}
+      {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
     </>
   );
 };
