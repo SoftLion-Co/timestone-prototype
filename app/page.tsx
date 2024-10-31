@@ -1,11 +1,11 @@
-import News from "@/app/sections/home-page/NewsSection";
-import Hero from "./sections/home-page/HeroSection";
+import SliderSection from "@/app/sections/home-page/WatchesSliderSection";
+import OurMissionSection from "@/app/sections/home-page/OurMissionSection";
 
 export default function Home() {
   return (
     <>
-      <Hero />
-      <News />
+      <SliderSection />
+      <OurMissionSection />
     </>
   );
 }
