@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useState, useEffect} from "react";
 import Title from "@/components/TitleComponents";
 import FormComponent from "@/components/FormComponent";
 import Input from "@/components/InputComponent";
@@ -10,6 +10,7 @@ import Checkbox from "@/components/CheckboxComponent";
 import { motion } from "framer-motion";
 import CartComponent from "@/components/CartComponent";
 import { CreateOrder } from "@/services/OrderService";
+import { Product } from "@/config/types";
 
 const CheckoutSection = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -17,6 +18,25 @@ const CheckoutSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [shippingValue, setshippingValue] = useState({});
   const [checkError, setCheckError] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [total, setTotal] = useState<number>(0.00);
+
+  useEffect(() => {
+
+    const fetchProducts = async () => {
+      try {
+        if(products.length != 0){
+          const result = products.reduce((acc, product) => acc + Number(product.minPrice), 0);
+          setTotal(result); 
+        }
+        
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [products]); 
 
   const options = [
     { value: "UA", label: "Ukraine" },
@@ -183,8 +203,20 @@ const CheckoutSection = () => {
 
     if (selectedOption) {
       try {
+        const lineItems = products.map((product) => ({
+          productId: product.id,
+          title: product.title,
+          priceSet: {
+            shopMoney: {
+              amount: product.minPrice,
+              currencyCode: "UAH",
+            },
+          },
+          quantity: product.quantity,
+        }));
         const data = {
           currency: "UAH",
+          customerId: "",
           email: formValues.email,
           phone: formValues.phoneNumber,
           shippingAddress: {
@@ -196,21 +228,10 @@ const CheckoutSection = () => {
             zip: formValues.zipCode,
             countryCode: formValues.country,
           },
-          shippingValue,
-
-          // lineItems: [
-          //   {
-          //     title: "Molumenzeit S 7",
-          //     priceSet: {
-          //       shopMoney: {
-          //         amount: 15000,
-          //         currencyCode: "UAH",
-          //       },
-          //     },
-          //     quantity: 2,
-          //   },
-          // ],
+          shippingLines: shippingValue,
+          lineItems: lineItems,
         };
+   //     console.log(data);
         const response = await CreateOrder(data, {
           sendReceipt: "true",
           sendFulfilmentReceipt: "true",
@@ -248,18 +269,20 @@ const CheckoutSection = () => {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <CartComponent />
-              <hr />
-              <CartComponent />
-              <hr />
-              <CartComponent showShipping />
-              <hr />
-              <CartComponent showTax />
+              {products.map((product, index) => (
+                <>
+                  <CartComponent
+                    key={product.id || index}
+                    productData={product}
+                  />
+                  {index < products.length - 1 && <hr />}
+                </>
+              ))}
             </motion.div>
           )}
 
           <div className="flex flex-col bg-darkBurgundy py-[25px] rounded-[10px] text-white text-center items-center gap-[8px]">
-            <h3 className="text-[20px] md:text-[25px]">$24,588</h3>
+            <h3 className="text-[20px] md:text-[25px]">{total}</h3>
             <p className="text-[10px] md:text-[15px]">Grand Total</p>
             <Image
               src={Arrow}

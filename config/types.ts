@@ -20,3 +20,11 @@ export type CardProps = {
   instantaneus_rate: string;
   standard_battery_life: string;
 };
+
+export type Product =  {
+  id: string;
+  title: string;
+  minPrice: string;
+  quantity: number;
+  images: string[];
+}
