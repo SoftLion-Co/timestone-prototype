@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useState, useEffect} from "react";
+import React, { SetStateAction, useState, useEffect } from "react";
 import Title from "@/components/TitleComponents";
 import FormComponent from "@/components/FormComponent";
 import Input from "@/components/InputComponent";
@@ -11,32 +11,35 @@ import { motion } from "framer-motion";
 import CartComponent from "@/components/CartComponent";
 import { CreateOrder } from "@/services/OrderService";
 import { Product } from "@/config/types";
+import { PRODUCT_DATA } from "@/config/productExample";
 
 const CheckoutSection = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [isVisible, setIsVisible] = useState(false);
-  const [shippingValue, setshippingValue] = useState({});
+  const [shippingValue, setshippingValue] = useState<any>({});
   const [checkError, setCheckError] = useState("");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [total, setTotal] = useState<number>(0.00);
+  const [products, setProducts] = useState<Product[]>(PRODUCT_DATA);
+  const [total, setTotal] = useState<number>(0.0);
+  const [price, setPrice] = useState<number>(0.0);
 
   useEffect(() => {
-
     const fetchProducts = async () => {
       try {
-        if(products.length != 0){
-          const result = products.reduce((acc, product) => acc + Number(product.minPrice), 0);
-          setTotal(result); 
+        if (products.length != 0) {
+          const result = products.reduce(
+            (acc, product) => acc + Number(product.minPrice) * product.quantity,
+            0 + price
+          );
+          setTotal(Number(result.toFixed(2)));
         }
-        
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
-  }, [products]); 
+  }, [products, price]);
 
   const options = [
     { value: "UA", label: "Ukraine" },
@@ -57,12 +60,13 @@ const CheckoutSection = () => {
             priceSet: {
               shopMoney: {
                 amount: "00.00",
-                currrencyCode: "UAH",
+                currencyCode: "UAH",
               },
             },
           },
         ],
       });
+      setPrice(0.0);
     } else if (option === "UPS Express") {
       setshippingValue({
         shippingLines: [
@@ -72,12 +76,13 @@ const CheckoutSection = () => {
             priceSet: {
               shopMoney: {
                 amount: "49.99",
-                currrencyCode: "UAH",
+                currencyCode: "UAH",
               },
             },
           },
         ],
       });
+      setPrice(49.99);
     }
   };
   type FormValues = {
@@ -87,7 +92,7 @@ const CheckoutSection = () => {
     address1: string;
     address2: string;
     city: string;
-    phoneNumber: string;
+    phone: string;
     zipCode: string;
     country: string;
   };
@@ -103,7 +108,7 @@ const CheckoutSection = () => {
     address1: "",
     address2: "",
     city: "",
-    phoneNumber: "",
+    phone: "",
     zipCode: "",
     country: "",
   });
@@ -115,7 +120,7 @@ const CheckoutSection = () => {
     address1: null,
     address2: null,
     city: null,
-    phoneNumber: null,
+    phone: null,
     zipCode: null,
     country: null,
   });
@@ -161,9 +166,8 @@ const CheckoutSection = () => {
       case "city":
         if (!value) return "Enter required data";
         return null;
-      case "phoneNumber":
+      case "phone":
         if (!value) return "Enter phone number";
-        if (!/^\d{10}$/.test(value)) return "Enter valid phone number";
         return null;
       case "zipCode":
         if (!value) return "Enter zip code";
@@ -218,7 +222,7 @@ const CheckoutSection = () => {
           currency: "UAH",
           customerId: "",
           email: formValues.email,
-          phone: formValues.phoneNumber,
+          phone: formValues.phone,
           shippingAddress: {
             firstName: formValues.firstName,
             lastName: formValues.lastName,
@@ -228,13 +232,15 @@ const CheckoutSection = () => {
             zip: formValues.zipCode,
             countryCode: formValues.country,
           },
-          shippingLines: shippingValue,
+          shippingLines: shippingValue.shippingLines
+            ? shippingValue.shippingLines
+            : [],
           lineItems: lineItems,
         };
-   //     console.log(data);
+
         const response = await CreateOrder(data, {
           sendReceipt: "true",
-          sendFulfilmentReceipt: "true",
+          sendFulfillmentReceipt: "true",
           inventoryBehaviour: "BYPASS",
         });
 
@@ -245,7 +251,7 @@ const CheckoutSection = () => {
           address1: "",
           address2: "",
           city: "",
-          phoneNumber: "",
+          phone: "",
           zipCode: "",
           country: "",
         });
@@ -258,7 +264,6 @@ const CheckoutSection = () => {
   return (
     <section>
       <Title text="checkout" />
-
       <div className="container flex flex-col gap-[30px] justify-center py-[50px] lg:flex-wrap lg:flex-row-reverse lg:gap-[50px]">
         <div className="flex flex-col lg:order-1 mini:mx-auto lg:mx-0 mini:w-[400px] md:w-[500px] lg:w-[400px] xl:w-[500px]">
           {isOpen && (
@@ -278,11 +283,15 @@ const CheckoutSection = () => {
                   {index < products.length - 1 && <hr />}
                 </>
               ))}
+              <hr />
+              <CartComponent showShipping price={price} />
+              <hr />
+              <CartComponent showTax price={price} />
             </motion.div>
           )}
 
           <div className="flex flex-col bg-darkBurgundy py-[25px] rounded-[10px] text-white text-center items-center gap-[8px]">
-            <h3 className="text-[20px] md:text-[25px]">{total}</h3>
+            <h3 className="text-[20px] md:text-[25px]">${total}</h3>
             <p className="text-[10px] md:text-[15px]">Grand Total</p>
             <Image
               src={Arrow}
@@ -333,12 +342,12 @@ const CheckoutSection = () => {
           />
 
           <Input
-            name="phoneNumber"
+            name="phone"
             placeholder="Phone Number"
             type="text"
-            value={formValues.phoneNumber}
+            value={formValues.phone}
             onChange={handleInputChange}
-            error={formErrors.phoneNumber}
+            error={formErrors.phone}
             bordered
             fullWidth
             className="mini:w-[80%]"

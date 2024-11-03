@@ -1,4 +1,4 @@
-import React, { FC, useState, ReactNode } from "react";
+import React, { FC, useEffect, useState, ReactNode } from "react";
 import Image from "next/image";
 import Arrow from "@/images/news-section/arrow.svg";
 
