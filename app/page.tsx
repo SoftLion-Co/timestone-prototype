@@ -1,10 +1,10 @@
 import News from "@/app/sections/home-page/NewsSection";
-import Login from "@/app/sections/authorization-page/LoginSection";
+import Auth from "@/app/sections/authorization-page/AuthorizationSection";
 
 export default function Home() {
   return (
     <>
-      <Login />
+      <Auth />
     </>
   );
 }
