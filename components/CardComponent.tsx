@@ -5,14 +5,8 @@ import Link from 'next/link';
 import React, { FC } from 'react';
 import Basket from '@/images/card-component/busket.svg';
 import { CardProps } from '@/config/types';
-
-const handleAddToBasket = (
-  e: React.MouseEvent<HTMLButtonElement>,
-  id: string
-) => {
-  e.preventDefault();
-  console.log(`add to basket product with id: ${id}`);
-};
+import { useCart } from '@/hooks/useCart';
+import { getProductById } from '@/lib/products';
 
 const CardComponent: FC<CardProps> = ({
   id,
@@ -21,6 +15,25 @@ const CardComponent: FC<CardProps> = ({
   images,
   productType,
 }) => {
+  const { addToCart, isOpen, changeOpenState } = useCart();
+
+  const handleAddToBasket = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    e.preventDefault();
+
+    const getProdById = async () => {
+      const prod = await getProductById(id);
+
+      !isOpen && changeOpenState(true);
+
+      addToCart(prod);
+    };
+
+    getProdById();
+  };
+
   return (
     <div className="flex flex-col items-center font-poppins">
       <div className="relative group rounded-md overflow-hidden">

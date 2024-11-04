@@ -15,3 +15,12 @@ export type CardProps = {
   images: string[];
   opyions: CardPropsOptions[];
 };
+
+export type CartProductProps = {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  caseColor: string;
+  strapColor: string;
+};
