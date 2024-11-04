@@ -168,6 +168,7 @@ const CheckoutSection = () => {
         return null;
       case "phone":
         if (!value) return "Enter phone number";
+        if (!/^\d{10}$/.test(value)) return "Enter valid phone number";
         return null;
       case "zipCode":
         if (!value) return "Enter zip code";
@@ -222,7 +223,7 @@ const CheckoutSection = () => {
           currency: "UAH",
           customerId: "",
           email: formValues.email,
-          phone: formValues.phone,
+          phone: "+38" + formValues.phone,
           shippingAddress: {
             firstName: formValues.firstName,
             lastName: formValues.lastName,
@@ -255,6 +256,8 @@ const CheckoutSection = () => {
           zipCode: "",
           country: "",
         });
+
+        setSelectedOption(null);
       } catch (error) {
         console.error("Error:", error);
       }
