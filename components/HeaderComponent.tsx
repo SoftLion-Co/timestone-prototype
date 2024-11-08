@@ -12,6 +12,7 @@ import { Modal, Button, ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Close from '@/images/vectors/close.svg';
 import Burger from '@/images/vectors/burger.svg';
+import { useCart } from '@/hooks/useCart';
 
 const navData = [
   { link: '/ua/category-page', text: 'Watches' },
@@ -23,6 +24,8 @@ const navData = [
 
 const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
+
+  const { products, changeOpenState } = useCart();
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
@@ -44,9 +47,22 @@ const Header = () => {
         </div>
 
         <div className="flex gap-[25px]">
-          <Link href="/">
+          {/* <Link href="/">
             <Image src={Basket} alt="Basket" />
-          </Link>
+          </Link> */}
+          <button
+            className="relative"
+            onClick={(e) => {
+              e.preventDefault();
+              changeOpenState(true);
+            }}>
+            {products.length > 0 && (
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-3.5">
+                {products.length}
+              </div>
+            )}
+            <Image src={Basket} alt="Basket" />
+          </button>
           <Link href="/">
             <Image src={Profile} alt="Profile" />
           </Link>
