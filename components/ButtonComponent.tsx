@@ -1,7 +1,10 @@
-import React, { FC } from 'react';
-import Image from 'next/image';
-import Cube from '@/images/vectors/cube.svg';
-import Profile from '@/images/vectors/profile.svg';
+
+import React, { FC } from "react";
+import Image from "next/image";
+import Cube from "@/images/vectors/cube.svg";
+import Profile from "@/images/vectors/profile.svg";
+import FacebookIcon from "@/images/authorization-page/facebook-icon.svg";
+import GoogleIcon from "@/images/authorization-page/google-icon.svg";
 
 interface ButtonProps {
   text: string;
@@ -11,7 +14,7 @@ interface ButtonProps {
   bordered?: boolean;
   fullWidth?: boolean;
   onClick?: () => void;
-  icon?: 'cube' | 'profile';
+  icon?: "cube" | "profile" | "facebook" | "google";
 }
 
 const Button: FC<ButtonProps> = ({
@@ -68,6 +71,28 @@ const Button: FC<ButtonProps> = ({
           alt="Profile"
           width={20}
           height={20}
+          className="mr-2 inline-block"
+        />
+      );
+    }
+    if (icon === "facebook") {
+      return (
+        <Image
+          src={FacebookIcon}
+          alt="Facebook icon"
+          width={14}
+          height={14}
+          className="mr-2 inline-block"
+        />
+      );
+    }
+    if (icon === "google") {
+      return (
+        <Image
+          src={GoogleIcon}
+          alt="Facebook icon"
+          width={22}
+          height={22}
           className="mr-2 inline-block"
         />
       );

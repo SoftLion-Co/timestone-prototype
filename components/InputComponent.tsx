@@ -1,7 +1,6 @@
 "use client";
 import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-
 import Image from "next/image";
 import Arrow from "@/images/news-section/arrow.svg";
 
@@ -20,6 +19,7 @@ interface InputProps {
   showSelect?: boolean;
   options?: Option[];
   onSelect?: (value: string) => void;
+  scrollable?: boolean;
 }
 
 type Option = {
@@ -42,14 +42,12 @@ const InputComponent: FC<InputProps> = ({
   onChange,
   options,
   onSelect,
+  scrollable = false,
 }) => {
   const backgroundClass = bordered ? "transparent" : background;
   const textClass = background ? "text-silver" : "";
-  const borderClass = error
-    ? "border border-darkBurgundy border-solid"
-    : bordered
-    ? "border border-whisper border-solid"
-    : "";
+
+  const borderClass = bordered ? "border border-whisper border-solid" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +102,9 @@ const InputComponent: FC<InputProps> = ({
 
           {isOpen && (
             <motion.ul
-              className="absolute mt-2 w-full border border-gray-300 rounded-lg bg-snow z-10"
+              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-snow z-10 ${
+                scrollable ? "max-h-[160px] overflow-y-auto" : ""
+              }`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
