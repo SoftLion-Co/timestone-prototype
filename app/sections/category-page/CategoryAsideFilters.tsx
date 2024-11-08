@@ -8,7 +8,7 @@ import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
 import { CardProps } from '@/config/types';
-import { getProducts } from '@/lib/products';
+import { getProducts } from '@/services/ProductService';
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,

@@ -6,7 +6,7 @@ import { usePagination } from '@mantine/hooks';
 
 import { useFilters } from '@/hooks/useFilters';
 import CardComponent from '@/components/CardComponent';
-import CustomSelect from '@/components/test-select/SelectComponent';
+import CustomSelect from '@/components/SelectComponent';
 import ProductSceleton from './ProductSceleton';
 import { CardProps } from '@/config/types';
 import { ProductsContext } from './CategoryMain';

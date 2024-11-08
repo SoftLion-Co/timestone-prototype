@@ -1,9 +1,9 @@
-import Image1 from "@/images/product-page/image-1.svg";
-import Image2 from "@/images/product-page/image-2.svg";
-import Image3 from "@/images/product-page/image-3.svg";
-import Image4 from "@/images/product-page/image-4.svg";
-import Image5 from "@/images/product-page/image-5.svg";
-import Image6 from "@/images/product-page/image-6.svg";
+import Image1 from "@/test/images/watch/image-1.svg";
+import Image2 from "@/test/images/watch/image-2.svg";
+import Image3 from "@/test/images/watch/image-3.svg";
+import Image4 from "@/test/images/watch/image-4.svg";
+import Image5 from "@/test/images/watch/image-5.svg";
+import Image6 from "@/test/images/watch/image-6.svg";
 
 export const PRODUCT_DATA = {
   case_color: "black",

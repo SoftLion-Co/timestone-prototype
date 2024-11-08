@@ -8,9 +8,9 @@ import "@mantine/carousel/styles.css";
 import Button from "@/components/ButtonComponent";
 
 import ImgArrow from "@/images/vectors/arrow.svg";
-import TestImgWatch1 from "@/images/test-watches/watch-1.png";
-import TestImgWatch2 from "@/images/test-watches/watch-2.png";
-import TestImgWatch3 from "@/images/test-watches/watch-3.png";
+import TestImgWatch1 from "@/test/images/watches/watch-1.png";
+import TestImgWatch2 from "@/test/images/watches/watch-2.png";
+import TestImgWatch3 from "@/test/images/watches/watch-3.png";
 
 const textSliderObject = {
   title: "Watches",

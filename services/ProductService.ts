@@ -1,4 +1,5 @@
-const PRODUCT_API = 'http://localhost:4001/product';
+import axios from "axios";
+import {BASE_URL} from "@/config/config";
 
 export const getProducts = async (
   filters?: object,
@@ -6,7 +7,7 @@ export const getProducts = async (
   pageCursor?: string
 ) => {
   try {
-    const res = await fetch(PRODUCT_API, {
+    const res = await fetch(`${BASE_URL}/product`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,9 +27,9 @@ export const getProducts = async (
   }
 };
 
-export const getProductById = async (id: string) => {
+export const getProductByHandle = async (handle: string) => {
   try {
-    const res = await fetch(`${PRODUCT_API}/id?id=${id}`);
+    const res = await fetch(`${BASE_URL}/product/${handle}`);
 
     if (!res.ok) {
       const errorMessage = await res.text();

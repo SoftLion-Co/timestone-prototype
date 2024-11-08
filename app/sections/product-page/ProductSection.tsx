@@ -4,7 +4,7 @@ import { Carousel } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import Button from "@/components/ButtonComponent";
 import Image from "next/image";
-import { PRODUCT_DATA } from "@/config/productData";
+import { PRODUCT_DATA } from "@/test/productData";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
 import TitleComponents from "@/components/TitleComponents";

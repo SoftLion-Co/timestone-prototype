@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import TestImgWoman from "@/images/test-our-mission/watch-on-woman.png";
+import TestImgWoman from "@/images/our-mission/watch-on-woman.png";
 import Button from "@/components/ButtonComponent";
 
 const textOurMissionObject = {

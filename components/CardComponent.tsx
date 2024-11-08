@@ -6,7 +6,7 @@ import React, { FC } from 'react';
 import Basket from '@/images/card-component/busket.svg';
 import { CardProps } from '@/config/types';
 import { useCart } from '@/hooks/useCart';
-import { getProductById } from '@/lib/products';
+import { getProductByHandle } from '@/services/ProductService';
 
 const CardComponent: FC<CardProps> = ({
   id,
@@ -24,7 +24,7 @@ const CardComponent: FC<CardProps> = ({
     e.preventDefault();
 
     const getProdById = async () => {
-      const prod = await getProductById(id);
+      const prod = await getProductByHandle(id);
 
       !isOpen && changeOpenState(true);
 

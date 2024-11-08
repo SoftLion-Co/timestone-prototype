@@ -4,14 +4,14 @@ import Title from "@/components/TitleComponents";
 import FormComponent from "@/components/FormComponent";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
-import Arrow from "@/images/checkout-section/TopArrow.svg";
+import Arrow from "@/images/checkout-section/topArrow.svg";
 import Image from "next/image";
 import Checkbox from "@/components/CheckboxComponent";
 import { motion } from "framer-motion";
 import CartComponent from "@/components/CartComponent";
 import { CreateOrder } from "@/services/OrderService";
 import { Product } from "@/config/types";
-import { PRODUCT_DATA } from "@/config/productExample";
+import { PRODUCT_DATA } from "@/test/productExample";
 
 const CheckoutSection = () => {
   const [isOpen, setIsOpen] = useState(true);
