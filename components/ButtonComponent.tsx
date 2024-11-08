@@ -6,6 +6,9 @@ import Profile from "@/images/vectors/profile.svg";
 interface ButtonProps {
   text: string;
   className?: string;
+  href?: string;
+  target?: string;
+  tag?: "a" | "button";
   type?: "button" | "submit" | "reset";
   background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
@@ -17,6 +20,9 @@ interface ButtonProps {
 const Button: FC<ButtonProps> = ({
   text,
   className,
+  href,
+  target,
+  tag = "button",
   type = "button",
   background = "darkBurgundy",
   bordered = false,
@@ -24,6 +30,7 @@ const Button: FC<ButtonProps> = ({
   onClick,
   icon,
 }) => {
+  const Tag = tag
   const finalBackground = bordered ? "transparent" : background;
   const backgroundClass =
     finalBackground === "darkBurgundy"
@@ -76,14 +83,16 @@ const Button: FC<ButtonProps> = ({
   };
 
   return (
-    <button
+    <Tag
       className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
       type={type}
+      target={target}
+      href={href}
       onClick={onClick}
     >
       {renderIcon()}
       {text}
-    </button>
+    </Tag>
   );
 };
 
