@@ -1,22 +1,34 @@
-import { StaticImageData } from 'next/image';
+export type CardPropsOptions = {
+  name: string;
+  values: string[];
+};
 
 export type CardProps = {
-  product_id: string;
-  model: string;
-  price: number;
-  photo_url: StaticImageData;
-  type: string;
+  id: string;
+  title: string;
+  productType: string;
+  bodyHtml: string;
   country: string;
-  case: string;
-  case_size: number;
-  case_color: string;
-  straps: string;
-  strap_color: string;
-  dial_color: string;
-  coating: string;
-  glass: string;
-  water_resistance: string;
-  movement: string;
-  instantaneus_rate: string;
-  standard_battery_life: string;
+  minPrice: number;
+  maxPrice: number;
+  currencyCode: string;
+  images: string[];
+  opyions: CardPropsOptions[];
 };
+
+export type CartProductProps = {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  caseColor: string;
+  strapColor: string;
+};
+
+export type Product =  {
+  id: string;
+  title: string;
+  minPrice: string;
+  quantity: number;
+  images: string[];
+}

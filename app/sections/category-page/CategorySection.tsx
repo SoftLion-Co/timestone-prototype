@@ -1,49 +1,55 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+
 import { usePagination } from '@mantine/hooks';
 
 import { useFilters } from '@/hooks/useFilters';
-
-import { CARD_INFORMATION } from '@/config/constants';
-
 import CardComponent from '@/components/CardComponent';
 import CustomSelect from '@/components/test-select/SelectComponent';
 import ProductSceleton from './ProductSceleton';
+import { CardProps } from '@/config/types';
+import { ProductsContext } from './CategoryMain';
 
-const CategorySection = () => {
-  const { filters, dispatch } = useFilters();
+const ITEM_TO_SHOW = 9;
 
-  const [itemToShow, setItemToShow] = useState(9);
-  const [products, setProducts] = useState(CARD_INFORMATION);
+const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
+  const allProducts1 = useContext(ProductsContext);
+
+  const { dispatch } = useFilters();
+
+  const [visibleProducts, setVisibleProducts] = useState<CardProps[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [visibleProducts, setVisibleProducts] = useState(
-    products.slice(0, itemToShow)
-  );
-
   const pagination = usePagination({
-    total: Math.ceil(products.length / itemToShow),
+    total: Math.ceil(totalProducts / ITEM_TO_SHOW),
     initialPage: 1,
     onChange(page) {
-      const start = (page - 1) * itemToShow;
-      const end = start + itemToShow;
-      setVisibleProducts(products.slice(start, end));
+      const start = (page - 1) * ITEM_TO_SHOW;
+      const end = start + ITEM_TO_SHOW;
+      setVisibleProducts(allProducts1.slice(start, end));
     },
   });
 
   useEffect(() => {
-    setIsLoading(false);
-  }, []);
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setVisibleProducts(allProducts1.slice(0, ITEM_TO_SHOW));
+      pagination.setPage(1);
+      setIsLoading(false);
+    }, 700);
+  }, [allProducts1]);
 
   const handleChangePage = (range: number) => {
     pagination.setPage(+range);
-    window.scrollTo({ top: 80, behavior: 'smooth' });
+    window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
   const handleChangeCountry = (value: string) => {
-    dispatch({ type: 'SET_COUNTRY', payload: value });
+    let arr = [value];
+    dispatch({ type: 'SET_COUNTRIES', payload: arr });
   };
 
   const handleChangeSorting = (value: string) => {
@@ -53,17 +59,6 @@ const CategorySection = () => {
   return (
     <section className="pt-[43px] pb-[70px] sm:px-[60px] flex-1">
       <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
-        <CustomSelect
-          left
-          placeholder="Countries"
-          options={[
-            { value: 'USA', label: 'USA' },
-            { value: 'Ukraine', label: 'Ukraine' },
-            { value: 'Germany', label: 'Germany' },
-          ]}
-          onSelect={handleChangeCountry}
-        />
-
         <CustomSelect
           left
           placeholder="Sort By"
@@ -78,17 +73,18 @@ const CategorySection = () => {
 
       {isLoading ? (
         <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {Array.from({ length: itemToShow }, (_, index) => (
+          {Array.from({ length: 6 }, (_, index) => (
             <ProductSceleton key={index} />
           ))}
         </div>
       ) : (
         <>
           <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-            {visibleProducts.map((cardProps) => (
-              <CardComponent {...cardProps} key={cardProps.product_id} />
+            {visibleProducts.map((card: CardProps) => (
+              <CardComponent {...card} key={card.id} />
             ))}
           </div>
+
           <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
             {pagination.range.map((range) =>
               range === 'dots' ? (
