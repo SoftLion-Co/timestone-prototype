@@ -9,8 +9,11 @@ import GoogleIcon from "@/images/authorization-page/google-icon.svg";
 interface ButtonProps {
   text: string;
   className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  background?: 'darkBurgundy' | 'transparent' | 'onyx';
+  href?: string;
+  target?: string;
+  tag?: "a" | "button";
+  type?: "button" | "submit" | "reset";
+  background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
   onClick?: () => void;
@@ -20,14 +23,18 @@ interface ButtonProps {
 const Button: FC<ButtonProps> = ({
   text,
   className,
-  type = 'button',
-  background = 'darkBurgundy',
+  href,
+  target,
+  tag = "button",
+  type = "button",
+  background = "darkBurgundy",
   bordered = false,
   fullWidth = false,
   onClick,
   icon,
 }) => {
-  const finalBackground = bordered ? 'transparent' : background;
+  const Tag = tag
+  const finalBackground = bordered ? "transparent" : background;
   const backgroundClass =
     finalBackground === 'darkBurgundy'
       ? 'bg-darkBurgundy'
@@ -101,13 +108,16 @@ const Button: FC<ButtonProps> = ({
   };
 
   return (
-    <button
+    <Tag
       className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
       type={type}
-      onClick={onClick}>
+      target={target}
+      href={href}
+      onClick={onClick}
+    >
       {renderIcon()}
       {text}
-    </button>
+    </Tag>
   );
 };
 
