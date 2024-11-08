@@ -1,7 +1,6 @@
 "use client";
-import React, { FC, useState, useRef, useEffect } from "react";
+import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-
 import Image from "next/image";
 import Arrow from "@/images/news-section/arrow.svg";
 
@@ -12,10 +11,11 @@ interface InputProps {
   background?: "snow";
   bordered?: boolean;
   fullWidth?: boolean;
-  required?: boolean;
   pattern?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string | null;
+  name?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   showSelect?: boolean;
   options?: Option[];
   onSelect?: (value: string) => void;
@@ -34,10 +34,11 @@ const InputComponent: FC<InputProps> = ({
   background = "snow",
   bordered = false,
   fullWidth = false,
-  required = false,
   showSelect,
   pattern,
   value,
+  name,
+  error,
   onChange,
   options,
   onSelect,
@@ -45,6 +46,7 @@ const InputComponent: FC<InputProps> = ({
 }) => {
   const backgroundClass = bordered ? "transparent" : background;
   const textClass = background ? "text-silver" : "";
+
   const borderClass = bordered ? "border border-whisper border-solid" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
@@ -76,7 +78,10 @@ const InputComponent: FC<InputProps> = ({
   return (
     <>
       {showSelect ? (
-        <div className="relative w-[272px] mini:w-[320px]" ref={selectRef}>
+        <div
+          className={`${className} relative w-full mini:w-[320px]`}
+          ref={selectRef}
+        >
           <div
             className="border border-gray-300 rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver"
             onClick={toggleDropdown}
@@ -119,15 +124,16 @@ const InputComponent: FC<InputProps> = ({
         </div>
       ) : (
         <input
-          className={`${className} ${backgroundClass} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] mini:w-[320px]`}
+          className={`${className} ${backgroundClass} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] mini:w-[320px] focus:outline-none focus:ring-1 focus:ring-onyx`}
           type={type}
           placeholder={placeholder}
-          required={required}
           pattern={pattern}
           value={value}
+          name={name}
           onChange={onChange}
         />
       )}
+      {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
     </>
   );
 };

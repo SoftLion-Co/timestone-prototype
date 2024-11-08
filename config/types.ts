@@ -24,3 +24,11 @@ export type CartProductProps = {
   caseColor: string;
   strapColor: string;
 };
+
+export type Product =  {
+  id: string;
+  title: string;
+  minPrice: string;
+  quantity: number;
+  images: string[];
+}
