@@ -32,6 +32,7 @@ const config: Config = {
         onyx: '#000000',
         snow: '#ffffff',
         charcoal: '#202020',
+        whisper: '#EAECF5',
 
         //new colors
 
