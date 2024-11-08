@@ -23,7 +23,7 @@
     "classnames": "^2.5.1",
     "embla-carousel-react": "^8.2.0",
     "framer-motion": "^11.5.4",
-    "next": "14.2.7",
+    "next": "^15.0.3-canary.5",
     "normalize.css": "^8.0.1",
     "postcss": "8.4.41",
     "project-prototype": "file:",

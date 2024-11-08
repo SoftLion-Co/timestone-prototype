@@ -7,6 +7,8 @@ import Header from '@/components/HeaderComponent';
 import Footer from '@/components/FooterComponent';
 import { MantineProvider } from '@mantine/core';
 import { FiltersProvider } from '@/hooks/useFilters';
+import CartComponent from '@/components/cart-component/CartComponent';
+import { CartProvider } from '@/hooks/useCart';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,13 +25,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FiltersProvider>
-          <MantineProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </MantineProvider>
-        </FiltersProvider>
+        <CartProvider>
+          <FiltersProvider>
+            <MantineProvider>
+              <Header />
+              <CartComponent />
+              <main>{children}</main>
+              <Footer />
+            </MantineProvider>
+          </FiltersProvider>
+        </CartProvider>
       </body>
     </html>
   );
