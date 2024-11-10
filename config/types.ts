@@ -13,7 +13,7 @@ export type CardProps = {
   maxPrice: number;
   currencyCode: string;
   images: string[];
-  opyions: CardPropsOptions[];
+  options: CardPropsOptions[];
 };
 
 export type CartProductProps = {
@@ -31,4 +31,5 @@ export type Product =  {
   minPrice: string;
   quantity: number;
   images: string[];
+  description: string;
 }

@@ -2,7 +2,7 @@ export const PRODUCT_DATA = [
   {
     id: "gid://shopify/Product/9528884298014",
     title: "Molumenzeit S 2",
-    bodyHtml:
+    description:
       '<p><meta charset="utf-8"><span></span><span></span><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim facilisi elementum commodo ipsum. Aenean aenean adipiscing lect</span></p>\n<ul>\n<li>\n<span>Case:</span> <span>316L Stainless-steel</span>\n</li>\n<li>\n<span>Coating:</span> <span>Color anodized anti-scratch</span>\n</li>\n<li>\n<span>Glass:</span> <span>Sapphire Crystal</span>\n</li>\n<li>\n<span>Straps:</span> <span>22mm Stainless-steel bracelet</span>\n</li>\n<li>\n<span>Case Size:</span> <span>42mm</span>\n</li>\n<li>\n<span>Case Color:</span> Black</li>\n<li>Dial Color:<span style="font-size: 0.875rem;"> </span><span style="font-size: 0.875rem;">Black Metallic</span>\n</li>\n<li>\n<span>Water Resistance: </span> <span>5 ATM/50 meters</span>\n</li>\n<li>\n<span>Water Resistance:</span> <span>5 ATM/50 meters</span>\n</li>\n<li>\n<span>Straps: </span> <span>Quick release</span>\n</li>\n<li>\n<span>Movement:</span> <span>Swiss Parts RONDA 762E</span>\n</li>\n<li>\n<span>Instantaneous rate:</span> <span>-10/ +20 sec/month</span>\n</li>\n<li>\n<span>Standard Battery life:</span> <span>10 years</span>\n</li>\n</ul>',
     productType: "watches",
     minPrice: "17000.0",
@@ -37,7 +37,7 @@ export const PRODUCT_DATA = [
   {
     id: "gid://shopify/Product/9528884298014",
     title: "Molumenzeit S 2",
-    bodyHtml:
+    description:
       '<p><meta charset="utf-8"><span></span><span></span><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim facilisi elementum commodo ipsum. Aenean aenean adipiscing lect</span></p>\n<ul>\n<li>\n<span>Case:</span> <span>316L Stainless-steel</span>\n</li>\n<li>\n<span>Coating:</span> <span>Color anodized anti-scratch</span>\n</li>\n<li>\n<span>Glass:</span> <span>Sapphire Crystal</span>\n</li>\n<li>\n<span>Straps:</span> <span>22mm Stainless-steel bracelet</span>\n</li>\n<li>\n<span>Case Size:</span> <span>42mm</span>\n</li>\n<li>\n<span>Case Color:</span> Black</li>\n<li>Dial Color:<span style="font-size: 0.875rem;"> </span><span style="font-size: 0.875rem;">Black Metallic</span>\n</li>\n<li>\n<span>Water Resistance: </span> <span>5 ATM/50 meters</span>\n</li>\n<li>\n<span>Water Resistance:</span> <span>5 ATM/50 meters</span>\n</li>\n<li>\n<span>Straps: </span> <span>Quick release</span>\n</li>\n<li>\n<span>Movement:</span> <span>Swiss Parts RONDA 762E</span>\n</li>\n<li>\n<span>Instantaneous rate:</span> <span>-10/ +20 sec/month</span>\n</li>\n<li>\n<span>Standard Battery life:</span> <span>10 years</span>\n</li>\n</ul>',
     productType: "watches",
     minPrice: "15000.0",
