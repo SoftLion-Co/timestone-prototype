@@ -266,7 +266,7 @@ const AuthorizationSection = () => {
         />
       </div>
 
-      <form className="flex flex-col bg-snow w-[360px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-silver rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
+      <form className="flex flex-col bg-snow w-[360px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-gray-300 rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
         <div className="mb-[28px] lg:flex lg:space-between mt-[24px] lg:mt-[60px] items-center">
           {["Login", "Create Account"].map((title, index) => {
             const isActive = isLoginPage ? index === 0 : index === 1;
