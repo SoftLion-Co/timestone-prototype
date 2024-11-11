@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Watch from "@/images/test_watch.png";
+import Watch from "@/test/images/test_watch.png";
 
 import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
@@ -10,6 +10,7 @@ import Facebook from "@/images/social-networks/facebook.svg";
 import FollowUs from "@/images/social-networks/follow-us.svg";
 
 import Button from "@/components/ButtonComponent";
+import TitleComponents from "@/components/TitleComponents";
 
 interface HeroProps {
   className?: string;
@@ -55,28 +56,31 @@ const Links: FC<HeroProps> = ({ className }) => {
 
 const HeroSection: FC = () => {
   return (
-    <section className="relative py-[40px] lg:py-[80px]">
-      <div className="flex flex-col items-center mx-[20px] lg:mx-[60px] gap-[40px] lg:flex-row lg:gap-[90px] lg:items-start xl:items-end">
+    <section className="flex flex-col relative py-[40px] lg:py-[60px]">
+      <div className="flex flex-col items-center mx-[20px] lg:mx-[60px] gap-[40px] lg:flex-row lg:gap-[90px] lg:items-start xl:items-center">
         <Links className="hidden lg:grid" />
 
-        <div className="text-center lg:flex lg:flex-col lg:text-left mini:w-[400px] lg:w-[550px]">
-          <h1 className="text-[40px] xl:text-[60px] text-onyx mb-[30px]">
+        <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">
+          <h1 className="font-spaceage text-black leading-[50px] mb-4 md:mb-[20px] text-[40px] lg:text-[45px] lg:mb-[25px] xl:text-[60px] ">
             FIND YOUR DREAM WATCH
           </h1>
 
-          <p className="text-silver lg:text-left mb-[30px]">
+          <p className="text-silver md:text-[14px] lg:text-left mb-[30px]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim
             facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
           </p>
 
-          <Button text="Your Watch" />
+          <Button text="Your Watch" tag="a" href="/ua/catalog" />
         </div>
 
         <Links className="grid lg:hidden" />
       </div>
 
+      <div className="flex justify-end lg:hidden">
+        <Image className="object-contain" src={Watch} alt="Watch" width={800}/>
+      </div>
       <Image
-        className="object-contain right-0 sm:hidden lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px]"
+        className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[620px] xl:w-auto"
         src={Watch}
         alt="Watch"
       />

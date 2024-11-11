@@ -71,7 +71,7 @@ const SortAndLimitProducts = (items: typeof TestWatchesImages) => {
 
 const SliderSection = () => {
   return (
-    <section className="container">
+    <section className="container py-[40px] lg:py-[80px]">
       <div>
         <h1 className="font-spaceAge text-center text-[48px] lg:text-left">
           {textSliderObject.title}
