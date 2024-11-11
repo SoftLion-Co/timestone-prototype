@@ -14,7 +14,7 @@ const textOurMissionObject = {
 const OurMissionSection = () => {
   return (
     <section className="bg-onyx mb-[20px]">
-      <div className="flex flex-col items-center md:flex-row md:gap-[140px] lg:gap-[280px]">
+      <div className="flex flex-col items-center md:flex-row md:gap-[140px] lg:gap-x-[250px]">
         <div className="relative w-full md:w-auto">
           <Image
             src={TestImgWoman}
@@ -30,8 +30,8 @@ const OurMissionSection = () => {
           />
         </div>
 
-        <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] md:py-0 ">
-          <h1 className="font-spaceAge text-[28px] lg:text-[48px]">
+        <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] lg:w-[400px] md:mx-0 md:py-0 ">
+          <h1 className="font-spaceage leading-[50px] text-[28px] md:text-[32px] lg:text-[48px]">
             {textOurMissionObject.title}
           </h1>
           <p className="font-poppins text-default">
@@ -40,7 +40,7 @@ const OurMissionSection = () => {
           <p className="font-poppins text-default">
             {textOurMissionObject.textParagraph2}
           </p>
-          <Button text="Design Your Watch" className="w-[208px]" />
+          <Button text="Contact Us" tag="a" href="/ua/contact-us" />
         </div>
       </div>
     </section>
