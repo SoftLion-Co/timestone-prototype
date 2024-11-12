@@ -4,37 +4,98 @@ import { Carousel } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import Button from "@/components/ButtonComponent";
 import Image from "next/image";
-import { PRODUCT_DATA } from "@/test/productExample";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
 import TitleComponents from "@/components/TitleComponents";
 import { Product } from "@/config/types";
 import { NumberInput } from "@mantine/core";
+import { getProductByHandle } from "@/services/ProductService";
+import { UnstyledButton } from "@mantine/core";
+import Arrow from "@/images/product-page/control-arrow.svg";
 
 interface productProps {
-  productData: Product 
+  productName: string;
+}
 
-// const slides = PRODUCT_DATA.images.slice(1).map((item, index) => (
-//   <Carousel.Slide key={index}>
-//     <img src={item} width={350} height={365} alt={`Image${index + 1}`} />
-//   </Carousel.Slide>
-// ));
-
-const ProductSection: FC<productProps> = ({ productData }) => {
+const ProductSection: FC<productProps> = ({ productName }) => {
   const [isOutOfStock, setIsOutOfStock] = useState<boolean>(false);
-  const [maxQuantity, setMaxQuantity] = useState<number>();
-  const [quantity, setQuantity] = useState<number>();
+  const [maxQuantity, setMaxQuantity] = useState<number>(100);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [product, setProduct] = useState<Product>();
+  const [isLouding, setIsLouding] = useState<boolean>(true);
 
-  useEffect(() => { 
-      setQuantity( 
-        productData.quantity && 
-          productData.quantity > 0 
-          ? 1 
-          : 0 
-      ); 
-      setIsOutOfStock(productData.quantity === 0); 
-      setMaxQuantity(productData.quantity || 0); 
-  }, []);
+  const slides = product?.images?.slice(1).map((item, index) => (
+    <Carousel.Slide key={index}>
+      <img src={item} width={350} height={365} alt={`Image${index + 1}`} />
+    </Carousel.Slide>
+  ));
+
+  const handleQuantityChange = (value: number | string | undefined) => {
+    const numericValue = typeof value === "string" ? parseFloat(value) : value;
+    if (!isNaN(numericValue as number)) {
+      setQuantity(numericValue as number);
+    }
+  };
+
+  const handleIncrement = () => {
+    const newValue = Math.min(quantity + 1, maxQuantity);
+    handleQuantityChange(newValue);
+  };
+
+  const handleDecrement = () => {
+    const newValue = Math.max(quantity - 1, 1);
+    handleQuantityChange(newValue);
+  };
+
+  const handlePlaceAnOrder = () => {};
+
+  const controls = (
+    <div className="flex flex-col items-center justify-center h-full gap-[4px]">
+      <UnstyledButton
+        className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+        disabled={quantity >= maxQuantity || isOutOfStock}
+        onClick={handleIncrement}
+      >
+        <Image src={Arrow} alt="Up Arrow" width={16} height={16} />
+      </UnstyledButton>
+      <UnstyledButton
+        className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+        disabled={quantity <= 1 || isOutOfStock}
+        onClick={handleDecrement}
+      >
+        <Image src={Arrow} alt="Down Arrow" className="transform rotate-180" />
+      </UnstyledButton>
+    </div>
+  );
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const productData: Product = await getProductByHandle(productName);
+        if (productData) {
+          setProduct(productData);
+          setQuantity(productData.quantity && productData.quantity > 0 ? 1 : 0);
+          setIsOutOfStock(productData.quantity === 0);
+          setMaxQuantity(productData.quantity || 0);
+
+          setIsLouding(true);
+        } else {
+          console.error("Product not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch product data:", error);
+      }
+    };
+    fetchProduct();
+  }, [productName]);
+
+  if (!isLouding) {
+    return <div>Please wait, data is loading</div>;
+  }
+  const modifiedDescription = product?.description?.replace(
+    /<p><meta charset="utf-8"><span><\/span><span><\/span><span>.*?<\/span><\/p>/,
+    ""
+  );
 
   return (
     <section>
@@ -44,7 +105,7 @@ const ProductSection: FC<productProps> = ({ productData }) => {
       />
       <div className="container flex flex-col md:flex-row gap-[100px] justify-items-center py-[30px] xl:py-[65px]">
         <div className="hidden xl:block xl:flex xl:flex-wrap xl:flex-row xl:gap-[30px]">
-          {productData?.images.slice(1).map((item, index) => (
+          {product?.images?.slice(1).map((item, index) => (
             <img
               key={index}
               src={item}
@@ -79,26 +140,12 @@ const ProductSection: FC<productProps> = ({ productData }) => {
               />
             }
           >
-            {/* {slides} */}
+            {slides}
           </Carousel>
         </div>
-        <NumberInput 
-            type="text" 
-            max={maxQuantity} 
-            min={1} 
-            value={quantity} 
-          //  onChange={handleQuantityChange} 
-            classNames={{ 
-              control: "border-none before:hidden after:hidden", 
-              input: "focus:border-primary h-[44px] w-[80px] text-xs", 
-            }} 
-            disabled={isOutOfStock} 
-          />
-          {isOutOfStock && ( 
-              <p className="text-red-500">Немає в наявності</p> 
-            )}
+
         <div className="flex flex-col items-center text-center">
-          <h3 className="text-[32px]">{productData?.title}</h3>
+          <h3 className="text-[32px]">{product?.title}</h3>
           <p className="text-[12px] my-[20px] w-[350px] md:w-[400px] text-silver">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim
             facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
@@ -106,18 +153,10 @@ const ProductSection: FC<productProps> = ({ productData }) => {
 
           <hr className="hidden xl:block w-[350px] md:w-[400px]" />
 
-          <div className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none">
-          {/* <div dangerouslySetInnerHTML={{ __html: productData.description }} /> */}
-            {/* {ProductValue.map((item, index) => (
-              <p
-              key={index}
-              className="text-[10px] text-silver flex flex-row justify-between"
-              >
-              <span>{item.label}</span>
-              <span>{item.value}</span>
-              </p>
-              ))} */}
-          </div>
+          <div
+            className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[10px] text-left"
+            dangerouslySetInnerHTML={{ __html: modifiedDescription || " " }}
+          />
 
           <hr className="hidden xl:block w-[400px]" />
 
@@ -125,44 +164,28 @@ const ProductSection: FC<productProps> = ({ productData }) => {
             <Button
               text="Place an order"
               className="mini:w-[80%] w-[100%] px-[50px]"
+              onClick={handlePlaceAnOrder}
             />
-            <span className="text-[20px] px-[10px]">
-              {/* {PRODUCT_DATA.minPrice}$ */}
-            </span>
+
+            <NumberInput
+              type="text"
+              max={maxQuantity}
+              min={1}
+              value={quantity}
+              onChange={handleQuantityChange}
+              rightSection={controls}
+              classNames={{
+                input: "focus:border-whisper h-[44px] w-[80px] text-xs",
+              }}
+              disabled={isOutOfStock}
+            />
+            {isOutOfStock && <p className="text-red-500">Немає в наявності</p>}
+
+            <span className="text-[20px] px-[10px]">{product?.minPrice}$</span>
           </div>
-
-          {/* <Button
-            className="w-[350px] md:w-[400px]"
-            text="Try on in AR Online"
-            icon="cube"
-            bordered
-            /> */}
-
-          {/* <Button
-            text="Design Your Watch"
-            className="my-[30px] w-[350px] md:w-[400px]"
-            /> */}
         </div>
       </div>
     </section>
   );
 };
 export default ProductSection;
-
-// const ProductValue = [
-//   { label: "Case:", value: PRODUCT_DATA.case },
-//   { label: "Coating:", value: PRODUCT_DATA.coating },
-//   { label: "Glass:", value: PRODUCT_DATA.glass },
-//   { label: "Straps:", value: "22mm Stainless-steel bracelet" },
-//   { label: "Case Size:", value: `${PRODUCT_DATA.case_size}mm` },
-//   { label: "Case Color: ", value: PRODUCT_DATA.case_color },
-//   { label: "Dial Color:", value: PRODUCT_DATA.dial_color },
-//   { label: "Water Resistance:", value: PRODUCT_DATA.water_resistance },
-//   { label: "Straps:", value: PRODUCT_DATA.straps },
-//   { label: "Movement:", value: PRODUCT_DATA.movement },
-//   { label: "Instantaneous rate:", value: PRODUCT_DATA.instantaneus_rate },
-//   {
-//     label: "Standard Battery life:",
-//     value: PRODUCT_DATA.standard_battery_life,
-//   },
-// ];

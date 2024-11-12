@@ -1,5 +1,5 @@
 import axios from "axios";
-import {BASE_URL} from "@/config/config";
+import { BASE_URL } from "@/config/config";
 
 export const CreateOrder = async (order: any, options: any): Promise<any> => {
   try {
