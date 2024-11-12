@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 import { Carousel } from "@mantine/carousel";
@@ -8,7 +8,9 @@ import "@mantine/carousel/styles.css";
 import Button from "@/components/ButtonComponent";
 import ImgArrow from "@/images/vectors/arrow.svg";
 
-import { TestSliderProducts } from "@/test/sliderProducts"
+import { TestSliderProducts } from "@/test/sliderProducts";
+import CardComponent from "@/components/CardComponent";
+import { CardProps } from "@/config/types";
 
 const textSliderObject = {
   title: "Watches",
@@ -19,16 +21,20 @@ const textSliderObject = {
 };
 
 
-const SortAndLimitProducts = (items: typeof TestSliderProducts) => {
-  return items
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )
-    .slice(0, 12);
-};
+// const SortAndLimitProducts = (items: typeof TestSliderProducts) => {
+//   return items
+//     .sort(
+//       (a, b) =>
+//         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+//     )
+//     .slice(0, 12);
+// };
+// з фільтрацією беде сетслайдер продуктс
 
 const SliderSection = () => {
+
+  const [sliderProducts, setSliderProducts] = useState<CardProps[]>(TestSliderProducts);
+
   return (
     <section className="container">
       <div>
@@ -49,8 +55,8 @@ const SliderSection = () => {
               mini: "100%",
               sm: "50%",
               md: "40%",
-              lg: "36%",
-              xl: "26%",
+              lg: "33%",
+              xl: "30%",
             }}
             loop
             align="start"
@@ -69,31 +75,13 @@ const SliderSection = () => {
                   src={ImgArrow}
                   alt="Previous Arrow"
                   className="w-[80px] h-auto transform scale-x-[-1]"
-                />
+                /> 
               </div>
             }
           >
-            {SortAndLimitProducts(TestSliderProducts).map((item, index) => (
-              <Carousel.Slide
-                key={index}
-                className="flex flex-col items-center text-center"
-                style={{
-                  marginRight: "40px",
-                }}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.name}
-                  className="object-contain h-[400px] w-[100%] rounded-[14px] md:object-cover"
-                />
-
-                <div className="mt-[26px] font-poppins text-silver text-default">
-                  {item.name}
-                </div>
-
-                <div className="mt-[24px] font-poppins text-[26px]">
-                  {item.price}
-                </div>
+            {sliderProducts.map((card) => (
+              <Carousel.Slide key={card.id}>
+                <CardComponent {...card} />
               </Carousel.Slide>
             ))}
           </Carousel>
