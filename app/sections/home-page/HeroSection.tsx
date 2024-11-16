@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Watch from "@/test/images/test_watch.png";
+import Watch from "@/images/hero-section/watch.png";
 
 import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
