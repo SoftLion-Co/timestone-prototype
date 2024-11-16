@@ -309,6 +309,7 @@ const CheckoutSection = () => {
 
         <FormComponent title="Basic Info" className="lg:order-2 relative">
           <Input
+            inputType="input"
             name="email"
             placeholder="Email"
             type="email"
@@ -321,6 +322,7 @@ const CheckoutSection = () => {
           />
 
           <Input
+            inputType="input"
             name="firstName"
             placeholder="Fist Name"
             type="text"
@@ -333,6 +335,7 @@ const CheckoutSection = () => {
           />
 
           <Input
+            inputType="input"
             name="lastName"
             placeholder="Last Name"
             type="text"
@@ -345,6 +348,7 @@ const CheckoutSection = () => {
           />
 
           <Input
+            inputType="input"
             name="phone"
             placeholder="Phone Number"
             type="text"
@@ -357,6 +361,7 @@ const CheckoutSection = () => {
           />
 
           <Input
+            inputType="input"
             name="address1"
             placeholder="Address 1"
             type="text"
@@ -368,6 +373,7 @@ const CheckoutSection = () => {
             className="mini:w-[80%]"
           />
           <Input
+            inputType="input"
             name="address2"
             placeholder="Address 2"
             type="text"
@@ -381,6 +387,7 @@ const CheckoutSection = () => {
 
           <div className="flex gap-[10px] items-center mini:w-[80%]">
             <Input
+              inputType="input"
               name="city"
               placeholder="City"
               type="text"
@@ -392,6 +399,7 @@ const CheckoutSection = () => {
               className="mini:w-[60%]"
             />
             <Input
+              inputType="input"
               name="zipCode"
               placeholder="Zip Code"
               type="text"
@@ -407,7 +415,7 @@ const CheckoutSection = () => {
           <Input
             name="country"
             placeholder="Country"
-            showSelect
+            inputType="select"
             options={options}
             onSelect={handleSelect}
             className="mini:w-[80%]"

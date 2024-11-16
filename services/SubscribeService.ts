@@ -26,11 +26,12 @@ export const sendEmailToUs = async (
 ): Promise<string> => {
   try {
     console.log(3, fullName, email, text)
-    await axios.post(`${BASE_URL}/newsletter/contact-us`, {
+    const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
       fullName,
       email,
       text,
     });
+    console.log(response)
     return "New receiver added successfully";
   } catch (error) {
     console.error("Error adding new receiver:", error);

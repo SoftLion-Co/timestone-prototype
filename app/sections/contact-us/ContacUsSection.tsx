@@ -1,19 +1,16 @@
 "use client";
+import React from "react";
 import Image from "next/image";
-import React, { useState } from "react";
-import { Textarea, TextInput } from "@mantine/core";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Button from "@/components/ButtonComponent";
+import Input from "@/components/InputComponent";
 import { sendEmailToUs } from "@/services/SubscribeService";
 
 import Message from "@/images/contact-us/message.svg";
 import ContactUsImage from "@/images/contact-us/image1.png";
 
 const ContactUsSection = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -26,27 +23,24 @@ const ContactUsSection = () => {
         "Full Name must be at least 3 characters"
       ),
       email: isEmail("Invalid email"),
-      message: hasLength({ min: 6 }, "Message must have at least 6 characters"),
+      message: hasLength({ min: 4 }, "Message must have at least 6 characters"),
     },
   });
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const errors = form.validate();
-    await sendEmailToUs(fullName, email, message);
-    console.log({ ...form.values });
-
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
-
+    console.log(4, { ...form.values });
+    const values = form.values;
+    await sendEmailToUs(values.fullName, values.email, values.message);
+    console.log(5, { ...form.values });
     form.reset();
-    setFullName("");
-    setEmail("");
-    setMessage("");
   };
-  
+
   return (
     <section className="lg:bg-pearl py-[20px]">
       <div className="container relative flex flex-col items-center mt-[30px] mb-[60px] gap-[50px] lg:gap-0 lg:justify-between lg:flex-row">
@@ -65,33 +59,33 @@ const ContactUsSection = () => {
             className="w-full flex flex-col items-center gap-[30px] lg:items-start"
           >
             <div className="w-full flex flex-col gap-[14px]">
-              <TextInput
-                required
+              <Input
+                inputType="input"
                 placeholder="Full name"
-                classNames={{
-                  input:
-                    "py-[16px] px-[30px] w-full h-[55px] rounded-[5px] border-[2px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy ",
-                }}
+                required={true}
+                bordered={true}
+                className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
                 {...form.getInputProps("fullName")}
+                errorType="critical"
               />
-              <TextInput
-                required
+              <Input
+                inputType="input"
+                required={true}
+                bordered={true}
                 placeholder="Email"
                 type="email"
-                classNames={{
-                  input:
-                    "py-[16px] px-[30px] w-full h-[55px] rounded-[5px] border-[2px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy",
-                }}
+                className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
                 {...form.getInputProps("email")}
+                errorType="critical"
               />
-              <Textarea
-                required
+              <Input
+                inputType="textarea"
                 placeholder="Message"
-                classNames={{
-                  input:
-                    "py-[16px] px-[30px] w-full h-[160px] rounded border-[2px] rounded-[5px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy ",
-                }}
+                required={true}
+                bordered={true}
+                className="focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                 {...form.getInputProps("message")}
+                errorType="critical"
               />
             </div>
             <Button
