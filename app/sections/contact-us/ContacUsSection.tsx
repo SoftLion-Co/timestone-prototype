@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
 import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Button from "@/components/ButtonComponent";
@@ -11,6 +11,11 @@ import Message from "@/images/contact-us/message.svg";
 import ContactUsImage from "@/images/contact-us/image1.png";
 
 const ContactUsSection = () => {
+  const MAX_ATTEMPTS = 3;
+  const [value, setValue] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const form = useForm({
     initialValues: {
       fullName: "",
@@ -27,6 +32,18 @@ const ContactUsSection = () => {
     },
   });
 
+
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("contactUsAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const errors = form.validate();
@@ -34,11 +51,18 @@ const ContactUsSection = () => {
       console.log("Form has errors:", errors);
       return;
     }
-    console.log(4, { ...form.values });
     const values = form.values;
     await sendEmailToUs(values.fullName, values.email, values.message);
-    console.log(5, { ...form.values });
+    if (attempts < MAX_ATTEMPTS) {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      localStorage.setItem("contactUsAttempts", newAttempts.toString());
+      if (newAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
     form.reset();
+    setValue("");
   };
 
   return (
@@ -58,6 +82,11 @@ const ContactUsSection = () => {
             onSubmit={handleSubmit}
             className="w-full flex flex-col items-center gap-[30px] lg:items-start"
           >
+             {isDisabled ? (
+            <p className="text-red-500">Ви вичерпали всі спроби!</p>
+          ) : (
+            <p className="text-black">Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+          )}
             <div className="w-full flex flex-col gap-[14px]">
               <Input
                 inputType="input"
@@ -67,6 +96,7 @@ const ContactUsSection = () => {
                 className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
                 {...form.getInputProps("fullName")}
                 errorType="critical"
+                disabled={isDisabled}
               />
               <Input
                 inputType="input"
@@ -77,6 +107,7 @@ const ContactUsSection = () => {
                 className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
                 {...form.getInputProps("email")}
                 errorType="critical"
+                disabled={isDisabled}
               />
               <Input
                 inputType="textarea"
@@ -86,11 +117,13 @@ const ContactUsSection = () => {
                 className="focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                 {...form.getInputProps("message")}
                 errorType="critical"
+                disabled={isDisabled}
               />
             </div>
             <Button
               text="Send Message"
-              className="disabled:cursor-no-drop"
+              background="darkBurgundy"
+              disabled={isDisabled}
               type="submit"
               tag="button"
             />

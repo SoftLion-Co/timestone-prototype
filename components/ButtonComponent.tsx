@@ -16,6 +16,7 @@ interface ButtonProps {
   background?: "darkBurgundy" | "transparent" | "onyx";
   bordered?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   icon?: "cube" | "profile" | "facebook" | "google";
 }
@@ -30,6 +31,7 @@ const Button: FC<ButtonProps> = ({
   background = "darkBurgundy",
   bordered = false,
   fullWidth = false,
+  disabled,
   onClick,
   icon,
 }) => {
@@ -41,7 +43,9 @@ const Button: FC<ButtonProps> = ({
       : finalBackground === 'onyx'
       ? 'bg-onyx'
       : 'bg-transparent';
-
+const disabledBg =   finalBackground === 'darkBurgundy'
+? 'disabled:bg-darkBurgundy  disabled:bg-opacity-70 disabled:text-snow'
+: 'disabled:bg-black  disabled:bg-opacity-60 disabled:text-snow';
   const textClass =
     finalBackground === 'darkBurgundy' || finalBackground === 'onyx'
       ? 'text-white'
@@ -51,7 +55,7 @@ const Button: FC<ButtonProps> = ({
 
   const borderClass = bordered ? 'border border-darkBurgundy border-solid' : '';
 
-  const widthClass = fullWidth ? 'w-[100%]' : '';
+  const widthClass = fullWidth ? 'w-[100%]' : ''; 
 
   const hoverClass = bordered
     ? 'hover:bg-darkBurgundy hover:text-white focus:bg-darkBurgundy focus:text-white transition-colors duration-300'
@@ -109,10 +113,11 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <Tag
-      className={`${className} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px] flex items-center justify-center`}
+      className={`${className} ${disabledBg} ${backgroundClass} ${borderClass} ${textClass} ${widthClass} ${hoverClass} py-[16px] px-[24px] rounded-[6px] flex items-center justify-center disabled:cursor-not-allowed `}
       type={type}
       target={target}
       href={href}
+      disabled={disabled}
       onClick={onClick}
     >
       {renderIcon()}
