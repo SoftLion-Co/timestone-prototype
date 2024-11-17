@@ -21,6 +21,7 @@ interface InputProps {
   scrollable?: boolean;
   errorType?: "critical" | "warning";
   required?: boolean;
+  disabled?: boolean;
 }
 
 type Option = {
@@ -45,6 +46,7 @@ const InputComponent: FC<InputProps> = ({
   errorType,
   scrollable = false,
   required,
+  disabled
 }) => {
   const textClass = bordered ? "text-black" : "text-silver";
 
@@ -136,6 +138,7 @@ const InputComponent: FC<InputProps> = ({
             value={value}
             name={name}
             required={required}
+            disabled={disabled}
             onChange={onChange}
           />
           {error && (
@@ -156,6 +159,7 @@ const InputComponent: FC<InputProps> = ({
             placeholder={placeholder}
             required={required}
             value={value}
+            disabled={disabled}
             onChange={onChange}
             className={`${className} ${borderClass} ${textClass} py-[16px] px-[30px] w-full h-[160px] rounded border-[1px] rounded-[5px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
           />

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Input from "@/components/InputComponent";
@@ -10,6 +10,11 @@ import { addNewReceiver } from "@/services/SubscribeService";
 import Background from "@/images/news-section/subscribe.svg";
 
 const NewsSection = () => {
+  const MAX_ATTEMPTS = 3;
+  const [value, setValue] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const form = useForm({
     initialValues: {
       name: "",
@@ -21,18 +26,40 @@ const NewsSection = () => {
     },
   });
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const errors = form.validate();
-    const values = form.values;
-    await addNewReceiver(values.name, values.email);
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
+  }, []);
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
 
+    const values = form.values;
+
+    await addNewReceiver(values.name, values.email);
+
+    if (attempts < MAX_ATTEMPTS) {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      localStorage.setItem("inputAttempts", newAttempts.toString());
+      if (newAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
     form.reset();
+    setValue("");
   };
 
   return (
@@ -51,6 +78,11 @@ const NewsSection = () => {
           className="flex flex-col gap-[30px] items-center"
           onSubmit={handleSubmit}
         >
+          {isDisabled ? (
+            <p className="text-red-500">Ви вичерпали всі спроби!</p>
+          ) : (
+            <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+          )}
           <div className="flex flex-col gap-[30px] xl:flex-row xl:gap-[20px]">
             <div className="flex flex-col">
               <Input
@@ -60,6 +92,7 @@ const NewsSection = () => {
                 type="text"
                 errorType="warning"
                 {...form.getInputProps("name")}
+                disabled={isDisabled}
               />
             </div>
             <div className="flex flex-col">
@@ -70,16 +103,17 @@ const NewsSection = () => {
                 type="email"
                 errorType="warning"
                 {...form.getInputProps("email")}
+                disabled={isDisabled}
               />
             </div>
           </div>
-
           <Button
             text="Sing Up"
             type="submit"
             tag="button"
             background="onyx"
             className="w-[160px]"
+            disabled={isDisabled}
           />
         </form>
 
