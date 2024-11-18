@@ -4,6 +4,8 @@ import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
+import { loginUser, registrateNewUser } from "@/services/AuthService";
+import { m } from "framer-motion";
 
 const months = [
   { value: "january", label: "January" },
@@ -55,7 +57,7 @@ const AuthorizationSection = () => {
     { value: string; label: string }[]
   >([]);
   const [day, setDay] = useState<string>("");
-  const [receiveUpdates, setReceiveUpdates] = useState<string>("");
+  const [receiveUpdates, setReceiveUpdates] = useState<boolean>(false);
   const [confirmEmail, setConfirmEmail] = useState<string>("");
   const [confirmPassword, setConfirmPasswor] = useState<string>("");
 
@@ -85,15 +87,17 @@ const AuthorizationSection = () => {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(true);
 
   const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setMonth('');
-    setDay('');
-    setPhone('');
-    setEmail('');
-    setPassword('');
-    setReceiveUpdates("false"); 
-};
+    setFirstName("");
+    setLastName("");
+    setMonth("");
+    setDay("");
+    setPhone("");
+    setEmail("");
+    setPassword("");
+    setConfirmEmail("");
+    setConfirmPasswor("");
+    setReceiveUpdates(false);
+  };
 
   const handleCreateAccount = () => {
     if (checkValidationRegistration()) {
@@ -107,6 +111,16 @@ const AuthorizationSection = () => {
         password: password,
         receiveUpdates: receiveUpdates,
       };
+      registrateNewUser(
+        firstName,
+        lastName,
+        month,
+        day,
+        phone,
+        email,
+        password,
+        receiveUpdates
+      );
       console.log(`New user added`, newUser);
       resetForm();
     }
@@ -118,6 +132,7 @@ const AuthorizationSection = () => {
         email: email,
         password: password,
       };
+      loginUser(newUser.email, newUser.password);
       console.log(`User logged in`, newUser);
       resetForm();
     }
@@ -312,7 +327,7 @@ const AuthorizationSection = () => {
             </div>
 
             <Input
-            inputType="input"
+              inputType="input"
               placeholder="Email"
               type="email"
               fullWidth={true}
@@ -333,7 +348,7 @@ const AuthorizationSection = () => {
             )}
 
             <Input
-            inputType="input"
+              inputType="input"
               placeholder="Password"
               type="password"
               bordered={true}
@@ -397,7 +412,7 @@ const AuthorizationSection = () => {
 
             <div className="flex flex-col gap-[10px]">
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="First Name"
                 type="text"
                 bordered={true}
@@ -412,7 +427,7 @@ const AuthorizationSection = () => {
                 </span>
               )}
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="Last Name"
                 type="text"
                 bordered={true}
@@ -449,7 +464,7 @@ const AuthorizationSection = () => {
                 />
               </div>
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="Phone Number"
                 type="text"
                 bordered={true}
@@ -467,8 +482,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
-                  inputType="input"
-                  className="mini:w-[320px]"
+                    inputType="input"
+                    className="mini:w-[320px]"
                     placeholder="Email"
                     type="email"
                     bordered={true}
@@ -486,7 +501,7 @@ const AuthorizationSection = () => {
                 <div>
                   {" "}
                   <Input
-                  inputType="input"
+                    inputType="input"
                     placeholder="Confirm Email"
                     type="email"
                     className="mini:w-[320px]"
@@ -506,8 +521,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
-                  inputType="input"
-                  className="mini:w-[320px]"
+                    inputType="input"
+                    className="mini:w-[320px]"
                     placeholder="Password"
                     type="password"
                     bordered={true}
@@ -524,7 +539,7 @@ const AuthorizationSection = () => {
 
                 <div>
                   <Input
-                  inputType="input"
+                    inputType="input"
                     placeholder="Confirm Password"
                     type="password"
                     bordered={true}
@@ -544,9 +559,9 @@ const AuthorizationSection = () => {
               <div className="flex text-silver gap-[10px] mt-[10px] text-left">
                 <input
                   type="checkbox"
-                  value={receiveUpdates}
-                  onChange={(e) => setReceiveUpdates(e.target.value)}
-                  className="w-[24px] h-[24epx]"
+                  checked={receiveUpdates}
+                  onChange={(e) => setReceiveUpdates(e.target.checked)}
+                  className="w-[24px] h-[24px]"
                 />
                 <label>
                   Sign-up to receive the latest updates and promotions
