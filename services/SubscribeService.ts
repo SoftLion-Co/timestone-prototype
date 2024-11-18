@@ -6,7 +6,7 @@ import { BASE_URL } from "@/config/config";
 export const addNewReceiver = async (
   name: string,
   email: string
-): Promise<string> => {
+): Promise<any> => {
   try {
     await axios.post(`${BASE_URL}/newsletter/receiver`, {
       name,
@@ -15,7 +15,6 @@ export const addNewReceiver = async (
     return "New receiver added successfully";
   } catch (error) {
     console.error("Error adding new receiver:", error);
-    throw error;
   }
 };
 
@@ -23,7 +22,7 @@ export const sendEmailToUs = async (
   fullName: string,
   email: string,
   text: string
-): Promise<string> => {
+): Promise<any> => {
   try {
     console.log(3, fullName, email, text)
     const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
@@ -31,10 +30,8 @@ export const sendEmailToUs = async (
       email,
       text,
     });
-    console.log(response)
     return "New receiver added successfully";
   } catch (error) {
     console.error("Error adding new receiver:", error);
-    throw error;
   }
 };
