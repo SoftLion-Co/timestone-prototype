@@ -1,16 +1,16 @@
 "use client";
-import React, { useState } from "react";
+
 import Image from "next/image";
-
-import { Carousel } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
-
+import { Carousel } from "@mantine/carousel";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
-import ImgArrow from "@/images/vectors/arrow.svg";
-
 import { TestSliderProducts } from "@/test/sliderProducts";
 import CardComponent from "@/components/CardComponent";
 import { CardProps } from "@/config/types";
+import ImgArrow from "@/images/vectors/arrow.svg";
+// import { getProducts } from "@/services/ProductService";
+
 
 const textSliderObject = {
   title: "Watches",
@@ -21,33 +21,40 @@ const textSliderObject = {
 };
 
 
-// const SortAndLimitProducts = (items: typeof TestSliderProducts) => {
-//   return items
-//     .sort(
-//       (a, b) =>
-//         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-//     )
-//     .slice(0, 12);
-// };
-// з фільтрацією беде сетслайдер продуктс
-
+//! потрібна заглушка як на youtube
 const SliderSection = () => {
 
   const [sliderProducts, setSliderProducts] = useState<CardProps[]>(TestSliderProducts);
+  const [loading, setLoading] = useState(true);
+  
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       const response = await getProducts(undefined, undefined, 10, undefined, "BEST_SELLING", true);
+  //       setProducts(response)
+  //       setLoading(true)
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     }
+  //   };
+
+  //   fetchProducts();
+  // }, []);
 
   return (
-    <section className="container">
-      <div>
-        <h1 className="font-spaceAge text-center text-[48px] lg:text-left">
-          {textSliderObject.title}
-        </h1>
+    <>
+      {loading ? (
+        <section className="container py-[40px] lg:py-[80px]">
+          <div>
+            <h1 className="font-spaceAge text-center text-[48px] lg:text-left">
+              {textSliderObject.title}
+            </h1>
 
-        <div className="font-poppins text-silver text-default text-center leading-[28px] mt-[38px] lg:text-left lg:max-w-[600px]">
-          <p>{textSliderObject.textParagraphPart1}</p>
-          <p>{textSliderObject.textParagraphPart2}</p>
-        </div>
-      </div>
-
+            <div className="font-poppins text-silver text-default text-center leading-[28px] mt-[38px] lg:text-left lg:max-w-[600px]">
+              <p>{textSliderObject.textParagraphPart1}</p>
+              <p>{textSliderObject.textParagraphPart2}</p>
+            </div>
+          </div>
       <div className="mb-[112px] mt-[50px] overflow-hidden">
         <div>
           <Carousel
@@ -86,13 +93,16 @@ const SliderSection = () => {
             ))}
           </Carousel>
         </div>
-
-        <Button
-          text="Design Your Watch"
-          className="mt-[80px] mx-auto sm:mx-0 sm:ml-auto sm:mt-[90px]"
-        />
-      </div>
-    </section>
+            <Button
+              text="Design Your Watch"
+              className="mt-[80px] mx-auto sm:mx-0 sm:ml-auto sm:mt-[90px]"
+            />
+          </div>
+        </section>
+      ) : (
+        <section>loading...</section>
+      )}
+    </>
   );
 };
 
