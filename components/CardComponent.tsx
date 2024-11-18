@@ -10,8 +10,9 @@ import { getProductByHandle } from '@/services/ProductService';
 
 const CardComponent: FC<CardProps> = ({
   id,
+  handle,
   title,
-  minPrice,
+  price,
   images,
   productType,
 }) => {
@@ -27,8 +28,9 @@ const CardComponent: FC<CardProps> = ({
 
     addToCart({
       id: id,
+      handle: handle,
       title: title,
-      price: +minPrice,
+      price: +price,
       image: images[0],
       caseColor: 'red',
       strapColor: 'red',
@@ -66,7 +68,7 @@ const CardComponent: FC<CardProps> = ({
         className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>
-      <span className="font-normal text-xl text-onyx">${minPrice}</span>
+      <span className="font-normal text-xl text-onyx">${price}</span>
     </div>
   );
 };

@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 
 import TitleComponents from '@/components/TitleComponents';
 import CategoryAsideFilters from './CategoryAsideFilters';
 import CategorySection from './CategorySection';
 import { CardProps } from '@/config/types';
+import { FiltersProvider } from '@/hooks/useFilters';
 
 export const ProductsContext = createContext<CardProps[]>([]);
 
@@ -23,19 +24,21 @@ const CategoryMain = () => {
 
   return (
     <>
-      <ProductsContext.Provider value={products}>
-        <TitleComponents
-          text="Products"
-          additionalText={`${totalProducts} Total products`}
-        />
-        <div className="xl:flex xl:container">
-          <CategoryAsideFilters
-            handleUpdateProducts={handleUpdateProducts}
-            handleChangeTotalProducts={handleChangeTotalProducts}
+      <FiltersProvider>
+        <ProductsContext.Provider value={products}>
+          <TitleComponents
+            text="Products"
+            additionalText={`${totalProducts} Total products`}
           />
-          <CategorySection totalProducts={totalProducts} />
-        </div>
-      </ProductsContext.Provider>
+          <div className="xl:flex xl:container">
+            <CategoryAsideFilters
+              handleUpdateProducts={handleUpdateProducts}
+              handleChangeTotalProducts={handleChangeTotalProducts}
+            />
+            <CategorySection totalProducts={totalProducts} />
+          </div>
+        </ProductsContext.Provider>
+      </FiltersProvider>
     </>
   );
 };

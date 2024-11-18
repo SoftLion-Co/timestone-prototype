@@ -1,25 +1,25 @@
-"use client";
-import React, { SetStateAction, useState, useEffect } from "react";
-import Title from "@/components/TitleComponents";
-import FormComponent from "@/components/FormComponent";
-import Input from "@/components/InputComponent";
-import Button from "@/components/ButtonComponent";
-import Arrow from "@/images/checkout-section/topArrow.svg";
-import Image from "next/image";
-import Checkbox from "@/components/CheckboxComponent";
-import { motion } from "framer-motion";
-import CartComponent from "@/components/CartComponent";
-import { CreateOrder } from "@/services/OrderService";
-import { Product } from "@/config/types";
-import { PRODUCT_DATA } from "@/test/productExample";
+'use client';
+import React, { SetStateAction, useState, useEffect } from 'react';
+import Title from '@/components/TitleComponents';
+import FormComponent from '@/components/FormComponent';
+import Input from '@/components/InputComponent';
+import Button from '@/components/ButtonComponent';
+import Arrow from '@/images/checkout-section/topArrow.svg';
+import Image from 'next/image';
+import Checkbox from '@/components/CheckboxComponent';
+import { motion } from 'framer-motion';
+import CartComponent from '@/components/CartComponent';
+import { CreateOrder } from '@/services/OrderService';
+import { Product } from '@/config/types';
+import { PRODUCT_DATA } from '@/test/productExample';
 
 const CheckoutSection = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedOption, setSelectedOption] = useState<string | null>("");
+  const [selectedOption, setSelectedOption] = useState<string | null>('');
   const [isVisible, setIsVisible] = useState(false);
   const [shippingValue, setshippingValue] = useState<any>({});
-  const [checkError, setCheckError] = useState("");
-  const [products, setProducts] = useState<Product[]>(PRODUCT_DATA);
+  const [checkError, setCheckError] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState<number>(0.0);
   const [price, setPrice] = useState<number>(0.0);
 
@@ -28,13 +28,13 @@ const CheckoutSection = () => {
       try {
         if (products.length != 0) {
           const result = products.reduce(
-            (acc, product) => acc + Number(product.minPrice) * product.quantity,
+            (acc, product) => acc + Number(product.price) * product.quantity,
             0 + price
           );
           setTotal(Number(result.toFixed(2)));
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error('Error fetching products:', error);
       }
     };
 
@@ -42,41 +42,41 @@ const CheckoutSection = () => {
   }, [products, price]);
 
   const options = [
-    { value: "UA", label: "Ukraine" },
-    { value: "PL", label: "Poland" },
-    { value: "USA", label: "USA" },
+    { value: 'UA', label: 'Ukraine' },
+    { value: 'PL', label: 'Poland' },
+    { value: 'USA', label: 'USA' },
   ];
 
   const handleChange = (option: SetStateAction<string | null>) => {
     setSelectedOption(option);
-    setCheckError("");
+    setCheckError('');
 
-    if (option === "UPS Standard") {
+    if (option === 'UPS Standard') {
       setshippingValue({
         shippingLines: [
           {
-            code: "Standard",
-            title: "Standard",
+            code: 'Standard',
+            title: 'Standard',
             priceSet: {
               shopMoney: {
-                amount: "00.00",
-                currencyCode: "UAH",
+                amount: '00.00',
+                currencyCode: 'UAH',
               },
             },
           },
         ],
       });
       setPrice(0.0);
-    } else if (option === "UPS Express") {
+    } else if (option === 'UPS Express') {
       setshippingValue({
         shippingLines: [
           {
-            code: "Express",
-            title: "Express",
+            code: 'Express',
+            title: 'Express',
             priceSet: {
               shopMoney: {
-                amount: "49.99",
-                currencyCode: "UAH",
+                amount: '49.99',
+                currencyCode: 'UAH',
               },
             },
           },
@@ -102,15 +102,15 @@ const CheckoutSection = () => {
   };
 
   const [formValues, setFormValues] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    phone: "",
-    zipCode: "",
-    country: "",
+    email: '',
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    phone: '',
+    zipCode: '',
+    country: '',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -144,7 +144,7 @@ const CheckoutSection = () => {
   };
 
   const handleSelect = (value: string) => {
-    updateField("country", value);
+    updateField('country', value);
   };
 
   const validateEmail = (email: string) => {
@@ -155,27 +155,27 @@ const CheckoutSection = () => {
 
   const validateField = (name: string, value: string): string | null => {
     switch (name) {
-      case "email":
-        if (!value) return "Enter email";
-        if (!validateEmail(value)) return "Enter valid email format";
+      case 'email':
+        if (!value) return 'Enter email';
+        if (!validateEmail(value)) return 'Enter valid email format';
         return null;
-      case "firstName":
-      case "lastName":
-      case "address1":
-      case "address2":
-      case "city":
-        if (!value) return "Enter required data";
+      case 'firstName':
+      case 'lastName':
+      case 'address1':
+      case 'address2':
+      case 'city':
+        if (!value) return 'Enter required data';
         return null;
-      case "phone":
-        if (!value) return "Enter phone number";
-        if (!/^\d{10}$/.test(value)) return "Enter valid phone number";
+      case 'phone':
+        if (!value) return 'Enter phone number';
+        if (!/^\d{10}$/.test(value)) return 'Enter valid phone number';
         return null;
-      case "zipCode":
-        if (!value) return "Enter zip code";
-        if (!/^\d{5}$/.test(value)) return "Enter valid zip code";
+      case 'zipCode':
+        if (!value) return 'Enter zip code';
+        if (!/^\d{5}$/.test(value)) return 'Enter valid zip code';
         return null;
-      case "country":
-        if (!value) return "Select a country";
+      case 'country':
+        if (!value) return 'Select a country';
         return null;
       default:
         return null;
@@ -203,7 +203,7 @@ const CheckoutSection = () => {
 
   const handleSubmit = async () => {
     if (!selectedOption) {
-      setCheckError("Select shipping method");
+      setCheckError('Select shipping method');
     }
 
     if (selectedOption) {
@@ -213,17 +213,17 @@ const CheckoutSection = () => {
           title: product.title,
           priceSet: {
             shopMoney: {
-              amount: product.minPrice,
-              currencyCode: "UAH",
+              amount: product.price,
+              currencyCode: 'UAH',
             },
           },
           quantity: product.quantity,
         }));
         const data = {
-          currency: "UAH",
-          customerId: "",
+          currency: 'UAH',
+          customerId: '',
           email: formValues.email,
-          phone: "+38" + formValues.phone,
+          phone: '+38' + formValues.phone,
           shippingAddress: {
             firstName: formValues.firstName,
             lastName: formValues.lastName,
@@ -240,26 +240,26 @@ const CheckoutSection = () => {
         };
 
         const response = await CreateOrder(data, {
-          sendReceipt: "true",
-          sendFulfillmentReceipt: "true",
-          inventoryBehaviour: "BYPASS",
+          sendReceipt: 'true',
+          sendFulfillmentReceipt: 'true',
+          inventoryBehaviour: 'BYPASS',
         });
 
         setFormValues({
-          email: "",
-          firstName: "",
-          lastName: "",
-          address1: "",
-          address2: "",
-          city: "",
-          phone: "",
-          zipCode: "",
-          country: "",
+          email: '',
+          firstName: '',
+          lastName: '',
+          address1: '',
+          address2: '',
+          city: '',
+          phone: '',
+          zipCode: '',
+          country: '',
         });
 
         setSelectedOption(null);
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
       }
     }
   };
@@ -273,10 +273,9 @@ const CheckoutSection = () => {
             <motion.div
               className="bordered-[10px] shadow-lg rounded-lg px-[20px]"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+              animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+              transition={{ duration: 0.3 }}>
               {products.map((product, index) => (
                 <>
                   <CartComponent
@@ -300,7 +299,7 @@ const CheckoutSection = () => {
               src={Arrow}
               alt="Arrow"
               className={`transition-transform ${
-                isOpen ? "rotate-180" : "rotate-0"
+                isOpen ? 'rotate-180' : 'rotate-0'
               }`}
               onClick={() => setIsOpen(!isOpen)}
             />
@@ -433,23 +432,22 @@ const CheckoutSection = () => {
         <FormComponent
           title="Shipping"
           className={`lg:order-3 transition-opacity duration-0.3 ${
-            isVisible ? "opacity-100" : "opacity-50 pointer-events-none"
-          }`}
-        >
+            isVisible ? 'opacity-100' : 'opacity-50 pointer-events-none'
+          }`}>
           <Checkbox
             label="UPS Express"
             description="UPS Express 2-3 working days"
             price="$49.99"
-            checked={selectedOption == "UPS Express"}
-            onChange={() => handleChange("UPS Express")}
+            checked={selectedOption == 'UPS Express'}
+            onChange={() => handleChange('UPS Express')}
           />
 
           <Checkbox
             label="UPS Standard"
             price="Free"
             description="UPS Standard 2-3 working days"
-            checked={selectedOption == "UPS Standard"}
-            onChange={() => handleChange("UPS Standard")}
+            checked={selectedOption == 'UPS Standard'}
+            onChange={() => handleChange('UPS Standard')}
           />
           {checkError && (
             <p className="text-[14px] text-darkBurgundy">{checkError}</p>
