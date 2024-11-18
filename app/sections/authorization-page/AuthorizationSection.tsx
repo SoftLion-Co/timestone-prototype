@@ -312,6 +312,7 @@ const AuthorizationSection = () => {
             </div>
 
             <Input
+            inputType="input"
               placeholder="Email"
               type="email"
               fullWidth={true}
@@ -332,6 +333,7 @@ const AuthorizationSection = () => {
             )}
 
             <Input
+            inputType="input"
               placeholder="Password"
               type="password"
               bordered={true}
@@ -395,6 +397,7 @@ const AuthorizationSection = () => {
 
             <div className="flex flex-col gap-[10px]">
               <Input
+              inputType="input"
                 placeholder="First Name"
                 type="text"
                 bordered={true}
@@ -409,6 +412,7 @@ const AuthorizationSection = () => {
                 </span>
               )}
               <Input
+              inputType="input"
                 placeholder="Last Name"
                 type="text"
                 bordered={true}
@@ -426,7 +430,7 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px] text-left">
                 <Input
                   placeholder="January"
-                  showSelect={true}
+                  inputType="select"
                   bordered={true}
                   options={months}
                   value={month}
@@ -436,7 +440,7 @@ const AuthorizationSection = () => {
 
                 <Input
                   placeholder="01"
-                  showSelect={true}
+                  inputType="select"
                   bordered={true}
                   options={dayOptions}
                   value={day}
@@ -445,6 +449,7 @@ const AuthorizationSection = () => {
                 />
               </div>
               <Input
+              inputType="input"
                 placeholder="Phone Number"
                 type="text"
                 bordered={true}
@@ -462,6 +467,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
+                  inputType="input"
+                  className="mini:w-[320px]"
                     placeholder="Email"
                     type="email"
                     bordered={true}
@@ -479,8 +486,10 @@ const AuthorizationSection = () => {
                 <div>
                   {" "}
                   <Input
+                  inputType="input"
                     placeholder="Confirm Email"
                     type="email"
+                    className="mini:w-[320px]"
                     bordered={true}
                     value={confirmEmail}
                     fullWidth={true}
@@ -497,6 +506,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
+                  inputType="input"
+                  className="mini:w-[320px]"
                     placeholder="Password"
                     type="password"
                     bordered={true}
@@ -513,11 +524,13 @@ const AuthorizationSection = () => {
 
                 <div>
                   <Input
+                  inputType="input"
                     placeholder="Confirm Password"
                     type="password"
                     bordered={true}
                     value={confirmPassword}
                     fullWidth={true}
+                    className="mini:w-[320px]"
                     onChange={(e) => setConfirmPasswor(e.target.value)}
                   />
                   {confirmPasswordMessage && (
