@@ -1,19 +1,12 @@
-export type CardPropsOptions = {
-  name: string;
-  values: string[];
-};
-
 export type CardProps = {
   id: string;
   title: string;
   productType: string;
-  bodyHtml: string;
   country: string;
   minPrice: number;
   maxPrice: number;
-  currencyCode: string;
   images: string[];
-  options: CardPropsOptions[];
+  options: Option[];
 };
 
 export type CartProductProps = {
@@ -43,3 +36,5 @@ export type Option = {
   name: string;
   values: string[];
 };
+
+
