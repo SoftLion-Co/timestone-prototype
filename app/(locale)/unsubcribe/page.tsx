@@ -1,6 +1,6 @@
 //! ?email=${email}
 const Unsubscribe = () => {
-  const email = new URLSearchParams(window.location.search).get("email");
+  //const email = new URLSearchParams(window.location.search).get("email");
 
   const handleUnsubscribe = async () => {
     try {
@@ -13,7 +13,7 @@ const Unsubscribe = () => {
 
   return (
     <div>
-      <h1>Відписатися від розсилки</h1>
+      {/* <h1>Відписатися від розсилки</h1>
       {email ? (
         <div>
           <p>Ви бажаєте відписатися від розсилки для {email}?</p>
@@ -21,7 +21,7 @@ const Unsubscribe = () => {
         </div>
       ) : (
         <p>Невірний запит.</p>
-      )}
+      )} */}
     </div>
   );
 };
