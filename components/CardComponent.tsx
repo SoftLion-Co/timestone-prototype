@@ -23,15 +23,16 @@ const CardComponent: FC<CardProps> = ({
   ) => {
     e.preventDefault();
 
-    const getProdById = async () => {
-      const prod = await getProductByHandle(id);
+    !isOpen && changeOpenState(true);
 
-      !isOpen && changeOpenState(true);
-
-      addToCart(prod);
-    };
-
-    getProdById();
+    addToCart({
+      id: id,
+      title: title,
+      price: +minPrice,
+      image: images[0],
+      caseColor: 'red',
+      strapColor: 'red',
+    });
   };
 
   return (
@@ -61,7 +62,7 @@ const CardComponent: FC<CardProps> = ({
       </div>
 
       <Link
-        href={`products/${id}`}
+        href={`catalog/${id}`}
         className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>
