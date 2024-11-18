@@ -47,27 +47,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     handleQuantityChange(newValue);
   };
 
-  const handlePlaceAnOrder = () => {};
-
-  const controls = (
-    <div className="flex flex-col items-center justify-center h-full gap-[4px]">
-      <UnstyledButton
-        className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
-        disabled={quantity >= maxQuantity || isOutOfStock}
-        onClick={handleIncrement}
-      >
-        <Image src={Arrow} alt="Up Arrow" width={16} height={16} />
-      </UnstyledButton>
-      <UnstyledButton
-        className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
-        disabled={quantity <= 1 || isOutOfStock}
-        onClick={handleDecrement}
-      >
-        <Image src={Arrow} alt="Down Arrow" className="transform rotate-180" />
-      </UnstyledButton>
-    </div>
-  );
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -154,35 +133,59 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           <hr className="hidden xl:block w-[350px] md:w-[400px]" />
 
           <div
-            className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[10px] text-left"
+            className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[10px] text-center"
             dangerouslySetInnerHTML={{ __html: modifiedDescription || " " }}
           />
 
           <hr className="hidden xl:block w-[400px]" />
 
-          <div className="flex my-[25px] space-x-[40px] items-center">
-            <Button
-              text="Place an order"
-              className="mini:w-[80%] w-[100%] px-[50px]"
-              onClick={handlePlaceAnOrder}
-            />
+          <div className="flex my-[25px] space-x-[40px]">
+            <div className="relative">
+              <NumberInput
+                type="text"
+                max={maxQuantity}
+                min={1}
+                value={quantity}
+                onChange={handleQuantityChange}
+                classNames={{
+                  input:
+                    "h-[44px] w-[80px] text-xs pr-[40px] text-center ring-1 ring-silver focus:outline-none focus:ring-1 focus:ring-onyx",
+                }}
+                disabled={isOutOfStock}
+              />
+              {isOutOfStock && (
+                <p className="text-red-500">Немає в наявності</p>
+              )}
 
-            <NumberInput
-              type="text"
-              max={maxQuantity}
-              min={1}
-              value={quantity}
-              onChange={handleQuantityChange}
-              rightSection={controls}
-              classNames={{
-                input: "focus:border-whisper h-[44px] w-[80px] text-xs",
-              }}
-              disabled={isOutOfStock}
-            />
-            {isOutOfStock && <p className="text-red-500">Немає в наявності</p>}
+              <div className="absolute top-[-12px] right-[10px] h-full flex flex-col items-center justify-center gap-[4px]">
+                <UnstyledButton
+                  className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+                  disabled={quantity >= maxQuantity || isOutOfStock}
+                  onClick={handleIncrement}
+                >
+                  <Image src={Arrow} alt="Up Arrow"  />
+                </UnstyledButton>
+                <UnstyledButton
+                  className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+                  disabled={quantity <= 1 || isOutOfStock}
+                  onClick={handleDecrement}
+                >
+                  <Image
+                    src={Arrow}
+                    alt="Down Arrow"
+                    className="transform rotate-180"
+                  />
+                </UnstyledButton>
+              </div>
+            </div>
 
-            <span className="text-[20px] px-[10px]">{product?.minPrice}$</span>
+            <span className="text-[20px] px-[10px] py-[10px]">{product?.minPrice}$</span>
           </div>
+
+          <Button
+            text="Place an order"
+            className="mini:w-[80%] w-[100%] px-[50px]"
+          />
         </div>
       </div>
     </section>
