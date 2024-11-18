@@ -9,7 +9,6 @@ export type CardProps = {
   productType: string;
   country: string;
   minPrice: number;
-  maxPrice: number;
   images: string[];
   options: CardPropsOptions[];
 };
