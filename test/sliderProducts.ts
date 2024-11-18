@@ -16,7 +16,7 @@ export const TestSliderProducts = [
     // createdAt: "2024-04-21T13:37:15Z"
   },
   {
-    id: "1",
+    id: "2",
     title: "Volumenzeit S 2",
     productType: "Watch",
     country: "Germany",
@@ -28,7 +28,7 @@ export const TestSliderProducts = [
     // createdAt: "2024-04-21T13:37:15Z"
   },
   {
-    id: "1",
+    id: "3",
     title: "Volumenzeit S 2",
     productType: "Watch",
     country: "Germany",
@@ -40,7 +40,7 @@ export const TestSliderProducts = [
     // createdAt: "2024-04-21T13:37:15Z"
   },
   {
-    id: "1",
+    id: "4",
     title: "Volumenzeit S 2",
     productType: "Watch",
     country: "Germany",
@@ -52,7 +52,7 @@ export const TestSliderProducts = [
     // createdAt: "2024-04-21T13:37:15Z"
   },
   {
-    id: "1",
+    id: "5",
     title: "Volumenzeit S 2",
     productType: "Watch",
     country: "Germany",
