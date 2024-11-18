@@ -44,13 +44,13 @@ const SliderSection = () => {
   return (
     <>
       {loading ? (
-        <section className="container py-[40px] lg:py-[80px]">
-          <div>
-            <h1 className="font-spaceAge text-center text-[48px] lg:text-left">
+        <section className="py-[40px] lg:py-[80px] xl:pt-[130px]">
+          <div className="flex flex-col mx-[20px] lg:mx-[60px] lg:items-start">
+            <h1 className="font-spaceage text-center text-[28px] md:text-[48px] lg:text-left">
               {textSliderObject.title}
             </h1>
 
-            <div className="font-poppins text-silver text-default text-center leading-[28px] mt-[38px] lg:text-left lg:max-w-[600px]">
+            <div className="font-poppins text-silver text-default text-center leading-[28px] lg:text-left lg:max-w-[600px]">
               <p>{textSliderObject.textParagraphPart1}</p>
               <p>{textSliderObject.textParagraphPart2}</p>
             </div>
@@ -62,13 +62,13 @@ const SliderSection = () => {
               mini: "100%",
               sm: "50%",
               md: "40%",
-              lg: "33%",
-              xl: "30%",
+              lg: "30%",
+              xl: "26%",
             }}
             loop
             align="start"
             nextControlIcon={
-              <div className="mt-[30px] absolute top-1/2 right-[60px] sm:mt-[102px] sm:left-[218px] ">
+              <div className="mt-[30px] absolute top-1/2 right-[60px] sm:mt-[102px] sm:left-[260px]">
                 <Image
                   src={ImgArrow}
                   alt="Next Arrow"
@@ -77,7 +77,7 @@ const SliderSection = () => {
               </div>
             }
             previousControlIcon={
-              <div className="mt-[30px] absolute top-1/2 left-[60px] sm:left-0 sm:mt-[102px]">
+              <div className="mt-[30px] absolute top-1/2 left-[60px] sm:mt-[102px]">
                 <Image
                   src={ImgArrow}
                   alt="Previous Arrow"
@@ -95,7 +95,7 @@ const SliderSection = () => {
         </div>
             <Button
               text="Design Your Watch"
-              className="mt-[80px] mx-auto sm:mx-0 sm:ml-auto sm:mt-[90px]"
+              className="mt-[80px] mx-auto sm:mr-[20px] lg:mr-[60px] sm:ml-auto sm:mt-[90px]"
             />
           </div>
         </section>
