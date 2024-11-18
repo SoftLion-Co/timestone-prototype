@@ -30,3 +30,8 @@ export type Product =  {
   quantity: number;
   images: string[];
 };
+
+export type SidebarProps = {
+  setActiveSection: (section: string) => void;
+  className?: string;
+}
