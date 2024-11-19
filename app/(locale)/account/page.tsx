@@ -5,6 +5,7 @@ import TitleComponents from "@/components/TitleComponents";
 import MyAccountSection from "@/app/sections/account-page/MyAccountSection";
 import OrderHistorySection from "@/app/sections/account-page/OrderHistorySection";
 import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarComponent";
+import NewsSection from "@/app/sections/home-page/NewsSection";
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState("section1");
@@ -33,16 +34,19 @@ const Page = () => {
           <p>Loading profile...</p>
         </div>
       ) : (
-        <section className="bg-[#F9FAFE]">
-          <TitleComponents text="Timestone Account" />
-          <ProfileSideBarComponent
-            className="container pt-[20px] xl:pt-[40px]"
-            setActiveSection={setActiveSection}
-          />
-          <div className="container flex flex-col gap-[30px] md:flex-row md:justify-center pt-[40px] pb-[60px] xl:pb-[150px]">
-            <div>{renderSection()}</div>
-          </div>
-        </section>
+        <>
+          <section className="bg-[#F4F6F6] bg-opacity-50">
+            <TitleComponents text="Timestone Account" />
+            <ProfileSideBarComponent
+              className="container pt-[20px] xl:pt-[40px]"
+              setActiveSection={setActiveSection}
+            />
+            <div className="container flex flex-col gap-[30px] pt-[40px] pb-[60px] xl:pb-[150px]">
+              <div>{renderSection()}</div>
+            </div>
+          </section>
+          <NewsSection />
+        </>
       )}
     </>
   );
