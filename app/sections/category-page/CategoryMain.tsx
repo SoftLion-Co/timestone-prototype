@@ -7,6 +7,7 @@ import CategoryAsideFilters from './CategoryAsideFilters';
 import CategorySection from './CategorySection';
 import { CardProps } from '@/config/types';
 import { FiltersProvider } from '@/hooks/useFilters';
+import FilterComponent from './test/FilterComponent';
 
 export const ProductsContext = createContext<CardProps[]>([]);
 
@@ -22,6 +23,8 @@ const CategoryMain = () => {
     setProducts(newProducts);
   };
 
+  // TODO можна прибрати загальну кількість товарів на сторінці
+
   return (
     <>
       <FiltersProvider>
@@ -30,11 +33,13 @@ const CategoryMain = () => {
             text="Products"
             additionalText={`${totalProducts} Total products`}
           />
-          <div className="xl:flex xl:container">
+          {/* <FilterComponent title="test" showSearch isRangeSlider showOkButton /> */}
+          <div className="xl:flex lg:px-[150px] md:px-[75px]">
             <CategoryAsideFilters
               handleUpdateProducts={handleUpdateProducts}
               handleChangeTotalProducts={handleChangeTotalProducts}
             />
+
             <CategorySection totalProducts={totalProducts} />
           </div>
         </ProductsContext.Provider>

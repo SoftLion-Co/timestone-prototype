@@ -6,8 +6,7 @@ export type CardProps = {
   productType: string;
   price: number;
   vendor: string;
-  // одна картинка потрібна не масив
-  images: string[];
+  image: string;
   options: Option[];
 };
 
@@ -17,6 +16,8 @@ export type CartProductProps = {
   title: string;
   price: number;
   image: string;
+  quantity: number;
+  maxQuantity: number;
   caseColor: string;
   strapColor: string;
 };

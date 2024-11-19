@@ -225,6 +225,7 @@ const CategoryAsideFilters = ({
     setIsOpen(false);
   };
 
+  // TODO зробити щоб з'являлись фільри (на плюс - показувати, мінус - ховати) приклад в тг
   return (
     <>
       {/* pc filters */}
