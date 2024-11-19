@@ -21,6 +21,8 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
     products.length == 1 && changeOpenState(false);
   };
 
+  // прибрати кнопку add a matching item
+
   return (
     <li className="text-black pb-[15px] border-b border-[#ECEDF1] flex gap-[15px] items-center">
       <Image

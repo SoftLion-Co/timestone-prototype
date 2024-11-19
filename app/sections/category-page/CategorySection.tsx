@@ -13,6 +13,8 @@ import { ProductsContext } from './CategoryMain';
 
 const ITEM_TO_SHOW = 9;
 
+// зменшити простір на екрані (збільшення кількості продуктів в рядку)
+
 const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   const allProducts1 = useContext(ProductsContext);
 

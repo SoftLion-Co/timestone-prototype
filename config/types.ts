@@ -1,16 +1,19 @@
 export type CardProps = {
   id: string;
+  handle: string;
+  quantity: number;
   title: string;
   productType: string;
-  country: string;
-  minPrice: number;
-  maxPrice: number;//?
+  price: number;
+  vendor: string;
+  // одна картинка потрібна не масив
   images: string[];
   options: Option[];
 };
 
 export type CartProductProps = {
   id: string;
+  handle: string;
   title: string;
   price: number;
   image: string;
@@ -19,20 +22,19 @@ export type CartProductProps = {
 };
 
 export type Product = {
-	id: string;
-	title: string;
-	productType: string;
-	minPrice: string;
-	maxPrice: string;
-	currencyCode: string;
-	quantity: number;
-	images: string[];
-	description: string;
-	options: Option[];
-	handle: string;
- };
+  id: string;
+  handle: string;
+  quantity: number;
+  title: string;
+  description: string;
+  productType: string;
+  vendor: string;
+  price: string;
+  images: string[];
+  options: Option[];
+};
 
 export type Option = {
-	name: string;
-	values: string[];
- };
+  name: string;
+  values: string[];
+};
