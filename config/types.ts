@@ -23,7 +23,7 @@ export type CartProductProps = {
   strapColor: string;
 };
 
-export type Product =  {
+export type Product = {
   id: string;
   title: string;
   minPrice: string;
@@ -34,4 +34,27 @@ export type Product =  {
 export type SidebarProps = {
   setActiveSection: (section: string) => void;
   className?: string;
-}
+};
+
+export type OrderItem = {
+  id: string;
+  handle: string;
+  name: string;
+  vendor: string;
+  options: CardPropsOptions[];
+  price: string;
+  quantity: number;
+  subtotal: string;
+  image: string;
+};
+
+export type Order = {
+  id: string;
+  date: string;
+  status: string;
+  total: string;
+  shipping: string;
+  tax: string;
+  subtotal: string;
+  items: OrderItem[];
+};

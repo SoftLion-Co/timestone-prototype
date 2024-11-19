@@ -4,12 +4,14 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Table, Accordion } from "@mantine/core";
 
+import { Order } from "@/config/types";
+
 import Plus from "@/images/vectors/plus.svg";
 import Watch1 from "@/test/images/watches/watch-1.png";
 import Watch2 from "@/test/images/watches/watch-2.png";
 import Watch3 from "@/test/images/watches/watch-3.png";
 
-const orders = [
+const orders: Order[] = [
   {
     id: "#34BV66580",
     date: "September 9, 2020",
@@ -20,7 +22,7 @@ const orders = [
     subtotal: "$230.00",
     items: [
       {
-        id: 1,
+        id: "1",
         handle: "",
         name: "Molumenzeit S 2",
         vendor: "",
@@ -36,7 +38,7 @@ const orders = [
         image: Watch1.src,
       },
       {
-        id: 2,
+        id: "2",
         handle: "",
         name: "Molumenzeit S 1",
         vendor: "",
@@ -63,7 +65,7 @@ const orders = [
     subtotal: "$230.00",
     items: [
       {
-        id: 1,
+        id: "1",
         handle: "",
         name: "Molumenzeit S 3",
         vendor: "",
@@ -79,7 +81,8 @@ const orders = [
         image: Watch3.src,
       },
     ],
-  }, {
+  },
+  {
     id: "#55BV66580",
     date: "September 9, 2020",
     status: "In progress",
@@ -89,7 +92,7 @@ const orders = [
     subtotal: "$230.00",
     items: [
       {
-        id: 1,
+        id: "1",
         handle: "",
         name: "Molumenzeit S 2",
         vendor: "",
