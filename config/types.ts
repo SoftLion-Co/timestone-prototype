@@ -1,20 +1,19 @@
-export type CardPropsOptions = {
-  name: string;
-  values: string[];
-};
-
 export type CardProps = {
   id: string;
+  handle: string;
+  quantity: number;
   title: string;
   productType: string;
-  country: string;
-  minPrice: number;
+  price: number;
+  vendor: string;
+  // одна картинка потрібна не масив
   images: string[];
-  options: CardPropsOptions[];
+  options: Option[];
 };
 
 export type CartProductProps = {
   id: string;
+  handle: string;
   title: string;
   price: number;
   image: string;
@@ -22,10 +21,20 @@ export type CartProductProps = {
   strapColor: string;
 };
 
-export type Product =  {
+export type Product = {
   id: string;
-  title: string;
-  minPrice: string;
+  handle: string;
   quantity: number;
+  title: string;
+  description: string;
+  productType: string;
+  vendor: string;
+  price: string;
   images: string[];
+  options: Option[];
+};
+
+export type Option = {
+  name: string;
+  values: string[];
 };

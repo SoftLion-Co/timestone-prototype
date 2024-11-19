@@ -26,14 +26,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <CartProvider>
-          <FiltersProvider>
-            <MantineProvider>
-              <Header />
-              <CartComponent />
-              <main>{children}</main>
-              <Footer />
-            </MantineProvider>
-          </FiltersProvider>
+          <MantineProvider>
+            <Header />
+            <CartComponent />
+            <main>{children}</main>
+            <Footer />
+          </MantineProvider>
         </CartProvider>
       </body>
     </html>

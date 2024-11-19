@@ -6,42 +6,38 @@ export const getProducts = async (
   options?: object,
   limit?: number,
   pageCursor?: string,
-  sortKey?:string,
-  reverse?: boolean,
-) => {
+  sortKey?: string,
+  reverse?: boolean
+): Promise<any> => {
   try {
-    const res = await fetch(`${BASE_URL}/product`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axios.post(
+      `${BASE_URL}/product`,
+      {
+        filters,
+        options,
+        pageCursor,
+        limit,
+        sortKey,
+        reverse,
       },
-      body: JSON.stringify({ filters: filters, options: options, pageCursor }),
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    if (!res.ok) {
-      const errorMessage = await res.text();
-      throw new Error(`Error: ${res.status} - ${errorMessage}`);
-    }
-
-    return await res.json();
+    return response.data; 
   } catch (error) {
     console.error("Failed to fetch products:", error);
-    throw error;
   }
 };
 
-export const getProductByHandle = async (handle: string) => {
+export const getProductByHandle = async (handle: string): Promise<any> =>{
   try {
-    const res = await fetch(`${BASE_URL}/product/${handle}`);
-
-    if (!res.ok) {
-      const errorMessage = await res.text();
-      throw new Error(`Error: ${res.status} - ${errorMessage}`);
-    }
-
-    return await res.json();
+    const response = await axios.get(`${BASE_URL}/product/${handle}`);
+    return response.data; 
   } catch (error) {
-    console.error("Failed to fetch product by ID:", error);
-    throw error;
+    console.error("Failed to fetch product by handle:", error);
   }
 };
