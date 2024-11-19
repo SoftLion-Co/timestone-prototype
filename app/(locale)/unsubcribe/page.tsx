@@ -1,6 +1,6 @@
 //! ?email=${email}
 const Unsubscribe = () => {
-  // const email = new URLSearchParams(window.location.search).get("email");
+  //const email = new URLSearchParams(window.location.search).get("email");
 
   // const handleUnsubscribe = async () => {
   //   try {
