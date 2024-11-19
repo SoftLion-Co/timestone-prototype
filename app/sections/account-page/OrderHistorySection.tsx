@@ -171,7 +171,7 @@ const OrderHistorySection = () => {
                   alt="Toggle"
                   width={16}
                   height={16}
-                  className={`w-[10px] h-[10px] md:w-[16px] md:h-[16px] transition-transform duration-300 ${
+                  className={`w-[10px] h-[10px] md:w-[16px] md:h-[16px] transition-transform duration-300 ease-in-out ${
                     expandedOrder === order.id ? "rotate-45" : ""
                   }`}
                 />
