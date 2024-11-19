@@ -22,9 +22,7 @@ export type Product = {
   id: string;
   title: string;
   productType: string;
-  minPrice: string;
-  maxPrice: string;
-  currencyCode: string;
+  price: string;
   quantity: number;
   images: string[];
   description: string;

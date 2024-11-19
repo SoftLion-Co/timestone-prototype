@@ -36,6 +36,7 @@ export const getProducts = async (
 export const getProductByHandle = async (handle: string): Promise<any> => {
   try {
     const response = await axios.get(`${BASE_URL}/product/${handle}`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch product by handle:", error);

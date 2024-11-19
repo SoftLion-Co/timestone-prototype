@@ -71,10 +71,14 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   if (!isLouding) {
     return <div>Please wait, data is loading</div>;
   }
-  const modifiedDescription = product?.description?.replace(
-    /<p><meta charset="utf-8"><span><\/span><span><\/span><span>.*?<\/span><\/p>/,
-    ""
-  );
+
+  const description = product?.description.split("&") || ["", ""];
+  const higherDescription = description[0] || "";
+  const lowerDescription = description[1].split(";").map((item) => {
+    const [key, value] = item.split(":").map((part) => part.trim());
+    return { key, value };
+  });
+  console.log("lower:", lowerDescription);
 
   return (
     <section>
@@ -126,16 +130,26 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         <div className="flex flex-col items-center text-center">
           <h3 className="text-[32px]">{product?.title}</h3>
           <p className="text-[12px] my-[20px] w-[350px] md:w-[400px] text-silver">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim
-            facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
+            {higherDescription}
           </p>
 
           <hr className="hidden xl:block w-[350px] md:w-[400px]" />
 
           <div
             className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[10px] text-center"
-            dangerouslySetInnerHTML={{ __html: modifiedDescription || " " }}
+            //   dangerouslySetInnerHTML={{ __html: modifiedDescription || " " }}
           />
+
+          <div className="space-y-4">
+            {lowerDescription.map((property, index) => (
+              <div key={index} className="flex justify-between items-start">
+                <span className="font-semibold text-gray-700">
+                  {property.key}
+                </span>
+                <span className="text-gray-500">{property.value}</span>
+              </div>
+            ))}
+          </div>
 
           <hr className="hidden xl:block w-[400px]" />
 
@@ -163,7 +177,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   disabled={quantity >= maxQuantity || isOutOfStock}
                   onClick={handleIncrement}
                 >
-                  <Image src={Arrow} alt="Up Arrow"  />
+                  <Image src={Arrow} alt="Up Arrow" />
                 </UnstyledButton>
                 <UnstyledButton
                   className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
@@ -179,7 +193,9 @@ const ProductSection: FC<productProps> = ({ productName }) => {
               </div>
             </div>
 
-            <span className="text-[20px] px-[10px] py-[10px]">{product?.minPrice}$</span>
+            <span className="text-[20px] px-[10px] py-[10px]">
+              {product?.price}$
+            </span>
           </div>
 
           <Button

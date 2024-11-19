@@ -28,7 +28,7 @@ const CheckoutSection = () => {
       try {
         if (products.length != 0) {
           const result = products.reduce(
-            (acc, product) => acc + Number(product.minPrice) * product.quantity,
+            (acc, product) => acc + Number(product.price) * product.quantity,
             0 + price
           );
           setTotal(Number(result.toFixed(2)));
@@ -213,7 +213,7 @@ const CheckoutSection = () => {
           title: product.title,
           priceSet: {
             shopMoney: {
-              amount: product.minPrice,
+              amount: product.price,
               currencyCode: "UAH",
             },
           },
