@@ -378,13 +378,13 @@ const AuthorizationSection = () => {
             <Button
               text="Sign In"
               type="button"
-              className="!w-[208px] mx-auto mt-[38px]"
+              className="!w-[208px] mx-auto mt-[38px] mb-[46px]"
               onClick={handleSignUp}
             />
 
-            <p className="mt-[38px] font-bold text-[20px]">Express sing in</p>
+            {/* <p className="mt-[38px] font-bold text-[20px]">Express sing in</p> */}
 
-            <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
+            {/* <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
               <Button
                 text="Sign in"
                 type="button"
@@ -399,7 +399,7 @@ const AuthorizationSection = () => {
                 icon="google"
                 onClick={handleSignUpGoogle}
               />
-            </div>
+            </div> */}
           </>
         ) : (
           <>

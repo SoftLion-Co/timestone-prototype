@@ -24,9 +24,11 @@ export const registrateNewUser = async (
         password,
         receiveUpdates
       });
+    console.log(response.data);
     return response.data;
+    
   } catch (error) {
-    console.error("Failed to register user:", error);
+    console.error("Failed to register user:", error); //ретур ерор або сров відловлення на вронтенді
   }
 };
 
