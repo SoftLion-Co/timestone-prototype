@@ -69,7 +69,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   }, [productName]);
 
   if (!isLouding) {
-    return <div>Please wait, data is loading</div>;
+    return <div>Please wait, data is loading!</div>;
   }
 
   const description = product?.description.split("&") || ["", ""];
@@ -78,7 +78,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     const [key, value] = item.split(":").map((part) => part.trim());
     return { key, value };
   });
-  console.log("lower:", lowerDescription);
 
   return (
     <section>
@@ -135,18 +134,11 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
           <hr className="hidden xl:block w-[350px] md:w-[400px]" />
 
-          <div
-            className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[10px] text-center"
-            //   dangerouslySetInnerHTML={{ __html: modifiedDescription || " " }}
-          />
-
-          <div className="space-y-4">
+          <div className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[12px] text-center space-y-[10px]">
             {lowerDescription.map((property, index) => (
               <div key={index} className="flex justify-between items-start">
-                <span className="font-semibold text-gray-700">
-                  {property.key}
-                </span>
-                <span className="text-gray-500">{property.value}</span>
+                <span>{property.key}</span>
+                <span>{property.value}</span>
               </div>
             ))}
           </div>
@@ -163,12 +155,12 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 onChange={handleQuantityChange}
                 classNames={{
                   input:
-                    "h-[44px] w-[80px] text-xs pr-[40px] text-center ring-1 ring-silver focus:outline-none focus:ring-1 focus:ring-onyx",
+                    "h-[44px] w-[80px] text-xs pr-[40px] text-center rounded-lg ring-1 ring-silver focus:outline-none focus:ring-1 focus:ring-onyx",
                 }}
                 disabled={isOutOfStock}
               />
               {isOutOfStock && (
-                <p className="text-red-500">Немає в наявності</p>
+                <p className="text-darkBurgundy">Product is out of stock!</p>
               )}
 
               <div className="absolute top-[-12px] right-[10px] h-full flex flex-col items-center justify-center gap-[4px]">
@@ -200,7 +192,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
           <Button
             text="Place an order"
-            className="mini:w-[80%] w-[100%] px-[50px]"
+            className="mini:w-[80%] w-[100%] px-[50px] mb-[10px]"
           />
         </div>
       </div>
