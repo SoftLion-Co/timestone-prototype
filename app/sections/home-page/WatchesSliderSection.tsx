@@ -5,11 +5,11 @@ import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
 import React, { useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
-import { TestSliderProducts } from "@/test/sliderProducts";
+// import { TestSliderProducts } from "@/test/sliderProducts";
 import CardComponent from "@/components/CardComponent";
 import { CardProps } from "@/config/types";
 import ImgArrow from "@/images/vectors/arrow.svg";
-// import { getProducts } from "@/services/ProductService";
+import { getProducts } from "@/services/ProductService";
 
 
 const textSliderObject = {
@@ -24,22 +24,24 @@ const textSliderObject = {
 //! потрібна заглушка як на youtube
 const SliderSection = () => {
 
-  const [sliderProducts, setSliderProducts] = useState<CardProps[]>(TestSliderProducts);
-  const [loading, setLoading] = useState(true);
+  const [sliderProducts, setSliderProducts] = useState<CardProps[]>([]);
+  const [loading, setLoading] = useState(false);
   
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     try {
-  //       const response = await getProducts(undefined, undefined, 10, undefined, "BEST_SELLING", true);
-  //       setProducts(response)
-  //       setLoading(true)
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+			//!complete filters
+        const response = await getProducts(undefined, undefined, 10, undefined, "BEST_SELLING", true);
+        console.log(response.products)
+		  setSliderProducts(response.products)
+        setLoading(true)
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
 
-  //   fetchProducts();
-  // }, []);
+    fetchProducts();
+  }, []);
 
   return (
     <>

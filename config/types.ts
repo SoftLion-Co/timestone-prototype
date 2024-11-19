@@ -7,7 +7,7 @@ export type CardProps = {
   price: number;
   vendor: string;
   // одна картинка потрібна не масив
-  images: string[];
+  image: string[];
   options: Option[];
 };
 
