@@ -110,14 +110,19 @@ const AuthorizationSection = () => {
         dateOfBirth,
         password,
         receiveUpdates
-      );
-      resetForm();
+      ).then((response) => {
+        if (response) {
+          // якшо респонс не помилка знач успіщних знач можна встановити модалку
+          setIsModalVisible(true);
+          resetForm();
+        } // а яко помилка то показати на формі тип її
+      });
     }
   };
 
   const handleSignUp = () => {
     if (checkValidationLogin()) {
-      loginUser(email,password);
+      loginUser(email, password);
       resetForm();
     }
   };
@@ -254,8 +259,24 @@ const AuthorizationSection = () => {
     return isValid;
   };
 
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const Modal = ({ message }: { message: string }) => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div className="max-w-[280px] bg-white p-[20px] rounded-lg text-center">
+          <h3 className="text-xl font-semibold">{message}</h3>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className=" relative flex justify-center items-center font-poppins">
+      {isModalVisible && (
+        <Modal message="Check your email to confirm and finish registration" />
+      )}
+
       <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
         <Image
           src={Background}

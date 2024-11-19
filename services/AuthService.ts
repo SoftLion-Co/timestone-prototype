@@ -22,8 +22,7 @@ export const registrateNewUser = async (
         password,
         receiveUpdates
       });
-    return response.data;
-    
+    return response.data; //тут повертаються токени
   } catch (error) {
     console.error("Failed to register user:", error);
   }
