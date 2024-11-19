@@ -52,11 +52,11 @@ const AuthorizationSection = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
+  const [month, setMonth] = useState<string>("January");
   const [dayOptions, setDayOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const [day, setDay] = useState<string>("");
+  const [day, setDay] = useState<string>("01");
   const [receiveUpdates, setReceiveUpdates] = useState<boolean>(false);
   const [confirmEmail, setConfirmEmail] = useState<string>("");
   const [confirmPassword, setConfirmPasswor] = useState<string>("");
@@ -89,8 +89,8 @@ const AuthorizationSection = () => {
   const resetForm = () => {
     setFirstName("");
     setLastName("");
-    setMonth("");
-    setDay("");
+    setMonth("January");
+    setDay("01");
     setPhone("");
     setEmail("");
     setPassword("");
@@ -101,39 +101,23 @@ const AuthorizationSection = () => {
 
   const handleCreateAccount = () => {
     if (checkValidationRegistration()) {
-      const newUser = {
-        firstName: firstName,
-        lastName: lastName,
-        month: month,
-        day: day,
-        phone: phone,
-        email: email,
-        password: password,
-        receiveUpdates: receiveUpdates,
-      };
+      const dateOfBirth = `${month}, ${day}`;
       registrateNewUser(
         firstName,
         lastName,
-        month,
-        day,
-        phone,
         email,
+        phone,
+        dateOfBirth,
         password,
         receiveUpdates
       );
-      console.log(`New user added`, newUser);
       resetForm();
     }
   };
 
   const handleSignUp = () => {
     if (checkValidationLogin()) {
-      const newUser = {
-        email: email,
-        password: password,
-      };
-      loginUser(newUser.email, newUser.password);
-      console.log(`User logged in`, newUser);
+      loginUser(email,password);
       resetForm();
     }
   };

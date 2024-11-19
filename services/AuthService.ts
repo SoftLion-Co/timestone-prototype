@@ -4,10 +4,9 @@ import { BASE_URL } from "@/config/config";
 export const registrateNewUser = async (
     firstName: string,
     lastName: string,
-    month: string,
-    day: string, // узгодити тип та вигляд збереження в бд
-    phone: string,
     email: string,
+    phone: string,
+    dateOfBirth: string,
     password: string,
     receiveUpdates: boolean,
 ): Promise<any> => {
@@ -19,16 +18,14 @@ export const registrateNewUser = async (
         lastName,
         email,
         phone,
-        month,
-        day,
+        dateOfBirth,
         password,
         receiveUpdates
       });
-    console.log(response.data);
     return response.data;
     
   } catch (error) {
-    console.error("Failed to register user:", error); //ретур ерор або сров відловлення на вронтенді
+    console.error("Failed to register user:", error);
   }
 };
 
