@@ -3,6 +3,9 @@ import { useForm } from "@mantine/form";
 
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
+
+//!добавити методи гетюзер гетордерс ремув ресейвер ад ресейвер
+
 const MyAccountSection = () => {
   const countries = [{ value: "UA", label: "Ukraine" }];
 
@@ -103,6 +106,7 @@ const MyAccountSection = () => {
 
     form.reset();
   };
+
 
   return (
     <>
