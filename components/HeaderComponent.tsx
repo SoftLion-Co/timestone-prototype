@@ -18,7 +18,6 @@ const navData = [
   { link: '/ua/category-page', text: 'Watches' },
   { link: '/ua/contact-us', text: 'Contact us' },
   { link: '/ua/legal', text: 'FAQ' },
-
 ];
 
 const Header = () => {
