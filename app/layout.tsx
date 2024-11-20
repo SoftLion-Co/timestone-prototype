@@ -6,7 +6,6 @@ import { Inter } from 'next/font/google';
 import Header from '@/components/HeaderComponent';
 import Footer from '@/components/FooterComponent';
 import { MantineProvider } from '@mantine/core';
-import { FiltersProvider } from '@/hooks/useFilters';
 import CartComponent from '@/components/cart-component/CartComponent';
 import { CartProvider } from '@/hooks/useCart';
 

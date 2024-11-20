@@ -20,6 +20,8 @@ export type CartProductProps = {
   title: string;
   price: number;
   image: string;
+  quantity: number;
+  maxQuantity: number;
   caseColor: string;
   strapColor: string;
 };

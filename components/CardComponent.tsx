@@ -13,6 +13,7 @@ const CardComponent: FC<CardProps> = ({
   title,
   price,
   image,
+  quantity,
   productType,
 }) => {
   const { addToCart, isOpen, changeOpenState } = useCart();
@@ -30,7 +31,9 @@ const CardComponent: FC<CardProps> = ({
       handle: handle,
       title: title,
       price: +price,
-      image: image[0],
+      image: image,
+      quantity: 1,
+      maxQuantity: quantity,
       caseColor: 'red',
       strapColor: 'red',
     });
@@ -40,7 +43,7 @@ const CardComponent: FC<CardProps> = ({
     <div className="flex flex-col items-center font-poppins">
       <div className="relative group rounded-md overflow-hidden">
         <Image
-          src={image[0]}
+          src={image}
           width={255}
           height={300}
           alt={`image of ${title}`}

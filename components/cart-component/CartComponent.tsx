@@ -4,13 +4,11 @@ import Image from 'next/image';
 
 import Close from '@/images/cart-component/close.svg';
 import CartProduct from './CartProduct';
-import Button from '../ButtonComponent';
 import Link from 'next/link';
 import { useCart } from '@/hooks/useCart';
 
 const CartComponent = () => {
-  const { products, removeFromCart, totalAmount, isOpen, changeOpenState } =
-    useCart();
+  const { products, totalAmount, isOpen, changeOpenState } = useCart();
 
   return (
     <div
@@ -41,21 +39,10 @@ const CartComponent = () => {
             <CartProduct key={product.id} card={product} />
           ))}
         </ul>
-
-        <Button text="Add A Matching Item" fullWidth bordered />
       </div>
 
       <div className="py-6 px-5 bg-pearl flex flex-col gap-[16px] mt-auto">
         <ul className="flex flex-col text-silver gap-2">
-          {/* <li className="border-b border-[##ECEDF1] flex items-center justify-between">
-            <p className="text-[12px]">Shopping UPS Standard</p>
-            <span className="text-[20px] text-black font-normal">$12</span>
-          </li>
-          <li className="border-b border-[##ECEDF1] flex items-center justify-between">
-            <p className="text-[12px]">Discount 15% Off</p>
-            <span className="text-[20px] text-black font-normal">$1250</span>
-          </li> */}
-
           <li className="border-b border-[##ECEDF1] flex items-center justify-between">
             <p className="text-[12px]">Grand Total</p>
             <span className="text-[20px] text-black font-normal">
@@ -65,7 +52,7 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href="/"
+          href="/ua/checkout"
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300 ">
           Go To Checkout
         </Link>
