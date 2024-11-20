@@ -12,6 +12,7 @@ interface InputProps {
   bordered?: boolean;
   fullWidth?: boolean;
   pattern?: string;
+  label?: string;
   value?: string;
   error?: string | null;
   name?: string;
@@ -38,6 +39,7 @@ const InputComponent: FC<InputProps> = ({
   fullWidth = false,
   pattern,
   value,
+  label,
   name,
   error,
   onChange,
@@ -86,7 +88,7 @@ const InputComponent: FC<InputProps> = ({
             ref={selectRef}
           >
             <div
-              className="border border-gray-300 rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver"
+              className={`border border-whisper border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver`}
               onClick={toggleDropdown}
             >
               {selected

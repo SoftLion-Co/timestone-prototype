@@ -4,10 +4,6 @@ export type CardProps = {
   quantity: number;
   title: string;
   productType: string;
-  country: string;
-  minPrice: number;
-  maxPrice: number;
-  images: string[];
   price: number;
   vendor: string;
   image: string;
@@ -36,6 +32,34 @@ export type Product = {
   description: string;
   vendor: string;
   images: string[];
+};
+
+export type SidebarProps = {
+  setActiveSection: (section: string) => void;
+  className?: string;
+};
+
+export type OrderItem = {
+  id: string;
+  handle: string;
+  name: string;
+  vendor: string;
+  options: Option[];
+  price: string;
+  quantity: number;
+  subtotal: string;
+  image: string;
+};
+
+export type Order = {
+  id: string;
+  date: string;
+  status: string;
+  total: string;
+  shipping: string;
+  tax: string;
+  subtotal: string;
+  items: OrderItem[];
   options: Option[];
 };
 
