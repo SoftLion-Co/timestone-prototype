@@ -1,4 +1,4 @@
-export type CardPropsOptions = {
+export type Option = {
   name: string;
   values: string[];
 };
@@ -11,7 +11,7 @@ export type CardProps = {
   minPrice: number;
   maxPrice: number;
   images: string[];
-  options: CardPropsOptions[];
+  options: Option[];
 };
 
 export type CartProductProps = {
@@ -41,7 +41,7 @@ export type OrderItem = {
   handle: string;
   name: string;
   vendor: string;
-  options: CardPropsOptions[];
+  options: Option[];
   price: string;
   quantity: number;
   subtotal: string;
