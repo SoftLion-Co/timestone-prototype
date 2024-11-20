@@ -115,7 +115,7 @@ const Button: FC<ButtonProps> = ({
           alt="Logout icon"
           width={22}
           height={22}
-          className="mr-2 inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert transition duration-300 ease-in-out"
+          className="mr-2 inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300 ease-in-out"
         />
       );
     }

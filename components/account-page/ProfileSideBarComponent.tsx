@@ -20,13 +20,16 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
   };
 
   const handleLogout = () => {
+    localStorage.setItem("accessToken", "");
+    localStorage.setItem("refreshToken", "");
     router.push("/");
     setIsLoggedIn(false);
   };
+
   const activeClass = `
   cursor-pointer py-[0] px-[10px] md:px-[20px] md:py-[10px]
   text-black border-l-[3px] border-darkBurgundy
- md:border-b-[3px] md:border-l-0 md:border-primary 
+  md:border-b-[3px] md:border-l-0 md:border-primary 
 `;
   const inactiveClass = `
   cursor-pointer py-[0] px-[10px] md:px-[20px] md:py-[10px] text-gray-500 hover:text-black
@@ -37,7 +40,7 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
   return (
     <div className="">
       <div
-        className={`${className} flex justify-between items-start md:items-center md:justify-end md:gap-[100px] lg:gap-[200px] xl:gap-[370px] `}
+        className={`${className} flex justify-between items-start md:items-center md:justify-end md:gap-[100px] lg:gap-[200px] xl:gap-[380px] `}
       >
         <nav className="flex flex-col gap-[30px] md:flex-row md:items-center ">
           <p
@@ -64,7 +67,8 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
         <div className="flex flex-row items-center">
           <Button
             bordered
-            className="text-[12px] py-[10px] "
+            onClick={handleLogout}
+            className="text-[12px] py-[8px] px-[10px]"
             text="Logout"
             background="transparent"
             icon="logout"

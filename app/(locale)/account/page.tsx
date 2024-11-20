@@ -1,12 +1,14 @@
 "use client";
+import { Loader } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 
 import TitleComponents from "@/components/TitleComponents";
+import NewsSection from "@/app/sections/home-page/NewsSection";
 import MyAccountSection from "@/app/sections/account-page/MyAccountSection";
 import OrderHistorySection from "@/app/sections/account-page/OrderHistorySection";
 import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarComponent";
-import NewsSection from "@/app/sections/home-page/NewsSection";
 
+//! перевірка на tokens
 const Page = () => {
   const [activeSection, setActiveSection] = useState("section1");
   const [loading, setLoading] = useState(true);
@@ -30,8 +32,8 @@ const Page = () => {
   return (
     <>
       {loading ? (
-        <div className="container text-center">
-          <p>Loading profile...</p>
+        <div className="container flex justify-center items-center">
+          <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
         </div>
       ) : (
         <>

@@ -40,25 +40,25 @@ export type SidebarProps = {
 };
 
 export type OrderItem = {
-  id: string;
-  handle: string;
+  id: string; 
+  // handle: string;
   name: string;
-  vendor: string;
-  options: Option[];
+  // vendor: string;
   price: string;
   quantity: number;
   subtotal: string;
-  image: string;
+  // image: string;
 };
 
 export type Order = {
   id: string;
+  // name: string;
   date: string;
   status: string;
   total: string;
-  shipping: string;
-  tax: string;
-  subtotal: string;
+  // shipping: string;
+  // tax: string;
+  // subtotal: string;
   items: OrderItem[];
 };
 

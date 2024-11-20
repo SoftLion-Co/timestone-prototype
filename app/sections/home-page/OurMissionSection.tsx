@@ -40,7 +40,7 @@ const OurMissionSection = () => {
           <p className="font-poppins text-default">
             {textOurMissionObject.textParagraph2}
           </p>
-          <Button text="Contact Us" tag="a" href="/ua/contact-us" />
+          <Button text="Contact Us" tag="a" href="/contact-us" />
         </div>
       </div>
     </section>

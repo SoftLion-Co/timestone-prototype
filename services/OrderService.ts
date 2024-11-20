@@ -13,7 +13,8 @@ export const CreateOrder = async (order: any, options: any): Promise<any> => {
 };
 
 // accessToken: string, authToken: string
-export const GetUserOrders = async (customerId:string): Promise<any> => {
+//customer id треба видалити
+export const getUserOrders = async (customerId:string): Promise<any> => {
 	try {
 		const res = await axios.get(`${BASE_URL}/order/${customerId}`);
 	//   const res = await axios.get(`${BASE_URL}/order`, {

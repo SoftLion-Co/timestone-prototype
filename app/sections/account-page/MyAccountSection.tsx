@@ -1,10 +1,15 @@
 "use client";
 import { useForm } from "@mantine/form";
+import React, { useState, useEffect } from "react";
+
+import { getUser, updatePassword, updateUser } from "@/services/AuthService";
+import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
+import { orders } from "@/test/orderData";
 
-//!добавити методи гетюзер гетордерс ремув ресейвер ад ресейвер
+//! кнопки для підєднання facebook or google
 
 const MyAccountSection = () => {
   const countries = [{ value: "UA", label: "Ukraine" }];
@@ -48,15 +53,50 @@ const MyAccountSection = () => {
     { value: "december", label: "December" },
   ];
 
+  const [userName, setUserName] = useState(""); 
+  const [userFullname, setUserFullname] = useState(""); 
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = await getUser("66ffebc6fecfdf4543b5c7c9"); // треба буде замінити на tokens
+        console.log("5",JSON.stringify(user));
+        setUserName(user.firstName || "");
+        setUserFullname(user.lastName || "");
+        form.setValues({
+          name: user.firstName || "",
+          fullname: user.lastName || "",
+          email: user.email || "",
+          phone: user.phoneNumber || "",
+          month: user.dateOfBirth?.split(",")[0] || "",
+          date: user.dateOfBirth?.split(",")[1] || "",
+          country: user.address?.split("&")[0] || "",
+          city: user.address?.split("&")[1] || "",
+          address: user.address?.split("&")[2] || "",
+          zipCode: user.address?.split("&")[3] || "",
+        });
+        console.log("6",JSON.stringify(user.address?.split("&")));
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+  
+    fetchUserData();
+  }, []);
+  
   const form = useForm({
     initialValues: {
-      name: "",
+      name: "настя",
       fullname: "",
       email: "",
       phone: "",
-      password: "",
-      verify: "",
-      remember: false,
+      month: "",
+      date: "",
+      country: "",
+      city: "",
+      address: "",
+      zipCode: "",
+      subscribe: false,
     },
     validate: {
       name: (value) =>
@@ -65,7 +105,17 @@ const MyAccountSection = () => {
         value.length < 3 ? "Name must be at least 3 characters" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       phone: (value) =>
-        value && /^\d{10}$/.test(value) ? null : "Invalid phone number",
+        value && /^\+?\d{12}$/.test(value) ? null : "Invalid phone number. It should start with + and contain 12 digits.",      
+    },
+  });
+  
+  const formWithPass = useForm({
+    initialValues: {
+      password: "",
+      verify: "",
+      remember: false,
+    },
+    validate: {
       password: (value) =>
         value.length < 6 ? "Password must have at least 6 characters" : null,
       verify: (value, values) =>
@@ -77,42 +127,44 @@ const MyAccountSection = () => {
     event.preventDefault();
     const errors = form.validate();
     const values1 = form.values;
-    console.log(
-      5,
-      values1.fullname,
-      values1.name,
-      values1.email,
-      values1.phone
-    );
+
+    const response = await updateUser("", {
+      lastname: values1.fullname,
+      firstname: values1.name,
+      email: values1.email,
+      phoneNumber: values1.phone,
+      dateOfBirth: `${ values1.month},${ values1.date}` ,
+      address: `${ values1.country}&${ values1.city}&${ values1.address}&${ values1.zipCode}`,
+    });
 
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
-
+    //! обробка помилки
     form.reset();
   };
 
   const handleSubmitPassword = async (event: any) => {
     event.preventDefault();
-    const values2 = form.values;
-    const errors = form.validate();
+    const values2 = formWithPass.values;
+    const errors = formWithPass.validate();
     console.log(5, values2.password, values2.verify);
+    // const response = await updatePassword("", values2.password)
 
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
-
+    //! обробка помилки
     form.reset();
   };
-
 
   return (
     <>
       <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
         <h1 className="text-black text-[32px] md:text-[46px] font-medium">
-          Hey, John Smith
+        Hey, {userName} {userFullname}
         </h1>
         <p className="text-[12px] text-[#939393] md:text-[14px] text-center">
           Welcome to your dashboard, your one-stop-shop for all your recent
@@ -188,6 +240,7 @@ const MyAccountSection = () => {
               bordered={true}
               scrollable={true}
               className="mini:w-full lg:w-[45%]"
+              {...form.getInputProps("month")}
             />
 
             <Input
@@ -196,6 +249,7 @@ const MyAccountSection = () => {
               bordered={true}
               scrollable={true}
               className="mini:w-full lg:w-[45%]"
+              {...form.getInputProps("date")}
             />
           </div>
         </div>
@@ -210,6 +264,7 @@ const MyAccountSection = () => {
               value={countries[0].label}
               options={countries}
               className="mini:w-full lg:w-[47%]"
+              {...form.getInputProps("country")}
             />
             <Input
               inputType="select"
@@ -218,6 +273,7 @@ const MyAccountSection = () => {
               scrollable
               className="mini:w-full lg:w-[47%]"
               placeholder="City"
+              {...form.getInputProps("city")}
             />
             <Input
               inputType="input"
@@ -226,6 +282,7 @@ const MyAccountSection = () => {
               type="text"
               bordered
               className="w-full lg:w-[47%]"
+              {...form.getInputProps("address")}
             />
             <Input
               inputType="input"
@@ -234,11 +291,16 @@ const MyAccountSection = () => {
               type="text"
               bordered
               className="w-full lg:w-[47%]"
+              {...form.getInputProps("zipCode")}
             />
           </div>
         </div>
         <div className="w-full flex text-[14px] items-center flex-row text-silver gap-[10px] mt-[-20px] text-left">
-          <input type="checkbox" className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-red-500 checked:border-red-500 focus:outline-none focus:ring-0" />
+          <input
+            {...form.getInputProps("subscribe")}
+            type="checkbox"
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-red-500 checked:border-red-500 focus:outline-none focus:ring-0"
+          />
           <label>Sign-up to receive the latest updates and promotions</label>
         </div>
         <Button text="Update" className="mt-[-20px]" type="submit" />
@@ -249,7 +311,7 @@ const MyAccountSection = () => {
         onSubmit={handleSubmitPassword}
       >
         <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-          <h2 className="mb-[20px] text-[24px] text-[#939393]">Password</h2>
+          <h2 className="mb-[20px] text-[24px] text-[#939393]">New password</h2>
           <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
             <div className="w-full lg:w-[45%] flex flex-col">
               <Input
@@ -262,7 +324,7 @@ const MyAccountSection = () => {
                 errorType="critical"
                 fullWidth
                 className="w-full"
-                {...form.getInputProps("password")}
+                {...formWithPass.getInputProps("password")}
               />
             </div>
             <div className="w-full lg:w-[45%] flex flex-col">
@@ -276,7 +338,7 @@ const MyAccountSection = () => {
                 errorType="critical"
                 fullWidth
                 className="w-full"
-                {...form.getInputProps("verify")}
+                {...formWithPass.getInputProps("verify")}
               />
             </div>
           </div>
