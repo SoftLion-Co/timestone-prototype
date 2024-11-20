@@ -4,10 +4,13 @@ export type CardProps = {
   quantity: number;
   title: string;
   productType: string;
+  country: string;
+  minPrice: number;
+  maxPrice: number;
+  images: string[];
   price: number;
   vendor: string;
-  // одна картинка потрібна не масив
-  image: string[];
+  image: string;
   options: Option[];
 };
 
@@ -23,13 +26,13 @@ export type CartProductProps = {
 
 export type Product = {
   id: string;
+  title: string;
+  productType: string;
+  price: string;
   handle: string;
   quantity: number;
-  title: string;
   description: string;
-  productType: string;
   vendor: string;
-  price: string;
   images: string[];
   options: Option[];
 };
