@@ -60,7 +60,6 @@ export type Order = {
   tax: string;
   subtotal: string;
   items: OrderItem[];
-  options: Option[];
 };
 
 export type Option = {
