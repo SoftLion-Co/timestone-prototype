@@ -52,7 +52,7 @@ const AuthorizationSection = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [month, setMonth] = useState<string>("January");
+  const [month, setMonth] = useState<string>("january");
   const [dayOptions, setDayOptions] = useState<
     { value: string; label: string }[]
   >([]);
@@ -89,7 +89,7 @@ const AuthorizationSection = () => {
   const resetForm = () => {
     setFirstName("");
     setLastName("");
-    setMonth("January");
+    setMonth("january");
     setDay("01");
     setPhone("");
     setEmail("");
@@ -112,17 +112,18 @@ const AuthorizationSection = () => {
         receiveUpdates
       ).then((response) => {
         if (response) {
-          // якшо респонс не помилка знач успіщних знач можна встановити модалку
+          // якшо респонс не помилка знач успішно надісланий емейл знач можна встановити модалку
           setIsModalVisible(true);
           resetForm();
-        } // а яко помилка то показати на формі тип її
+        } // а якшо помилка то показати на формі тип її
       });
     }
   };
 
   const handleSignUp = () => {
     if (checkValidationLogin()) {
-      loginUser(email, password);
+      const res = loginUser(email, password);
+      console.log(res);
       resetForm();
     }
   };
