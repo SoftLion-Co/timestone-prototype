@@ -1,13 +1,54 @@
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
 
-export const registration = async (userData: any): Promise<any> => {
+
+export const registrateNewUser = async (
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  dateOfBirth: string,
+  password: string,
+  receiveUpdates: boolean
+): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/registration`, userData);
-    console.log(res.data);
-	 return res.data;
+    const response = await axios.post(`${BASE_URL}/auth/registration`, {
+      firstName,
+      lastName,
+      email,
+      phone,
+      dateOfBirth,
+      password,
+      receiveUpdates,
+    });
+    return response.data; //тут повертаються шось про мейлсенд
   } catch (error) {
-    console.error("Error during registration:", error);
+    console.error("Failed to register user:", error);
+    throw error;
+  }
+};
+
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<any> => {
+  try {
+    console.log("login333");
+    const response = await axios.post(`${BASE_URL}/auth/login`, {
+      email,
+      password,
+    });
+    if (response?.data?.accessToken && response?.data?.refreshToken) {
+
+      const { accessToken, refreshToken } = response.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      return "";
+    }
+  } catch (error) {
+    console.error("Failed to login user:", error);
+    throw error;
   }
 };
 
@@ -36,15 +77,6 @@ export const updatePassword = async (userId: string, newPassword: string): Promi
     return res.data;
   } catch (error) {
     console.error("Error updating password:", error);
-  }
-};
-
-export const login = async (loginData: any): Promise<any> => {
-  try {
-    const res = await axios.post(`${BASE_URL}/auth/login`, loginData);
-    return res.data;
-  } catch (error) {
-    console.error("Error during login:", error);
   }
 };
 
@@ -87,3 +119,4 @@ export const facebookLogin = async (facebookToken: string): Promise<any> => {
     console.error("Error during Facebook login:", error);
   }
 };
+

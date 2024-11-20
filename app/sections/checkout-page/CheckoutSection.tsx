@@ -214,7 +214,7 @@ const CheckoutSection = () => {
           priceSet: {
             shopMoney: {
               amount: product.price,
-              currencyCode: 'UAH',
+              currencyCode: "UAH",
             },
           },
           quantity: product.quantity,

@@ -15,9 +15,9 @@ import Burger from '@/images/vectors/burger.svg';
 import { useCart } from '@/hooks/useCart';
 
 const navData = [
-  { link: '/ua/category-page', text: 'Watches' },
-  { link: '/ua/contact-us', text: 'Contact us' },
-  { link: '/ua/legal', text: 'FAQ' },
+  { link: '/catalog', text: 'Watches' },
+  { link: '/contact-us', text: 'Contact us' },
+  { link: '/legal', text: 'FAQ' },
 ];
 
 const Header = () => {
