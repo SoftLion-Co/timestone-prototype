@@ -129,7 +129,7 @@ const CategoryAsideFilters = ({
   };
 
   // set max and min price
-  const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleprice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinPrice(+e.target.value);
   };
 
@@ -225,6 +225,7 @@ const CategoryAsideFilters = ({
     setIsOpen(false);
   };
 
+  // TODO зробити щоб з'являлись фільри (на плюс - показувати, мінус - ховати) приклад в тг
   return (
     <>
       {/* pc filters */}
@@ -292,7 +293,7 @@ const CategoryAsideFilters = ({
                   className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
                   type="text"
                   placeholder="$0"
-                  onChange={handleMinPrice}
+                  onChange={handleprice}
                 />
                 <span className="text-silver text-[12px] font-poppins ">
                   to
@@ -465,7 +466,7 @@ const CategoryAsideFilters = ({
                       className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
                       type="text"
                       placeholder="$0"
-                      onChange={handleMinPrice}
+                      onChange={handleprice}
                     />
                     <span className="text-silver text-[10px] font-poppins">
                       to

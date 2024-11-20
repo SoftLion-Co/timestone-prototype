@@ -4,6 +4,8 @@ import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
+import { loginUser, registrateNewUser } from "@/services/AuthService";
+import { m } from "framer-motion";
 
 const months = [
   { value: "january", label: "January" },
@@ -50,12 +52,12 @@ const AuthorizationSection = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
+  const [month, setMonth] = useState<string>("january");
   const [dayOptions, setDayOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const [day, setDay] = useState<string>("");
-  const [receiveUpdates, setReceiveUpdates] = useState<string>("");
+  const [day, setDay] = useState<string>("01");
+  const [receiveUpdates, setReceiveUpdates] = useState<boolean>(false);
   const [confirmEmail, setConfirmEmail] = useState<string>("");
   const [confirmPassword, setConfirmPasswor] = useState<string>("");
 
@@ -85,40 +87,43 @@ const AuthorizationSection = () => {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(true);
 
   const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setMonth('');
-    setDay('');
-    setPhone('');
-    setEmail('');
-    setPassword('');
-    setReceiveUpdates("false"); 
-};
+    setFirstName("");
+    setLastName("");
+    setMonth("january");
+    setDay("01");
+    setPhone("");
+    setEmail("");
+    setPassword("");
+    setConfirmEmail("");
+    setConfirmPasswor("");
+    setReceiveUpdates(false);
+  };
 
   const handleCreateAccount = () => {
     if (checkValidationRegistration()) {
-      const newUser = {
-        firstName: firstName,
-        lastName: lastName,
-        month: month,
-        day: day,
-        phone: phone,
-        email: email,
-        password: password,
-        receiveUpdates: receiveUpdates,
-      };
-      console.log(`New user added`, newUser);
-      resetForm();
+      const dateOfBirth = `${month}, ${day}`;
+      registrateNewUser(
+        firstName,
+        lastName,
+        email,
+        phone,
+        dateOfBirth,
+        password,
+        receiveUpdates
+      ).then((response) => {
+        if (response) {
+          // якшо респонс не помилка знач успішно надісланий емейл знач можна встановити модалку
+          setIsModalVisible(true);
+          resetForm();
+        } // а якшо помилка то показати на формі тип її
+      });
     }
   };
 
   const handleSignUp = () => {
     if (checkValidationLogin()) {
-      const newUser = {
-        email: email,
-        password: password,
-      };
-      console.log(`User logged in`, newUser);
+      const res = loginUser(email, password);
+      console.log(res);
       resetForm();
     }
   };
@@ -255,8 +260,24 @@ const AuthorizationSection = () => {
     return isValid;
   };
 
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const Modal = ({ message }: { message: string }) => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div className="max-w-[280px] bg-white p-[20px] rounded-lg text-center">
+          <h3 className="text-xl font-semibold">{message}</h3>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className=" relative flex justify-center items-center font-poppins">
+      {isModalVisible && (
+        <Modal message="Check your email to confirm and finish registration" />
+      )}
+
       <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
         <Image
           src={Background}
@@ -266,7 +287,7 @@ const AuthorizationSection = () => {
         />
       </div>
 
-      <form className="flex flex-col bg-snow w-[360px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-silver rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
+      <form className="flex flex-col bg-snow w-[360px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-gray-300 rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
         <div className="mb-[28px] lg:flex lg:space-between mt-[24px] lg:mt-[60px] items-center">
           {["Login", "Create Account"].map((title, index) => {
             const isActive = isLoginPage ? index === 0 : index === 1;
@@ -312,7 +333,7 @@ const AuthorizationSection = () => {
             </div>
 
             <Input
-            inputType="input"
+              inputType="input"
               placeholder="Email"
               type="email"
               fullWidth={true}
@@ -333,7 +354,7 @@ const AuthorizationSection = () => {
             )}
 
             <Input
-            inputType="input"
+              inputType="input"
               placeholder="Password"
               type="password"
               bordered={true}
@@ -363,13 +384,13 @@ const AuthorizationSection = () => {
             <Button
               text="Sign In"
               type="button"
-              className="!w-[208px] mx-auto mt-[38px]"
+              className="!w-[208px] mx-auto mt-[38px] mb-[46px]"
               onClick={handleSignUp}
             />
 
-            <p className="mt-[38px] font-bold text-[20px]">Express sing in</p>
+            {/* <p className="mt-[38px] font-bold text-[20px]">Express sing in</p> */}
 
-            <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
+            {/* <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
               <Button
                 text="Sign in"
                 type="button"
@@ -384,7 +405,7 @@ const AuthorizationSection = () => {
                 icon="google"
                 onClick={handleSignUpGoogle}
               />
-            </div>
+            </div> */}
           </>
         ) : (
           <>
@@ -397,7 +418,7 @@ const AuthorizationSection = () => {
 
             <div className="flex flex-col gap-[10px]">
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="First Name"
                 type="text"
                 bordered={true}
@@ -412,7 +433,7 @@ const AuthorizationSection = () => {
                 </span>
               )}
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="Last Name"
                 type="text"
                 bordered={true}
@@ -449,7 +470,7 @@ const AuthorizationSection = () => {
                 />
               </div>
               <Input
-              inputType="input"
+                inputType="input"
                 placeholder="Phone Number"
                 type="text"
                 bordered={true}
@@ -467,8 +488,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
-                  inputType="input"
-                  className="mini:w-[320px]"
+                    inputType="input"
+                    className="mini:w-[320px]"
                     placeholder="Email"
                     type="email"
                     bordered={true}
@@ -486,7 +507,7 @@ const AuthorizationSection = () => {
                 <div>
                   {" "}
                   <Input
-                  inputType="input"
+                    inputType="input"
                     placeholder="Confirm Email"
                     type="email"
                     className="mini:w-[320px]"
@@ -506,8 +527,8 @@ const AuthorizationSection = () => {
               <div className="flex flex-col lg:flex-row gap-[10px]">
                 <div>
                   <Input
-                  inputType="input"
-                  className="mini:w-[320px]"
+                    inputType="input"
+                    className="mini:w-[320px]"
                     placeholder="Password"
                     type="password"
                     bordered={true}
@@ -524,7 +545,7 @@ const AuthorizationSection = () => {
 
                 <div>
                   <Input
-                  inputType="input"
+                    inputType="input"
                     placeholder="Confirm Password"
                     type="password"
                     bordered={true}
@@ -544,9 +565,9 @@ const AuthorizationSection = () => {
               <div className="flex text-silver gap-[10px] mt-[10px] text-left">
                 <input
                   type="checkbox"
-                  value={receiveUpdates}
-                  onChange={(e) => setReceiveUpdates(e.target.value)}
-                  className="w-[24px] h-[24epx]"
+                  checked={receiveUpdates}
+                  onChange={(e) => setReceiveUpdates(e.target.checked)}
+                  className="w-[24px] h-[24px]"
                 />
                 <label>
                   Sign-up to receive the latest updates and promotions

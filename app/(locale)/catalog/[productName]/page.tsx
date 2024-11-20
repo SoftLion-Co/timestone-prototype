@@ -1,9 +1,11 @@
 import ProductSection from "@/app/sections/product-page/ProductSection";
 
-const Page = () => {
+const Page = ({ params }: { params: any }) => {
+  const productName = params.productName;
+
   return (
     <>
-      <ProductSection />
+      <ProductSection productName={productName} />
     </>
   );
 };
