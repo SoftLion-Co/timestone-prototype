@@ -14,7 +14,7 @@ import { ProductsContext } from './CategoryMain';
 const ITEM_TO_SHOW = 9;
 
 const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
-  const allProducts1 = useContext(ProductsContext);
+  const allProducts = useContext(ProductsContext);
 
   const { dispatch } = useFilters();
 
@@ -28,7 +28,7 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
     onChange(page) {
       const start = (page - 1) * ITEM_TO_SHOW;
       const end = start + ITEM_TO_SHOW;
-      setVisibleProducts(allProducts1.slice(start, end));
+      setVisibleProducts(allProducts.slice(start, end));
     },
   });
 
@@ -36,20 +36,15 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
     setIsLoading(true);
 
     setTimeout(() => {
-      setVisibleProducts(allProducts1.slice(0, ITEM_TO_SHOW));
+      setVisibleProducts(allProducts.slice(0, ITEM_TO_SHOW));
       pagination.setPage(1);
       setIsLoading(false);
     }, 700);
-  }, [allProducts1]);
+  }, [allProducts]);
 
   const handleChangePage = (range: number) => {
     pagination.setPage(+range);
     window.scrollTo({ top: 100, behavior: 'smooth' });
-  };
-
-  const handleChangeCountry = (value: string) => {
-    let arr = [value];
-    dispatch({ type: 'SET_COUNTRIES', payload: arr });
   };
 
   const handleChangeSorting = (value: string) => {
@@ -57,15 +52,17 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   };
 
   return (
-    <section className="pt-[43px] pb-[70px] sm:px-[60px] flex-1">
+    <section className="pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">
       <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
+        {/* TODO зробити сортування  */}
         <CustomSelect
           left
           placeholder="Sort By"
           options={[
-            { value: 'Top', label: 'Top' },
+            { value: 'NewProducts', label: 'New Products' },
             { value: 'HighestPrice', label: 'Highest Price' },
             { value: 'LowestPrice', label: 'Lowest Price' },
+            { value: 'BestSellers', label: 'Best Sellers' },
           ]}
           onSelect={handleChangeSorting}
         />
@@ -79,7 +76,7 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
         </div>
       ) : (
         <>
-          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
             {visibleProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}

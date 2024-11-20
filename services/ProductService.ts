@@ -26,17 +26,17 @@ export const getProducts = async (
         },
       }
     );
-
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch products:", error);
   }
 };
 
-export const getProductByHandle = async (handle: string): Promise<any> =>{
+export const getProductByHandle = async (handle: string): Promise<any> => {
   try {
     const response = await axios.get(`${BASE_URL}/product/${handle}`);
-    return response.data; 
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch product by handle:", error);
   }

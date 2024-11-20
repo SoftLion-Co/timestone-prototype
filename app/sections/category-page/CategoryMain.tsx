@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 
 import TitleComponents from '@/components/TitleComponents';
 import CategoryAsideFilters from './CategoryAsideFilters';
 import CategorySection from './CategorySection';
 import { CardProps } from '@/config/types';
+import { FiltersProvider } from '@/hooks/useFilters';
+import FilterComponent from './test/FilterComponent';
 
 export const ProductsContext = createContext<CardProps[]>([]);
 
@@ -21,21 +23,27 @@ const CategoryMain = () => {
     setProducts(newProducts);
   };
 
+  // TODO можна прибрати загальну кількість товарів на сторінці
+
   return (
     <>
-      <ProductsContext.Provider value={products}>
-        <TitleComponents
-          text="Products"
-          additionalText={`${totalProducts} Total products`}
-        />
-        <div className="xl:flex xl:container">
-          <CategoryAsideFilters
-            handleUpdateProducts={handleUpdateProducts}
-            handleChangeTotalProducts={handleChangeTotalProducts}
+      <FiltersProvider>
+        <ProductsContext.Provider value={products}>
+          <TitleComponents
+            text="Products"
+            additionalText={`${totalProducts} Total products`}
           />
-          <CategorySection totalProducts={totalProducts} />
-        </div>
-      </ProductsContext.Provider>
+          {/* <FilterComponent title="test" showSearch isRangeSlider showOkButton /> */}
+          <div className="xl:flex lg:px-[150px] md:px-[75px]">
+            <CategoryAsideFilters
+              handleUpdateProducts={handleUpdateProducts}
+              handleChangeTotalProducts={handleChangeTotalProducts}
+            />
+
+            <CategorySection totalProducts={totalProducts} />
+          </div>
+        </ProductsContext.Provider>
+      </FiltersProvider>
     </>
   );
 };
