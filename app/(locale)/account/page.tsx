@@ -8,6 +8,7 @@ import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarCom
 import NewsSection from "@/app/sections/home-page/NewsSection";
 
 const Page = () => {
+  
   const [activeSection, setActiveSection] = useState("section1");
   const [loading, setLoading] = useState(true);
 
