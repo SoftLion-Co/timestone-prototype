@@ -153,6 +153,11 @@ const OrderHistorySection = () => {
                                     {item.name}
                                   </p>
                                 </Link>
+                                {/* <p
+                                className="text-[10px] md:text-[12px] text-gray-500"
+                              >
+                                {item.vendor}
+                              </p> */}
                               </div>
                             </td>
                             <td className="text-center text-[10px] md:text-[12px] lg:text-[14px]">
@@ -172,6 +177,15 @@ const OrderHistorySection = () => {
                       <span className="font-bold text-[12px] md:text-[14px] lg:text-[16px]">
                         Total: {order.total}
                       </span>
+                      {/* <span className="text-[12px] md:text-[14px] lg:text-[16px]">
+                        Shipping: {order.shipping}
+                      </span>
+                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
+                        Tax: {order.tax}
+                      </span>
+                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
+                        Subtotal: {order.subtotal}
+                      </span> */}
                     </div>
                   </div>
                 </Accordion.Panel>
@@ -181,9 +195,7 @@ const OrderHistorySection = () => {
         </Accordion>
       ) : (
         <div className="container flex justify-center">
-           <Loader
-        className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10"
-      />
+          <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
         </div>
       )}
     </>
