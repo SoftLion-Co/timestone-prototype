@@ -12,12 +12,12 @@ import Plus from "@/images/vectors/plus.svg";
 const OrderHistorySection = () => {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false); //false
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const ordersData = await getUserOrders("8332057051422");
+        const ordersData = await getUserOrders("8479676301598");
         console.log(ordersData);
         setOrders(ordersData);
         setTimeout(() => {
@@ -48,7 +48,7 @@ const OrderHistorySection = () => {
           text: "Скасовано",
           styles: "text-red-600 bg-red-100",
         };
-      case "fulfilled":
+      case "closed":
         return {
           text: "Повністю виконано",
           styles: "text-green-600 bg-green-100",
@@ -63,7 +63,7 @@ const OrderHistorySection = () => {
           text: "Відкрито",
           styles: "text-orange-500 bg-orange-100",
         };
-      case "closed":
+      case "on hold":
         return {
           text: "Закрито",
           styles: "text-purple-600 bg-purple-100",
@@ -100,7 +100,7 @@ const OrderHistorySection = () => {
                     onClick={() => toggleOrderDetails(order.id)}
                   >
                     <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-500">
-                      {order.id}//name
+                      {order.number}
                     </span>
                     <span className="text-gray-700 text-[10px] md:text-[12px] lg:text-[14px]">
                       {order.date}
@@ -147,17 +147,22 @@ const OrderHistorySection = () => {
                         {order.items.map((item) => (
                           <tr key={item.id}>
                             <td className="py-2 flex items-center gap-4">
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                width={60}
+                                height={60}
+                                className="w-[30px] h-[30px] md:w-[60px] md:h-[60px] object-cover rounded"
+                              />
                               <div>
                                 <Link href="/">
                                   <p className="text-[12px] md:text-[14px] lg:text-[16px] text-gray-800 pr-[10px]">
                                     {item.name}
                                   </p>
                                 </Link>
-                                {/* <p
-                                className="text-[10px] md:text-[12px] text-gray-500"
-                              >
-                                {item.vendor}
-                              </p> */}
+                                <p className="text-[10px] md:text-[12px] text-gray-500">
+                                  {item.vendor}
+                                </p>
                               </div>
                             </td>
                             <td className="text-center text-[10px] md:text-[12px] lg:text-[14px]">

@@ -41,18 +41,18 @@ export type SidebarProps = {
 
 export type OrderItem = {
   id: string; 
-  // handle: string;
+  handle: string;
   name: string;
-  // vendor: string;
+  vendor: string;
   price: string;
   quantity: number;
   subtotal: string;
-  // image: string;
+  image: string;
 };
 
 export type Order = {
   id: string;
-  // name: string;
+  number: string;
   date: string;
   status: string;
   total: string;

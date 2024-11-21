@@ -11,14 +11,7 @@ import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarCom
 //! перевірка на tokens
 const Page = () => {
   const [activeSection, setActiveSection] = useState("section1");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
-
+  
   const renderSection = () => {
     switch (activeSection) {
       case "section1":
@@ -30,12 +23,6 @@ const Page = () => {
     }
   };
   return (
-    <>
-      {loading ? (
-        <div className="container flex justify-center items-center">
-          <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
-        </div>
-      ) : (
         <>
           <section className="bg-[#F4F6F6] bg-opacity-50">
             <TitleComponents text="Timestone Account" />
@@ -49,8 +36,6 @@ const Page = () => {
           </section>
           <NewsSection />
         </>
-      )}
-    </>
   );
 };
 

@@ -148,7 +148,7 @@ const AuthorizationSection = () => {
   };
 
   const validatePhoneNumber = (phone: string) => {
-    const rgExp = /^\d{10}$/;
+    const rgExp = /^\+?\d{12}$/;
     return rgExp.test(phone);
   };
 
