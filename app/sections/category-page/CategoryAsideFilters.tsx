@@ -387,12 +387,12 @@ const CategoryAsideFilters = ({
       </aside>
 
       {/* mobile filters */}
-      <div className="bg-pearl sticky z-50 top-0 xl:hidden">
+      <div className="z-50 top-0 xl:hidden">
         <div className="container">
           <form onSubmit={handleSubmitFormForMobile}>
             {isOpen && (
               <motion.div
-                className="pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]"
+                className="bg-pearl pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}>
