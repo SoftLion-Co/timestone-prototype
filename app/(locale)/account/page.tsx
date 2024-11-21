@@ -10,6 +10,7 @@ import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarCom
 
 //! перевірка на tokens
 const Page = () => {
+  
   const [activeSection, setActiveSection] = useState("section1");
   
   const renderSection = () => {
