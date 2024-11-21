@@ -1,4 +1,4 @@
-import Section from "@/app/sections/home-page/123";
+//!доробити логіку
 
 //! ?email=${email}
 const Unsubscribe = () => {
@@ -15,7 +15,6 @@ const Unsubscribe = () => {
 
   return (
     <div>
-      <Section/>
       {/* <h1>Відписатися від розсилки</h1>
       {email ? (
         <div>

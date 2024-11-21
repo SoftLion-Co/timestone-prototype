@@ -3,6 +3,7 @@
 import Image from "next/image";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
+import { useMediaQuery } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import CardComponent from "@/components/CardComponent";
@@ -44,7 +45,39 @@ const SliderSection = () => {
 
     fetchProducts();
   }, []);
+  const isMobile = useMediaQuery("(max-width: 767.98px)");
+  const isTablet = useMediaQuery(
+    "(min-width: 768px) and (max-width: 1023.98px)"
+  );
+  const isLaptop = useMediaQuery(
+    "(min-width: 1024px) and (max-width: 1439.98px)"
+  );
+  const isXlLaptop = useMediaQuery(
+    "(min-width: 1440px) and (max-width: 1919.98px)"
+  );
+  const isDesktop = useMediaQuery("(min-width: 1920px)");
 
+  let slidesToShow;
+
+  switch (true) {
+    case isMobile:
+      slidesToShow = 1;
+      break;
+    case isTablet:
+      slidesToShow = 3;
+      break;
+    case isLaptop:
+      slidesToShow = 4;
+      break;
+    case isXlLaptop:
+      slidesToShow = 5;
+      break;
+    case isDesktop:
+      slidesToShow = 6;
+      break;
+    default:
+      slidesToShow = 0;
+  }
   return (
     <>
       <section className="py-[40px] lg:py-[80px] xl:pt-[130px]">
@@ -59,17 +92,13 @@ const SliderSection = () => {
           </div>
         </div>
         <div className="mb-[112px] mt-[50px] overflow-hidden">
-          <div>
+          <div className="">
             <Carousel
-              slideSize={{
-                mini: "100%",
-                sm: "50%",
-                md: "40%",
-                lg: "30%",
-                xl: "26%",
-              }}
+              className="w-[100%] mb-[80px]"
+              slideGap="xl"
+              slideSize={`${100 / slidesToShow}%`}
               loop
-              align="start"
+              align={isMobile && isTablet ? "center" : "start"}
               nextControlIcon={
                 <div className="mt-[30px] absolute top-1/2 right-[60px] sm:mt-[102px] sm:left-[260px]">
                   <Image
@@ -92,15 +121,18 @@ const SliderSection = () => {
               {loading ? (
                 <>
                   {sliderProducts.map((card) => (
-                    <Carousel.Slide key={card.id}>
+                    <Carousel.Slide
+                      key={card.id}
+                      className="flex justify-center"
+                    >
                       <CardComponent {...card} />
                     </Carousel.Slide>
                   ))}
                 </>
               ) : (
                 <>
-                  {Array.from({ length: 6 }, (_, index) => (
-                    <Carousel.Slide key={index}>
+                  {Array.from({ length: slidesToShow }, (_, index) => (
+                    <Carousel.Slide key={index} className="flex justify-center">
                       <ProductSceleton key={index} />
                     </Carousel.Slide>
                   ))}

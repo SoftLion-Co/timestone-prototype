@@ -1,17 +1,18 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
-import { Carousel } from "@mantine/carousel";
-import "@mantine/carousel/styles.css";
-import Button from "@/components/ButtonComponent";
 import Image from "next/image";
+import "@mantine/carousel/styles.css";
+import { Carousel } from "@mantine/carousel";
+import React, { FC, useEffect, useState } from "react";
+import { Loader, NumberInput, UnstyledButton} from "@mantine/core";
+
+import { Product } from "@/config/types";
+import Button from "@/components/ButtonComponent";
+import TitleComponents from "@/components/TitleComponents";
+import { getProductByHandle } from "@/services/ProductService";
+
+import Arrow from "@/images/product-page/control-arrow.svg";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
-import TitleComponents from "@/components/TitleComponents";
-import { Product } from "@/config/types";
-import { NumberInput } from "@mantine/core";
-import { getProductByHandle } from "@/services/ProductService";
-import { UnstyledButton } from "@mantine/core";
-import Arrow from "@/images/product-page/control-arrow.svg";
 
 interface productProps {
   productName: string;
@@ -22,7 +23,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const [maxQuantity, setMaxQuantity] = useState<number>(100);
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product>();
-  const [isLouding, setIsLouding] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
@@ -57,7 +58,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           setIsOutOfStock(productData.quantity === 0);
           setMaxQuantity(productData.quantity || 0);
 
-          setIsLouding(true);
+          setIsLoading(true);
         } else {
           console.error("Product not found");
         }
@@ -68,8 +69,10 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     fetchProduct();
   }, [productName]);
 
-  if (!isLouding) {
-    return <div>Please wait, data is loading!</div>;
+  if (!isLoading) {
+    return  <div className="container flex justify-center">
+    <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
+  </div>
   }
 
   const description = product?.description.split("&") || ["", ""];

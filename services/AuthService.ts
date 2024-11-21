@@ -89,13 +89,16 @@ export const refreshToken = async (): Promise<any> => {
   }
 };
 
-export const getUser = async (accessToken: string): Promise<any> => {
+export const getUser = async (id: string): Promise<any> => {
   try {
-    const res = await axios.get(`${BASE_URL}/auth/user`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await axios.get(`${BASE_URL}/auth/user/${id}`
+      // , 
+      // {
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
+    // }
+  );
     return res.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
