@@ -279,11 +279,12 @@ const AuthorizationSection = () => {
       )}
 
       <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
-        <Image
+      <Image
           src={Background}
           alt="Background"
+          className="w-full h-full"
           layout="fill"
-          objectFit="none"
+          objectFit="cover"
         />
       </div>
 

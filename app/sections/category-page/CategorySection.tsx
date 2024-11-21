@@ -11,7 +11,7 @@ import ProductSceleton from './ProductSceleton';
 import { CardProps } from '@/config/types';
 import { ProductsContext } from './CategoryMain';
 
-const ITEM_TO_SHOW = 9;
+const ITEM_TO_SHOW = 16;
 
 const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   const allProducts = useContext(ProductsContext);
@@ -84,14 +84,14 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
       </div>
 
       {isLoading ? (
-        <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }, (_, index) => (
+        <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6  ">
+          {Array.from({ length: ITEM_TO_SHOW }, (_, index) => (
             <ProductSceleton key={index} />
           ))}
         </div>
       ) : (
         <>
-          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
+          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {visibleProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
