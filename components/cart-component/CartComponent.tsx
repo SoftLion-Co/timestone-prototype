@@ -52,7 +52,7 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href="/ua/checkout"
+          href="/checkout"
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300 ">
           Go To Checkout
         </Link>

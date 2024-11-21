@@ -56,7 +56,7 @@ const CustomSelect: FC<SelectProps> = ({
   };
 
   return (
-    <div className={`relative w-48 bg-pearl text-[14px]`} ref={selectRef}>
+    <div className={`relative w-56 bg-pearl text-[14px]`} ref={selectRef}>
       <div
         className={`px-[26px] text-silver rounded-lg py-[22px] cursor-pointer text-center`}
         onClick={toggleDropdown}>

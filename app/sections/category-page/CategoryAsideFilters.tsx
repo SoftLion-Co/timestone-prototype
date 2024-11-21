@@ -9,6 +9,7 @@ import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
 import { CardProps } from '@/config/types';
 import { getProducts } from '@/services/ProductService';
+import { reverse } from 'dns';
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
@@ -28,6 +29,10 @@ const CategoryAsideFilters = ({
   const { filters, dispatch } = useFilters();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  // open and close filters
+  const [isOpenCountriesItem, setIsOpenCountriesItem] =
+    useState<boolean>(false);
 
   // get products
   useEffect(() => {
@@ -87,7 +92,14 @@ const CategoryAsideFilters = ({
         strapsColor: filters.strapsColor,
       };
 
-      const data = await getProducts(selectedFilters, selectedOptions);
+      const data = await getProducts(
+        selectedFilters,
+        selectedOptions,
+        9,
+        '',
+        filters.sortedBy,
+        filters.reverse
+      );
 
       let allProducts = [...data.products];
 
@@ -129,7 +141,7 @@ const CategoryAsideFilters = ({
   };
 
   // set max and min price
-  const handleprice = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinPrice(+e.target.value);
   };
 
@@ -190,10 +202,6 @@ const CategoryAsideFilters = ({
     }
   };
 
-  useEffect(() => {
-    console.log(countries);
-  }, [countries]);
-
   // submit filters
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -205,8 +213,6 @@ const CategoryAsideFilters = ({
     dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
     dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
     dispatch({ type: 'SET_COUNTRIES', payload: countries });
-
-    console.log(`applied`);
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
@@ -219,8 +225,6 @@ const CategoryAsideFilters = ({
     dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
     dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
     dispatch({ type: 'SET_COUNTRIES', payload: countries });
-
-    console.log(`applied`);
 
     setIsOpen(false);
   };
@@ -244,8 +248,23 @@ const CategoryAsideFilters = ({
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
-              <h4 className=" text-black font-semibold ">Select Countries</h4>
-              <div className="flex flex-col justify-start items-start gap-1">
+              <div className="flex justify-between items-center">
+                <h4 className=" text-black font-semibold ">Select Countries</h4>
+                <button
+                  className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                    isOpenCountriesItem
+                      ? ''
+                      : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                  }`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpenCountriesItem(
+                      (isOpenCountriesItem) => !isOpenCountriesItem
+                    );
+                  }}></button>
+              </div>
+
+              <motion.div className="flex flex-col justify-start items-start gap-1">
                 <div className="flex gap-2">
                   <input
                     type="checkbox"
@@ -267,7 +286,7 @@ const CategoryAsideFilters = ({
                   />
                   <span>Germany</span>
                 </div>
-              </div>
+              </motion.div>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
@@ -293,7 +312,7 @@ const CategoryAsideFilters = ({
                   className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
                   type="text"
                   placeholder="$0"
-                  onChange={handleprice}
+                  onChange={handleMinPrice}
                 />
                 <span className="text-silver text-[12px] font-poppins ">
                   to
@@ -351,18 +370,18 @@ const CategoryAsideFilters = ({
                       : 'opacity-100'
                   }`}></button>
                 <button
-                  onClick={(e) => handleSetStrapsColor(e, 'purple-green')}
+                  onClick={(e) => handleSetStrapsColor(e, 'purplegreen')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2D9B87] to-[#AF29CB] ${
                     strapsColor.length !== 0 &&
-                    strapsColor.indexOf('purple-green') === -1
+                    strapsColor.indexOf('purplegreen') === -1
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
                 <button
-                  onClick={(e) => handleSetStrapsColor(e, 'purple-blue')}
+                  onClick={(e) => handleSetStrapsColor(e, 'purpleblue')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2184CE] to-[#9020AD] ${
                     strapsColor.length !== 0 &&
-                    strapsColor.indexOf('purple-blue') === -1
+                    strapsColor.indexOf('purpleblue') === -1
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
@@ -466,7 +485,7 @@ const CategoryAsideFilters = ({
                       className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
                       type="text"
                       placeholder="$0"
-                      onChange={handleprice}
+                      onChange={handleMinPrice}
                     />
                     <span className="text-silver text-[10px] font-poppins">
                       to
