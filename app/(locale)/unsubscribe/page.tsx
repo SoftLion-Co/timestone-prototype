@@ -1,3 +1,5 @@
+import Section from "@/app/sections/home-page/123";
+
 //! ?email=${email}
 const Unsubscribe = () => {
   //const email = new URLSearchParams(window.location.search).get("email");
@@ -13,6 +15,7 @@ const Unsubscribe = () => {
 
   return (
     <div>
+      <Section/>
       {/* <h1>Відписатися від розсилки</h1>
       {email ? (
         <div>
