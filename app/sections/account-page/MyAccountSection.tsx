@@ -161,7 +161,7 @@ const MyAccountSection = () => {
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
     console.log(5, values2.password, values2.verify);
-    const response = await updatePassword("", values2.password)
+    const response = await updatePassword("", values2.password);
 
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);
@@ -315,14 +315,16 @@ const MyAccountSection = () => {
               </div>
             </div>
             <div className="w-full flex text-[14px] items-center flex-row text-silver gap-[10px] mt-[-20px] text-left">
-              <input
-                {...form.getInputProps("subscribe")}
-                type="checkbox"
-                className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-red-500 checked:border-red-500 focus:outline-none focus:ring-0"
-              />
-              <label>
-                Sign-up to receive the latest updates and promotions
-              </label>
+              <div className="flex items-center">
+                <input
+                  {...form.getInputProps("subscribe")}
+                  type="checkbox"
+                  className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                />
+                <label className="ml-2 text-gray-700">
+                  Sign-up to receive the latest updates and promotions
+                </label>
+              </div>
             </div>
             <Button text="Update" className="mt-[-20px]" type="submit" />
           </form>
