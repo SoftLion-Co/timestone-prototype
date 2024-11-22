@@ -3,6 +3,8 @@ import React, {useEffect} from "react";
 import { useRouter } from 'next/router';
 import { activateAccount } from "@/services/AuthService";
 
+//!доробити логіку
+
 const ActivatingSection = ({ activatedToken }: {activatedToken: string}) => {
 	// const router = useRouter();
 

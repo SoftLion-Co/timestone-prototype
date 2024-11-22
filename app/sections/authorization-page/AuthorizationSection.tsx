@@ -163,7 +163,7 @@ const AuthorizationSection = () => {
   };
 
   const validatePhoneNumber = (phone: string) => {
-    const rgExp = /^\+380\d{9}$/;
+    const rgExp = /^\+?\d{12}$/;
     return rgExp.test(phone);
   };
 
@@ -279,15 +279,16 @@ const AuthorizationSection = () => {
   return (
     <section className=" relative flex justify-center items-center font-poppins">
       <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
-        <Image
+      <Image
           src={Background}
           alt="Background"
+          className="w-full h-full"
           layout="fill"
-          objectFit="none"
+          objectFit="cover"
         />
       </div>
 
-      <form className="flex flex-col bg-snow w-[360px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-gray-300 rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
+      <form className="flex flex-col bg-snow w-[350px] md:w-[600px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-gray-300 rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
         <div className="mb-[28px] lg:flex lg:space-between mt-[24px] lg:mt-[60px] items-center">
           {["Login", "Create Account"].map((title, index) => {
             const isActive = isLoginPage ? index === 0 : index === 1;
@@ -312,9 +313,11 @@ const AuthorizationSection = () => {
                   className={`w-full absolute left-0 ${
                     isActive
                       ? "bg-darkMaroon h-[6px]"
-                      : "bg-silver h-[2px] -bottom-[4px]"
+                      : "bg-silver h-[2px] -bottom-[4px] "
                   }`}
+                  
                 />
+                
               </div>
             );
           })}
@@ -330,7 +333,7 @@ const AuthorizationSection = () => {
         {isLoginPage ? (
           <>
             <div className="text-center mb-[28px]">
-              <h2 className="text-[24px] text-darkMaroon font-bold mb-[20px]">
+              <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
                 WELCOME BACK
               </h2>
               <p className="leading-[2] text-silver">
@@ -382,7 +385,7 @@ const AuthorizationSection = () => {
                 <input
                   type="checkbox"
                   id="rememberMe"
-                  className="w-[20px] h-[20px] text-darkMaroon bg-snow border-2 border-silver rounded focus:ring-darkMaroon"
+                  className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
                 />
                 <label>Remember me</label>
               </div>
@@ -417,7 +420,7 @@ const AuthorizationSection = () => {
         ) : (
           <>
             <div className="text-center mb-[28px]">
-              <h2 className="text-[24px] text-darkMaroon max-w-[180px] mx-auto font-bold mb-[20px]">
+              <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
                 NEW TO TIMESTONE ?
               </h2>
               <p className="text-silver">Create a new account</p>
@@ -574,7 +577,7 @@ const AuthorizationSection = () => {
                   type="checkbox"
                   checked={receiveUpdates}
                   onChange={(e) => setReceiveUpdates(e.target.checked)}
-                  className="w-[24px] h-[24px]"
+                  className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
                 />
                 <label>
                   Sign-up to receive the latest updates and promotions

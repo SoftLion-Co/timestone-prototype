@@ -1,5 +1,11 @@
+import LegalSection from "@/app/sections/legal-page/LegalSection ";
+
 const Page = () => {
-  return <></>;
+  return (
+    <>
+      <LegalSection />
+    </>
+  );
 };
 
 export default Page;

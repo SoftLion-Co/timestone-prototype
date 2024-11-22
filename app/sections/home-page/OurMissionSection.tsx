@@ -1,7 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import TestImgWoman from "@/images/our-mission/watch-on-woman.png";
+
 import Button from "@/components/ButtonComponent";
+
+import TestImgWoman from "@/images/our-mission/watch-on-woman.png";
 
 const textOurMissionObject = {
   title: "OUR MISSION",
@@ -40,7 +42,7 @@ const OurMissionSection = () => {
           <p className="font-poppins text-default">
             {textOurMissionObject.textParagraph2}
           </p>
-          <Button text="Contact Us" tag="a" href="/ua/contact-us" />
+          <Button text="Contact Us" tag="a" href="/contact-us" />
         </div>
       </div>
     </section>

@@ -72,7 +72,7 @@ const HeroSection: FC = () => {
             facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
           </p>
 
-          <Button text="Your Watch" tag="a" href="/ua/catalog" />
+          <Button text="Your Watches" tag="a" href="/catalog" />
         </div>
 
         <Links className="grid lg:hidden" />

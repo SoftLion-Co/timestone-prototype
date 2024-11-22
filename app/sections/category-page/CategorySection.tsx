@@ -11,12 +11,12 @@ import ProductSceleton from './ProductSceleton';
 import { CardProps } from '@/config/types';
 import { ProductsContext } from './CategoryMain';
 
-const ITEM_TO_SHOW = 9;
+const ITEM_TO_SHOW = 16;
 
 const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   const allProducts = useContext(ProductsContext);
 
-  const { dispatch } = useFilters();
+  const { filters, dispatch } = useFilters();
 
   const [visibleProducts, setVisibleProducts] = useState<CardProps[]>([]);
 
@@ -33,13 +33,9 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   });
 
   useEffect(() => {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setVisibleProducts(allProducts.slice(0, ITEM_TO_SHOW));
-      pagination.setPage(1);
-      setIsLoading(false);
-    }, 700);
+    setVisibleProducts(allProducts.slice(0, ITEM_TO_SHOW));
+    pagination.setPage(1);
+    setIsLoading(false);
   }, [allProducts]);
 
   const handleChangePage = (range: number) => {
@@ -47,41 +43,61 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
+  // DONE зробити сортування
   const handleChangeSorting = (value: string) => {
-    dispatch({ type: 'SET_SORTING', payload: value });
+    let newValue = value == 'HPRICE' || value == 'LPRICE' ? 'PRICE' : value;
+
+    if (value === 'HPRICE') {
+      dispatch({ type: 'SET_REVERSE', payload: true });
+    }
+
+    if (value === 'LPRICE') {
+      dispatch({ type: 'SET_REVERSE', payload: false });
+    }
+
+    if (value === null || value === '') {
+      dispatch({ type: 'SET_REVERSE', payload: true });
+      newValue = 'RELEVANCE';
+    }
+
+    dispatch({ type: 'SET_SORTING', payload: newValue });
   };
+
+  useEffect(() => {
+    console.log(filters.sortedBy);
+  }, [filters.sortedBy]);
 
   return (
     <section className="pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">
       <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
-        {/* TODO зробити сортування  */}
         <CustomSelect
           left
           placeholder="Sort By"
           options={[
-            { value: 'NewProducts', label: 'New Products' },
-            { value: 'HighestPrice', label: 'Highest Price' },
-            { value: 'LowestPrice', label: 'Lowest Price' },
-            { value: 'BestSellers', label: 'Best Sellers' },
+            { value: 'CREATED_AT', label: 'New Products' },
+            { value: 'HPRICE', label: 'Highest Price' },
+            { value: 'LPRICE', label: 'Lowest Price' },
+            { value: 'BEST_SELLING', label: 'Best Sellers' },
           ]}
           onSelect={handleChangeSorting}
         />
       </div>
 
       {isLoading ? (
-        <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {Array.from({ length: 6 }, (_, index) => (
+        <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6  ">
+          {Array.from({ length: ITEM_TO_SHOW }, (_, index) => (
             <ProductSceleton key={index} />
           ))}
         </div>
       ) : (
         <>
-          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
+          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {visibleProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
           </div>
 
+          {/* TODO 1, 2, [...], lastIndex - ось така має бути пагінація  */}
           <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
             {pagination.range.map((range) =>
               range === 'dots' ? (

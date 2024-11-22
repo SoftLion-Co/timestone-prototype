@@ -40,11 +40,10 @@ export type SidebarProps = {
 };
 
 export type OrderItem = {
-  id: string;
+  id: string; 
   handle: string;
   name: string;
   vendor: string;
-  options: Option[];
   price: string;
   quantity: number;
   subtotal: string;
@@ -53,12 +52,13 @@ export type OrderItem = {
 
 export type Order = {
   id: string;
+  number: string;
   date: string;
   status: string;
   total: string;
-  shipping: string;
-  tax: string;
-  subtotal: string;
+  // shipping: string;
+  // tax: string;
+  // subtotal: string;
   items: OrderItem[];
 };
 

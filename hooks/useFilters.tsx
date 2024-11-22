@@ -16,6 +16,7 @@ interface FiltersState {
   strapsColor: string[];
   countries: string[];
   sortedBy: string;
+  reverse: boolean;
 }
 
 const initialFilters: FiltersState = {
@@ -26,7 +27,8 @@ const initialFilters: FiltersState = {
   watchesColor: [],
   strapsColor: [],
   countries: [],
-  sortedBy: '',
+  sortedBy: 'RELEVANCE',
+  reverse: false,
 };
 
 type FiltersAction =
@@ -37,7 +39,8 @@ type FiltersAction =
   | { type: 'TOGGLE_WATCH_COLOR'; payload: string[] }
   | { type: 'TOGGLE_STRAP_COLOR'; payload: string[] }
   | { type: 'SET_COUNTRIES'; payload: string[] }
-  | { type: 'SET_SORTING'; payload: string };
+  | { type: 'SET_SORTING'; payload: string }
+  | { type: 'SET_REVERSE'; payload: boolean };
 
 const filtersReducer = (
   state: FiltersState,
@@ -66,6 +69,8 @@ const filtersReducer = (
       return { ...state, countries: action.payload };
     case 'SET_SORTING':
       return { ...state, sortedBy: action.payload };
+    case 'SET_REVERSE':
+      return { ...state, reverse: action.payload };
     default:
       return state;
   }

@@ -16,7 +16,7 @@ import Burger from "@/images/vectors/burger.svg";
 import { useCart } from "@/hooks/useCart";
 
 const navData = [
-  { link: '/catalog', text: 'Watches' },
+  { link: '/#about-us', text: 'About Us' },
   { link: '/contact-us', text: 'Contact us' },
   { link: '/legal', text: 'FAQ' },
 ];
@@ -49,7 +49,7 @@ const Header = () => {
             ))}
           </nav>
 
-          <MainButton text="Your watch" />
+          <MainButton text="Watches" tag="a" href="/catalog" />
         </div>
 
         <div className="flex gap-[25px]">
@@ -98,7 +98,7 @@ const Header = () => {
   };
 
   return (
-    <header className="container">
+    <header className="mx-[20px] lg:mx-[60px]">
       <div className="flex justify-between items-center py-[20px]">
         <HeaderLogo />
 

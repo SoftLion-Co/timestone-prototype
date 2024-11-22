@@ -144,3 +144,47 @@ export const facebookLogin = async (facebookToken: string): Promise<any> => {
     console.error("Error during Facebook login:", error);
   }
 };
+
+/* const api = axios.create({
+   baseURL: BASE_URL,
+ });
+
+api.interceptors.request.use(
+	(config) => {
+	  const accessToken = localStorage.getItem("accessToken");
+	  if (accessToken) {
+		 config.headers["Authorization"] = `Bearer ${accessToken}`;
+	  }
+	  return config;
+	},
+	(error) => {
+	  return Promise.reject(error);
+	}
+ );
+
+ api.interceptors.response.use(
+	(response) => {
+	  return response;
+	},
+	async (error) => {
+	  const originalRequest = error.config;
+ 
+	  if (error.response?.status === 401 && !originalRequest._retry) {
+		 originalRequest._retry = true;
+ 
+		 try {
+			const refreshedToken = await refreshToken();
+			if (refreshedToken?.accessToken) {
+			  localStorage.setItem("accessToken", refreshedToken.accessToken);
+			  originalRequest.headers["Authorization"] = `Bearer ${refreshedToken.accessToken}`;
+			  return api(originalRequest);
+			}
+		 } catch (refreshError) {
+			console.error("Failed to refresh token", refreshError);
+		 }
+	  }
+ 
+	  console.error("API Error:", error.response?.data || error.message);
+	  return Promise.reject(error);
+	}
+ );*/

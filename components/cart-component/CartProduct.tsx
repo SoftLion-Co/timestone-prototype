@@ -68,7 +68,7 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
 
         <span className="text-black text-[20px] mb-[15px]">${card.price}</span>
 
-        <div className="flex items-center">
+        <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
           {/* <ul className="flex gap-[25px] items-center">
             <li className="flex items-center gap-[7px]">
               <div className={`w-5 h-5 rounded-md bg-darkMaroon`}></div>
@@ -80,28 +80,24 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
             </li>
           </ul> */}
 
-          {/* TODO переробити стилізацію (приклад в тг) */}
+          {/* DONE переробити стилізацію (приклад в тг) */}
           <button
             onClick={(e) => onHandleClickRemoveQuantity(e, card.id)}
-            className={`w-8 h-8 rounded-sm border bg-darkBurgundy 
-              text-white border-darkBurgundy ${
-                card.quantity > 1
-                  ? 'hover:bg-darkMaroon'
-                  : 'bg-darkBurgundyOpacity'
-              }`}>
+            className={`w-8 h-8 rounded-sm border-r-2 ${
+              card.quantity > 1 ? 'hover:bg-white bg-gray-200' : 'bg-white'
+            }`}>
             -
           </button>
-          <span className="h-8 w-8 border-t border-b border-darkBurgundy flex items-center justify-center">
+          <span className="w-8 h-8 rounded-sm  flex items-center justify-center">
             {card.quantity}
           </span>
           <button
             onClick={(e) => onHandleClickAddQuantity(e, card.id)}
-            className={`w-8 h-8 rounded-sm border bg-darkBurgundy
-              text-white border-darkBurgundy ${
-                card.quantity < card.maxQuantity
-                  ? 'hover:bg-darkMaroon'
-                  : 'bg-darkBurgundyOpacity'
-              }`}>
+            className={`w-8 h-8 rounded-sm border-l-2  ${
+              card.quantity < card.maxQuantity
+                ? 'hover:bg-white bg-gray-200'
+                : 'bg-white'
+            }`}>
             +
           </button>
         </div>
