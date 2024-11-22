@@ -33,6 +33,9 @@ const CategoryAsideFilters = ({
   // open and close filters
   const [isOpenCountriesItem, setIsOpenCountriesItem] =
     useState<boolean>(false);
+  const [isOpenTypeItem, setIsOpenTypeItem] = useState<boolean>(false);
+  const [isOpenCaseItem, setIsOpenCaseItem] = useState<boolean>(false);
+  const [isOpenStrapsItem, setIsOpenStrapsItem] = useState<boolean>(false);
 
   // get products
   useEffect(() => {
