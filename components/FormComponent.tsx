@@ -29,7 +29,7 @@ const FormComponent: FC<formProps> = ({ className, title, children }) => {
 
       {isOpen && (
         <form
-          className={`${className} mini:mx-0 mx-[30px] pb-[40px] flex flex-col items-center gap-y-[15px]`}
+          className={`${className} mini:mx-0 mx-[30px] pb-[40px] flex flex-col gap-y-[15px]`}
         >
           {children}
         </form>

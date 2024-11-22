@@ -1,24 +1,79 @@
-"use client";
-import React, { SetStateAction, useState, useEffect } from "react";
-import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
-import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
-import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
-import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
+// "use client";
+// import React, { SetStateAction, useState, useEffect } from "react";
+// import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
+// import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
+// //import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
+// import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
 
-const CheckoutSection = () => {
-  
-  return (
-    <div>
-      <ProductsSection />
-      <BasicInfoSection />
-      <ShippingSection/>
-      <PaymentSection />
-    </div>
+// const CheckoutSection = () => {
+
+//   const [isOpen, setIsOpen] = useState(true);
+//   const [selectedOption, setSelectedOption] = useState<string | null>("");
+//   const [isVisible, setIsVisible] = useState(false);
+//   const [shippingValue, setshippingValue] = useState<any>({});
+//   const [checkError, setCheckError] = useState("");
+//  // const [products, setProducts] = useState<Product[]>(PRODUCT_DATA);
+//   const [total, setTotal] = useState<number>(0.0);
+//   const [price, setPrice] = useState<number>(0.0);
+
+
+//   const options = [
+//     { value: "UA", label: "Ukraine" },
+//     { value: "PL", label: "Poland" },
+//     { value: "USA", label: "USA" },
+//   ];
+
+//     const handleChange = (option: SetStateAction<string | null>) => {
+//     setSelectedOption(option);
+//     setCheckError("");
+
+//     if (option === "UPS Standard") {
+//       setshippingValue({
+//         shippingLines: [
+//           {
+//             code: "Standard",
+//             title: "Standard",
+//             priceSet: {
+//               shopMoney: {
+//                 amount: "00.00",
+//                 currencyCode: "UAH",
+//               },
+//             },
+//           },
+//         ],
+//       });
+//       setPrice(0.0);
+//     } else if (option === "UPS Express") {
+//       setshippingValue({
+//         shippingLines: [
+//           {
+//             code: "Express",
+//             title: "Express",
+//             priceSet: {
+//               shopMoney: {
+//                 amount: "49.99",
+//                 currencyCode: "UAH",
+//               },
+//             },
+//           },
+//         ],
+//       });
+//       setPrice(49.99);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <ProductsSection />
+//       <BasicInfoSection />
+//    {/* //   <ShippingSection/> */}
+//       <PaymentSection />
+//     </div>
     
-  );
-};
+//   );
+// };
 
-export default CheckoutSection;
+// export default CheckoutSection;
 
 
 // import Title from "@/components/TitleComponents";
@@ -34,15 +89,7 @@ export default CheckoutSection;
 // import { Product } from "@/config/types";
 // import { PRODUCT_DATA } from "@/config/productExample";
 
-  // const [isOpen, setIsOpen] = useState(true);
-  // const [selectedOption, setSelectedOption] = useState<string | null>("");
-  // const [isVisible, setIsVisible] = useState(false);
-  // const [shippingValue, setshippingValue] = useState<any>({});
-  // const [checkError, setCheckError] = useState("");
-  // const [products, setProducts] = useState<Product[]>(PRODUCT_DATA);
-  // const [total, setTotal] = useState<number>(0.0);
-  // const [price, setPrice] = useState<number>(0.0);
-
+  
   // useEffect(() => {
   //   const fetchProducts = async () => {
   //     try {
@@ -61,50 +108,7 @@ export default CheckoutSection;
   //   fetchProducts();
   // }, [products, price]);
 
-  // const options = [
-  //   { value: "UA", label: "Ukraine" },
-  //   { value: "PL", label: "Poland" },
-  //   { value: "USA", label: "USA" },
-  // ];
 
-  // const handleChange = (option: SetStateAction<string | null>) => {
-  //   setSelectedOption(option);
-  //   setCheckError("");
-
-  //   if (option === "UPS Standard") {
-  //     setshippingValue({
-  //       shippingLines: [
-  //         {
-  //           code: "Standard",
-  //           title: "Standard",
-  //           priceSet: {
-  //             shopMoney: {
-  //               amount: "00.00",
-  //               currencyCode: "UAH",
-  //             },
-  //           },
-  //         },
-  //       ],
-  //     });
-  //     setPrice(0.0);
-  //   } else if (option === "UPS Express") {
-  //     setshippingValue({
-  //       shippingLines: [
-  //         {
-  //           code: "Express",
-  //           title: "Express",
-  //           priceSet: {
-  //             shopMoney: {
-  //               amount: "49.99",
-  //               currencyCode: "UAH",
-  //             },
-  //           },
-  //         },
-  //       ],
-  //     });
-  //     setPrice(49.99);
-  //   }
-  // };
   // type FormValues = {
   //   email: string;
   //   firstName: string;

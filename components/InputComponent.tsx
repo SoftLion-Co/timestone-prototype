@@ -22,6 +22,7 @@ interface InputProps {
   errorType?: "critical" | "warning";
   required?: boolean;
   disabled?: boolean;
+  maxLength?: number;
 }
 
 type Option = {
@@ -46,7 +47,8 @@ const InputComponent: FC<InputProps> = ({
   errorType,
   scrollable = false,
   required,
-  disabled
+  disabled,
+  maxLength,
 }) => {
   const textClass = bordered ? "text-black" : "text-silver";
 
@@ -125,6 +127,15 @@ const InputComponent: FC<InputProps> = ({
               </motion.ul>
             )}
           </div>
+          {error && (
+            <p
+              className={`text-[14px] ${
+                errorType === "critical" ? "text-darkBurgundy" : "text-snow"
+              }`}
+            >
+              {error}
+            </p>
+          )}
         </>
       );
     } else if (inputType === "input") {
@@ -140,6 +151,7 @@ const InputComponent: FC<InputProps> = ({
             required={required}
             disabled={disabled}
             onChange={onChange}
+            maxLength={maxLength}
           />
           {error && (
             <p

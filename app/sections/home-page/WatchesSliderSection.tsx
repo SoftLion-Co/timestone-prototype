@@ -24,7 +24,7 @@ const textSliderObject = {
 //! потрібна заглушка як на youtube
 const SliderSection = () => {
 
-  const [sliderProducts, setSliderProducts] = useState<CardProps[]>(TestSliderProducts);
+  const [sliderProducts, setSliderProducts] = useState<CardProps[]>([]);
   const [loading, setLoading] = useState(true);
   
   // useEffect(() => {
