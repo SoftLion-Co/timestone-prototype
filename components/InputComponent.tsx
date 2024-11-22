@@ -163,7 +163,7 @@ const InputComponent: FC<InputProps> = ({
             value={value}
             disabled={disabled}
             onChange={onChange}
-            className={`${className} ${borderClass} ${textClass} py-[16px] px-[30px] w-full h-[160px] rounded border-[1px] rounded-[5px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
+            className={`${className} ${borderClass} ${textClass} resize-none py-[16px] px-[30px] w-full h-[160px] rounded border-[1px] rounded-[5px] border-[#EAECF5] lg:w-[90%] xl:w-[70%] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
           />
           {error && (
             <p

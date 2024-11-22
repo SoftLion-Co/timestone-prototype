@@ -2,7 +2,7 @@ import React from "react";
 
 const AboutUsSection = () => {
   return (
-    <section className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] ">
+    <section id="about-us" className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] ">
       <div className="flex flex-col text-center lg:text-left lg:w-[400px]">
         <h2 className="font-spaceage text-[28px] mb-6 lg:text-[42px]">
           ABOUT US
