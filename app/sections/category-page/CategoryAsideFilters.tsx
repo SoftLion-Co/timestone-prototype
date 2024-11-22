@@ -33,6 +33,9 @@ const CategoryAsideFilters = ({
   // open and close filters
   const [isOpenCountriesItem, setIsOpenCountriesItem] =
     useState<boolean>(false);
+  const [isOpenTypeItem, setIsOpenTypeItem] = useState<boolean>(false);
+  const [isOpenCaseItem, setIsOpenCaseItem] = useState<boolean>(false);
+  const [isOpenStrapsItem, setIsOpenStrapsItem] = useState<boolean>(false);
 
   // get products
   useEffect(() => {
@@ -250,43 +253,56 @@ const CategoryAsideFilters = ({
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
               <div className="flex justify-between items-center">
                 <h4 className=" text-black font-semibold ">Select Countries</h4>
-                <button
-                  className={`relative bg-darkBurgundy h-[2px] w-5 ${
-                    isOpenCountriesItem
-                      ? ''
-                      : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpenCountriesItem(
-                      (isOpenCountriesItem) => !isOpenCountriesItem
-                    );
-                  }}></button>
+                <div className="w-4 h-4 cursor-pointer flex items-center justify-center">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-4`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenCountriesItem(
+                        (isOpenCountriesItem) => !isOpenCountriesItem
+                      );
+                    }}>
+                    {!isOpenCountriesItem && (
+                      <motion.div
+                        initial={{ rotate: 0 }}
+                        animate={{ rotate: -90 }}
+                        transition={{ duration: 0.3 }}
+                        className={`absolute bg-darkBurgundy h-[2px] w-4 top-0`}></motion.div>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <motion.div className="flex flex-col justify-start items-start gap-1">
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    onChange={(e) => handleSetCountries(e, 'USA')}
-                  />
-                  <span>USA</span>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    onChange={(e) => handleSetCountries(e, 'Ukraine')}
-                  />
-                  <span>Ukraine</span>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    onChange={(e) => handleSetCountries(e, 'Germany')}
-                  />
-                  <span>Germany</span>
-                </div>
-              </motion.div>
+              {isOpenCountriesItem && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col justify-start items-start gap-1 overflow-y-scroll max-h-16">
+                  <div className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => handleSetCountries(e, 'USA')}
+                    />
+                    <span>USA</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => handleSetCountries(e, 'Ukraine')}
+                    />
+                    <span>Ukraine</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => handleSetCountries(e, 'Germany')}
+                    />
+                    <span>Germany</span>
+                  </div>
+                </motion.div>
+              )}
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">

@@ -24,3 +24,17 @@ body {
 footer {
   margin-top: auto;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px rgb(202, 202, 202);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: silver;
+  border-radius: 10px;
+}
