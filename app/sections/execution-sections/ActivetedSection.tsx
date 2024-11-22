@@ -3,17 +3,19 @@ import React, {useEffect} from "react";
 import { useRouter } from 'next/router';
 import { activateAccount } from "@/services/AuthService";
 
+//!доробити логіку
+
 const ActivatingSection = ({ activatedToken }: {activatedToken: string}) => {
-	const router = useRouter();
+	// const router = useRouter();
 
 	useEffect(() => {
 		const sendToken = async() => {
 			const response = await activateAccount(activatedToken);
 			//set tokens in context
-			router.push('/');
+			// router.push('/');
 		}
 		sendToken();
-	 }, [activatedToken, router]);
+	 }, [activatedToken]);
 
   return (
     <div>

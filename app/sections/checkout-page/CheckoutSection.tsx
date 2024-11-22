@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 import CartComponent from '@/components/CartComponent';
 import { CreateOrder } from '@/services/OrderService';
 import { Product } from '@/config/types';
-import { PRODUCT_DATA } from '@/test/productExample';
+// import { PRODUCT_DATA } from '@/test/productExample';
 
 const CheckoutSection = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -214,7 +214,7 @@ const CheckoutSection = () => {
           priceSet: {
             shopMoney: {
               amount: product.price,
-              currencyCode: 'UAH',
+              currencyCode: "UAH",
             },
           },
           quantity: product.quantity,

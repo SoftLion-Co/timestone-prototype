@@ -1,29 +1,37 @@
 'use client';
-import React, { FC } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import Logo from '@/images/vectors/logo.svg';
-import Basket from '@/images/vectors/basket.svg';
-import Profile from '@/images/vectors/profile.svg';
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import React, { FC, useState } from "react";
+import Logo from "@/images/vectors/logo.svg";
+import Basket from "@/images/vectors/basket.svg";
+import Profile from "@/images/vectors/profile.svg";
 
-import MainButton from '@/components/ButtonComponent';
+import MainButton from "@/components/ButtonComponent";
 
-import { Modal, Button, ActionIcon } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import Close from '@/images/vectors/close.svg';
-import Burger from '@/images/vectors/burger.svg';
-import { useCart } from '@/hooks/useCart';
+import { Modal, Button, ActionIcon, Menu } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import Close from "@/images/vectors/close.svg";
+import Burger from "@/images/vectors/burger.svg";
+import { useCart } from "@/hooks/useCart";
 
 const navData = [
-  { link: '/catalog', text: 'Watches' },
+  { link: '/#about-us', text: 'About Us' },
   { link: '/contact-us', text: 'Contact us' },
   { link: '/legal', text: 'FAQ' },
 ];
 
 const Header = () => {
+  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
 
   const { products, changeOpenState } = useCart();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    router.push('/auth');
+    setIsLoggedIn(false);
+  };
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
@@ -41,7 +49,7 @@ const Header = () => {
             ))}
           </nav>
 
-          <MainButton text="Your watch" />
+          <MainButton text="Watches" tag="a" href="/catalog" />
         </div>
 
         <div className="flex gap-[25px]">
@@ -61,9 +69,21 @@ const Header = () => {
             )}
             <Image src={Basket} alt="Basket" />
           </button>
-          <Link href="/">
-            <Image src={Profile} alt="Profile" />
-          </Link>
+          {!isLoggedIn ? (
+            <button
+              onClick={handleLogin}
+              className="text-onyx font-semibold transition-all duration-300"
+            >
+              Login
+            </button>
+          ) : (
+              <Link
+                href="/account"
+                className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
+              >
+                <Image src={Profile} alt="profile" />
+              </Link>
+          )}
         </div>
       </div>
     );
@@ -78,7 +98,7 @@ const Header = () => {
   };
 
   return (
-    <header className="container">
+    <header className="mx-[20px] lg:mx-[60px]">
       <div className="flex justify-between items-center py-[20px]">
         <HeaderLogo />
 
