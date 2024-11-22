@@ -163,7 +163,7 @@ const AuthorizationSection = () => {
   };
 
   const validatePhoneNumber = (phone: string) => {
-    const rgExp = /^\d{10}$/;
+    const rgExp = /^\+380\d{9}$/;
     return rgExp.test(phone);
   };
 
