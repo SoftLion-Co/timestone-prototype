@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "@/config/config";
-
 
 export const registrateNewUser = async (
   firstName: string,
@@ -12,19 +11,34 @@ export const registrateNewUser = async (
   receiveUpdates: boolean
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/registration`, {
+    const result = await axios.post(`${BASE_URL}/auth/registration`, {
       firstName,
       lastName,
       email,
       phone,
       dateOfBirth,
       password,
-      receiveUpdates,
+      receiveUpdates, 
     });
-    return response.data; //тут повертаються шось про мейлсенд
-  } catch (error) {
-    console.error("Failed to register user:", error);
-    throw error;
+    console.log(result);
+    if (result.status === 201) {
+      return "created";
+    }
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError;
+    if (axiosError.response) {
+      
+      if (axiosError.response.status === 406) {
+        return "email";
+      } else if (axiosError.response.status === 405) {
+        return "phone";
+      } else {
+        return "error";  //тут ще не активований
+      }
+    } else {
+      console.error("Failed to register user:", error);
+      throw error;
+    }
   }
 };
 
@@ -39,7 +53,6 @@ export const loginUser = async (
       password,
     });
     if (response?.data?.accessToken && response?.data?.refreshToken) {
-
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
@@ -55,14 +68,17 @@ export const loginUser = async (
 export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
-	 console.log(res.data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     console.error("Error during account activation:", error);
   }
 };
 
-export const updateUser = async (userId: string, userData: any): Promise<any> => {
+export const updateUser = async (
+  userId: string,
+  userData: any
+): Promise<any> => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/update/${userId}`, userData);
     return res.data;
@@ -71,9 +87,14 @@ export const updateUser = async (userId: string, userData: any): Promise<any> =>
   }
 };
 
-export const updatePassword = async (userId: string, newPassword: string): Promise<any> => {
+export const updatePassword = async (
+  userId: string,
+  newPassword: string
+): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/update-password/${userId}`, { password: newPassword });
+    const res = await axios.post(`${BASE_URL}/auth/update-password/${userId}`, {
+      password: newPassword,
+    });
     return res.data;
   } catch (error) {
     console.error("Error updating password:", error);
@@ -104,7 +125,9 @@ export const getUser = async (accessToken: string): Promise<any> => {
 
 export const googleLogin = async (googleToken: string): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/google`, { token: googleToken });
+    const res = await axios.post(`${BASE_URL}/auth/google`, {
+      token: googleToken,
+    });
     return res.data;
   } catch (error) {
     console.error("Error during Google login:", error);
@@ -113,10 +136,11 @@ export const googleLogin = async (googleToken: string): Promise<any> => {
 
 export const facebookLogin = async (facebookToken: string): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/facebook`, { token: facebookToken });
+    const res = await axios.post(`${BASE_URL}/auth/facebook`, {
+      token: facebookToken,
+    });
     return res.data;
   } catch (error) {
     console.error("Error during Facebook login:", error);
   }
 };
-
