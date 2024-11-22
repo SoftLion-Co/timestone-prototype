@@ -6,8 +6,7 @@ export type CardProps = {
   productType: string;
   price: number;
   vendor: string;
-  // одна картинка потрібна не масив
-  images: string[];
+  image: string;
   options: Option[];
 };
 
@@ -17,21 +16,50 @@ export type CartProductProps = {
   title: string;
   price: number;
   image: string;
+  quantity: number;
+  maxQuantity: number;
   caseColor: string;
   strapColor: string;
 };
 
 export type Product = {
   id: string;
+  title: string;
+  productType: string;
+  price: string;
   handle: string;
   quantity: number;
-  title: string;
   description: string;
-  productType: string;
+  vendor: string;
+  images: string[];
+};
+
+export type SidebarProps = {
+  setActiveSection: (section: string) => void;
+  className?: string;
+};
+
+export type OrderItem = {
+  id: string; 
+  handle: string;
+  name: string;
   vendor: string;
   price: string;
-  images: string[];
-  options: Option[];
+  quantity: number;
+  subtotal: string;
+  image: string;
+};
+
+export type Order = {
+  id: string;
+  number: string;
+  date: string;
+  status: string;
+  total: string;
+  // shipping: string;
+  // tax: string;
+  // subtotal: string;
+  items: OrderItem[];
 };
 
 export type Option = {

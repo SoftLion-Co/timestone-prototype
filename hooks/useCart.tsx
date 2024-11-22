@@ -7,6 +7,8 @@ import { CartProductProps } from '@/config/types';
 interface CartContextType {
   products: CartProductProps[];
   addToCart: (product: CartProductProps) => void;
+  addQuantity: (productId: string) => void;
+  removeQuantity: (productId: string) => void;
   removeFromCart: (id: string) => void;
   totalAmount: number;
   isOpen: boolean;
@@ -20,16 +22,45 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const addToCart = (product: CartProductProps) => {
-    setProducts((prevProducts) => {
-      const existingProduct = prevProducts.find(
-        (item) => item.id === product.id
-      );
-      if (existingProduct) {
-        return [...prevProducts];
-      } else {
-        return [...prevProducts, { ...product }];
+    const existingProduct = products.find((item) => item.id === product.id);
+
+    let newArr = [];
+
+    if (existingProduct) {
+      if (existingProduct.quantity < existingProduct.maxQuantity) {
+        existingProduct.quantity += 1;
       }
-    });
+
+      newArr = [...products];
+    } else {
+      newArr = [...products, { ...product }];
+    }
+
+    setProducts(newArr);
+  };
+
+  const addQuantity = (productId: string) => {
+    const newProd = products.find((item) => item.id === productId);
+
+    if (newProd && newProd.quantity < newProd.maxQuantity) {
+      newProd.quantity += 1;
+    }
+
+    let newArr = [...products];
+
+    setProducts(newArr);
+  };
+
+  const removeQuantity = (productId: string) => {
+    const newProd = products.find((item) => item.id === productId);
+
+    if (newProd && newProd.quantity > 1) {
+      newProd.quantity -= 1;
+    }
+
+    let newArr = [...products];
+
+    setProducts(newArr);
   };
 
   const changeOpenState = (newType: boolean) => {
@@ -42,13 +73,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const totalAmount = products.reduce((sum, item) => sum + item.price, 0);
+  const totalAmount = products.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <CartContext.Provider
       value={{
         products,
         addToCart,
+        addQuantity,
+        removeQuantity,
         removeFromCart,
         totalAmount,
         isOpen,

@@ -22,19 +22,19 @@ const CategoryMain = () => {
     setProducts(newProducts);
   };
 
+  // DONE можна прибрати загальну кількість товарів на сторінці
+
   return (
     <>
       <FiltersProvider>
         <ProductsContext.Provider value={products}>
-          <TitleComponents
-            text="Products"
-            additionalText={`${totalProducts} Total products`}
-          />
-          <div className="xl:flex xl:container">
+          <TitleComponents text="Products" />
+          <div className="xl:flex lg:px-[150px] md:px-[75px]">
             <CategoryAsideFilters
               handleUpdateProducts={handleUpdateProducts}
               handleChangeTotalProducts={handleChangeTotalProducts}
             />
+
             <CategorySection totalProducts={totalProducts} />
           </div>
         </ProductsContext.Provider>

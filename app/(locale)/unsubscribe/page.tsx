@@ -1,3 +1,5 @@
+//!доробити логіку
+
 //! ?email=${email}
 const Unsubscribe = () => {
   //const email = new URLSearchParams(window.location.search).get("email");

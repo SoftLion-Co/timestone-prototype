@@ -54,6 +54,7 @@ const Links: FC<HeroProps> = ({ className }) => {
   );
 };
 
+//! знайти шрифт для заголовків
 const HeroSection: FC = () => {
   return (
     <section className="flex flex-col relative py-[40px] lg:py-[60px]">
@@ -61,6 +62,7 @@ const HeroSection: FC = () => {
         <Links className="hidden lg:grid" />
 
         <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">
+
           <h1 className="font-spaceage text-black leading-[50px] mb-4 md:mb-[20px] text-[40px] lg:text-[45px] lg:mb-[25px] xl:text-[60px] ">
             FIND YOUR DREAM WATCH
           </h1>
@@ -70,7 +72,7 @@ const HeroSection: FC = () => {
             facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
           </p>
 
-          <Button text="Your Watch" tag="a" href="/ua/catalog" />
+          <Button text="Your Watches" tag="a" href="/catalog" />
         </div>
 
         <Links className="grid lg:hidden" />

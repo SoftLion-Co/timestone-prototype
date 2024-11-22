@@ -8,7 +8,13 @@ import { useCart } from '@/hooks/useCart';
 import Delete from '@/images/cart-component/delete.svg';
 
 const CartProduct = ({ card }: { card: CartProductProps }) => {
-  const { products, removeFromCart, changeOpenState } = useCart();
+  const {
+    products,
+    addQuantity,
+    removeQuantity,
+    removeFromCart,
+    changeOpenState,
+  } = useCart();
 
   const onHandleClickDelete = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -21,7 +27,22 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
     products.length == 1 && changeOpenState(false);
   };
 
-  // прибрати кнопку add a matching item
+  const onHandleClickAddQuantity = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    e.preventDefault();
+
+    addQuantity(id);
+  };
+
+  const onHandleClickRemoveQuantity = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    e.preventDefault();
+    removeQuantity(id);
+  };
 
   return (
     <li className="text-black pb-[15px] border-b border-[#ECEDF1] flex gap-[15px] items-center">
@@ -47,8 +68,8 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
 
         <span className="text-black text-[20px] mb-[15px]">${card.price}</span>
 
-        <div>
-          <ul className="flex gap-[25px] items-center">
+        <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
+          {/* <ul className="flex gap-[25px] items-center">
             <li className="flex items-center gap-[7px]">
               <div className={`w-5 h-5 rounded-md bg-darkMaroon`}></div>
               <span className="text-[12px] text-silver">Case Color</span>
@@ -57,7 +78,28 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
               <div className={`w-5 h-5 rounded-md bg-darkMaroon`}></div>
               <span className="text-[12px] text-silver">Strap Color</span>
             </li>
-          </ul>
+          </ul> */}
+
+          {/* DONE переробити стилізацію (приклад в тг) */}
+          <button
+            onClick={(e) => onHandleClickRemoveQuantity(e, card.id)}
+            className={`w-8 h-8 rounded-sm border-r-2 ${
+              card.quantity > 1 ? 'hover:bg-white bg-gray-200' : 'bg-white'
+            }`}>
+            -
+          </button>
+          <span className="w-8 h-8 rounded-sm  flex items-center justify-center">
+            {card.quantity}
+          </span>
+          <button
+            onClick={(e) => onHandleClickAddQuantity(e, card.id)}
+            className={`w-8 h-8 rounded-sm border-l-2  ${
+              card.quantity < card.maxQuantity
+                ? 'hover:bg-white bg-gray-200'
+                : 'bg-white'
+            }`}>
+            +
+          </button>
         </div>
       </div>
     </li>

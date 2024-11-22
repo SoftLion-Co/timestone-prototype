@@ -6,14 +6,14 @@ import React, { FC } from 'react';
 import Basket from '@/images/card-component/busket.svg';
 import { CardProps } from '@/config/types';
 import { useCart } from '@/hooks/useCart';
-import { getProductByHandle } from '@/services/ProductService';
 
 const CardComponent: FC<CardProps> = ({
   id,
   handle,
   title,
   price,
-  images,
+  image,
+  quantity,
   productType,
 }) => {
   const { addToCart, isOpen, changeOpenState } = useCart();
@@ -31,7 +31,9 @@ const CardComponent: FC<CardProps> = ({
       handle: handle,
       title: title,
       price: +price,
-      image: images[0],
+      image: image,
+      quantity: 1,
+      maxQuantity: quantity,
       caseColor: 'red',
       strapColor: 'red',
     });
@@ -41,7 +43,7 @@ const CardComponent: FC<CardProps> = ({
     <div className="flex flex-col items-center font-poppins">
       <div className="relative group rounded-md overflow-hidden">
         <Image
-          src={images[0]}
+          src={image}
           width={255}
           height={300}
           alt={`image of ${title}`}
