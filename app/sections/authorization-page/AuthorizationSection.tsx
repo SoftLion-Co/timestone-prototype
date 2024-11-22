@@ -5,6 +5,7 @@ import Input from "@/components/InputComponent";
 import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
 import { loginUser, registrateNewUser } from "@/services/AuthService";
+import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
 import { m } from "framer-motion";
 
 const months = [
@@ -69,6 +70,9 @@ const AuthorizationSection = () => {
   const [confirmEmailMessage, setConfirmEmailMessage] = useState<string | null>(
     null
   );
+  const [registrationMessage, setRegistrationMessage] = useState<string | null>(
+    null
+  );
   const [confirmPasswordMessage, setConfirmPasswordMessage] = useState<
     string | null
   >(null);
@@ -81,10 +85,12 @@ const AuthorizationSection = () => {
     | "phoneError"
     | "confirmEmailError"
     | "confirmPasswordError"
+    | "registrationError"
     | null
   >(null);
 
   const [isLoginPage, setIsLoginPage] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const resetForm = () => {
     setFirstName("");
@@ -99,10 +105,10 @@ const AuthorizationSection = () => {
     setReceiveUpdates(false);
   };
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     if (checkValidationRegistration()) {
       const dateOfBirth = `${month}, ${day}`;
-      registrateNewUser(
+      const response = await registrateNewUser(
         firstName,
         lastName,
         email,
@@ -110,13 +116,22 @@ const AuthorizationSection = () => {
         dateOfBirth,
         password,
         receiveUpdates
-      ).then((response) => {
-        if (response) {
-          // якшо респонс не помилка знач успішно надісланий емейл знач можна встановити модалку
-          setIsModalVisible(true);
-          resetForm();
-        } // а якшо помилка то показати на формі тип її
-      });
+      );
+
+      if (response == "created") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setIsModalVisible(true);
+        resetForm();
+      } else if (response == "unactivated") {
+        setRegistrationMessage("Your accout not activated");
+        setMessageType("registrationError");
+      } else if (response == "phone") {
+        setRegistrationMessage("Phone already in use");
+        setMessageType("registrationError");
+      } else if (response === "email") {
+        setRegistrationMessage("Email already in use");
+        setMessageType("registrationError");
+      }
     }
   };
 
@@ -160,6 +175,7 @@ const AuthorizationSection = () => {
     setPhoneMessage(null);
     setConfirmEmailMessage(null);
     setConfirmPasswordMessage(null);
+    setRegistrationMessage(null);
   };
 
   const checkValidationLogin = () => {
@@ -260,24 +276,8 @@ const AuthorizationSection = () => {
     return isValid;
   };
 
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-  const Modal = ({ message }: { message: string }) => {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-        <div className="max-w-[280px] bg-white p-[20px] rounded-lg text-center">
-          <h3 className="text-xl font-semibold">{message}</h3>
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <section className="relative flex justify-center items-center font-poppins">
-      {isModalVisible && (
-        <Modal message="Check your email to confirm and finish registration" />
-      )}
-
+    <section className=" relative flex justify-center items-center font-poppins">
       <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
       <Image
           src={Background}
@@ -322,6 +322,13 @@ const AuthorizationSection = () => {
             );
           })}
         </div>
+
+        {isModalVisible && (
+          <ModalWindowComponent
+            title="Almost finished"
+            message="Please, check your email to confirm registration."
+          />
+        )}
 
         {isLoginPage ? (
           <>
@@ -575,6 +582,13 @@ const AuthorizationSection = () => {
                 <label>
                   Sign-up to receive the latest updates and promotions
                 </label>
+              </div>
+              <div>
+                {registrationMessage && (
+                  <span className={`block text-left text-onyx`}>
+                    {registrationMessage}
+                  </span>
+                )}
               </div>
 
               <Button
