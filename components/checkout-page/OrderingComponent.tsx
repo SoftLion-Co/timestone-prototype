@@ -8,8 +8,12 @@ import Button from "../ButtonComponent";
 
 import Thanks from "@/images/checkout-page/Thanks.png";
 
+interface OrderingComponentProps {
+  title: string;
+  message: string;
+}
 
-const OrderingComponent = () => {
+const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title}) =>{
   const [opened, { open, close }] = useDisclosure(true);
 
   return (
@@ -32,10 +36,10 @@ const OrderingComponent = () => {
       >
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">
           <h1 className="font-spaceage text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
-            Thanks for ordering
+            {title}
           </h1>
           <p className="text-center text-[#424551] font-poppins text-default text-[silver] px-[10px] mt-[5px] md:mt-0">
-            Your order is on the ready and we will ship it asap!
+            {message}
           </p>
           <Button
             href="/"
