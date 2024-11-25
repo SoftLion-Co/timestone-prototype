@@ -433,7 +433,6 @@ const AuthorizationSection = () => {
                 type="text"
                 bordered={true}
                 fullWidth={true}
-                className="!w-full"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
@@ -448,7 +447,6 @@ const AuthorizationSection = () => {
                 type="text"
                 bordered={true}
                 fullWidth={true}
-                className="!w-full"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
@@ -462,6 +460,7 @@ const AuthorizationSection = () => {
                 <Input
                   placeholder="January"
                   inputType="select"
+                  className="!w-full"
                   bordered={true}
                   options={months}
                   value={month}
@@ -472,6 +471,7 @@ const AuthorizationSection = () => {
                 <Input
                   placeholder="01"
                   inputType="select"
+                  className="!w-full"
                   bordered={true}
                   options={dayOptions}
                   value={day}
@@ -486,7 +486,6 @@ const AuthorizationSection = () => {
                 bordered={true}
                 value={phone}
                 fullWidth={true}
-                className="!w-full"
                 onChange={(e) => setPhone(e.target.value)}
               />
               {phoneMessage && (
@@ -499,12 +498,12 @@ const AuthorizationSection = () => {
                 <div>
                   <Input
                     inputType="input"
-                    className="mini:w-[320px]"
                     placeholder="Email"
                     type="email"
+                    fullWidth={true}
+                    className="lg:min-w-[314px]"
                     bordered={true}
                     value={email}
-                    fullWidth={true}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                   {emailMessage && (
@@ -520,10 +519,10 @@ const AuthorizationSection = () => {
                     inputType="input"
                     placeholder="Confirm Email"
                     type="email"
-                    className="mini:w-[320px]"
+                    fullWidth={true}
+                    className="lg:min-w-[314px]"
                     bordered={true}
                     value={confirmEmail}
-                    fullWidth={true}
                     onChange={(e) => setConfirmEmail(e.target.value)}
                   />
                   {confirmEmailMessage && (
@@ -538,12 +537,12 @@ const AuthorizationSection = () => {
                 <div>
                   <Input
                     inputType="input"
-                    className="mini:w-[320px]"
                     placeholder="Password"
                     type="password"
-                    bordered={true}
-                    value={password}
                     fullWidth={true}
+                    bordered={true}
+                    className="lg:min-w-[314px]"
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   {passwordMessage && (
@@ -559,9 +558,9 @@ const AuthorizationSection = () => {
                     placeholder="Confirm Password"
                     type="password"
                     bordered={true}
-                    value={confirmPassword}
                     fullWidth={true}
-                    className="mini:w-[320px]"
+                    className="lg:min-w-[314px]"
+                    value={confirmPassword}
                     onChange={(e) => setConfirmPasswor(e.target.value)}
                   />
                   {confirmPasswordMessage && (
