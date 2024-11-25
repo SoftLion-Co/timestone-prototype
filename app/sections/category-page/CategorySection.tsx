@@ -43,7 +43,6 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
-  // DONE зробити сортування
   const handleChangeSorting = (value: string) => {
     let newValue = value == 'HPRICE' || value == 'LPRICE' ? 'PRICE' : value;
 
