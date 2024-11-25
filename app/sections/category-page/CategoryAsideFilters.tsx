@@ -10,6 +10,7 @@ import { useFilters } from '@/hooks/useFilters';
 import { CardProps } from '@/config/types';
 import { getProducts } from '@/services/ProductService';
 import { reverse } from 'dns';
+import FilterContainerComponent from '@/components/filters-component/FilterContainerComponent';
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
@@ -34,6 +35,7 @@ const CategoryAsideFilters = ({
   const [isOpenCountriesItem, setIsOpenCountriesItem] =
     useState<boolean>(false);
   const [isOpenTypeItem, setIsOpenTypeItem] = useState<boolean>(false);
+  const [isOpenPriceItem, setIsOpenPriceItem] = useState<boolean>(false);
   const [isOpenCaseItem, setIsOpenCaseItem] = useState<boolean>(false);
   const [isOpenStrapsItem, setIsOpenStrapsItem] = useState<boolean>(false);
 
@@ -232,6 +234,7 @@ const CategoryAsideFilters = ({
     setIsOpen(false);
   };
 
+  // TODO зробити щоб з'являлись фільтри (на плюс - показувати, мінус - ховати) приклад в тг
   return (
     <>
       {/* pc filters */}
@@ -252,21 +255,27 @@ const CategoryAsideFilters = ({
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
               <div className="flex justify-between items-center">
                 <h4 className=" text-black font-semibold ">Select Countries</h4>
-                <button
-                  className={`relative bg-darkBurgundy h-[2px] w-5 ${
-                    isOpenCountriesItem
-                      ? ''
-                      : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpenCountriesItem(
-                      (isOpenCountriesItem) => !isOpenCountriesItem
-                    );
-                  }}></button>
+                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                      isOpenCountriesItem
+                        ? ''
+                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenCountriesItem(
+                        (isOpenCountriesItem) => !isOpenCountriesItem
+                      );
+                    }}></button>
+                </div>
               </div>
-
-              <motion.div className="flex flex-col justify-start items-start gap-1">
+              <FilterContainerComponent
+                filters={{
+                  isOpen: isOpenCountriesItem,
+                  styles:
+                    'flex flex-col justify-start items-start gap-1 overflow-y-scroll h-18',
+                }}>
                 <div className="flex gap-2">
                   <input
                     type="checkbox"
@@ -291,12 +300,30 @@ const CategoryAsideFilters = ({
                   />
                   <span>Germany</span>
                 </div>
-              </motion.div>
+              </FilterContainerComponent>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
-              <h4 className=" text-black font-semibold ">Select Products</h4>
-              <div className="flex flex-col justify-start items-start gap-1">
+              <div className="flex justify-between items-center">
+                <h4 className=" text-black font-semibold ">Select Products</h4>
+                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                      isOpenTypeItem
+                        ? ''
+                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenTypeItem((isOpenTypeItem) => !isOpenTypeItem);
+                    }}></button>
+                </div>
+              </div>
+              <FilterContainerComponent
+                filters={{
+                  isOpen: isOpenTypeItem,
+                  styles: 'flex flex-col justify-start items-start gap-1',
+                }}>
                 <button
                   onClick={(e) => handleProductType(e, 'watches')}
                   className={`${productType === 'watches' ? 'font-bold' : ''}`}>
@@ -307,12 +334,30 @@ const CategoryAsideFilters = ({
                   className={`${productType === 'straps' ? 'font-bold' : ''}`}>
                   Straps
                 </button>
-              </div>
+              </FilterContainerComponent>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
-              <h4 className="text-black font-semibold">Price Range</h4>
-              <div className="flex gap-[15px] items-center">
+              <div className="flex justify-between items-center">
+                <h4 className="text-black font-semibold">Price Range</h4>
+                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                      isOpenPriceItem
+                        ? ''
+                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenPriceItem((isOpenPriceItem) => !isOpenPriceItem);
+                    }}></button>
+                </div>
+              </div>
+              <FilterContainerComponent
+                filters={{
+                  isOpen: isOpenPriceItem,
+                  styles: 'flex gap-[15px] items-center',
+                }}>
                 <input
                   className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
                   type="text"
@@ -328,12 +373,30 @@ const CategoryAsideFilters = ({
                   placeholder="$150"
                   onChange={handleMaxPrice}
                 />
-              </div>
+              </FilterContainerComponent>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px] xl:px-0">
-              <h4 className=" text-black font-semibold">Case Color</h4>
-              <div className="flex gap-3">
+              <div className="flex justify-between items-center">
+                <h4 className=" text-black font-semibold">Case Color</h4>
+                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                      isOpenCaseItem
+                        ? ''
+                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenCaseItem((isOpenCaseItem) => !isOpenCaseItem);
+                    }}></button>
+                </div>
+              </div>
+              <FilterContainerComponent
+                filters={{
+                  isOpen: isOpenCaseItem,
+                  styles: 'flex gap-3',
+                }}>
                 <button
                   onClick={(e) => handleSetWatchesColor(e, 'Black')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A] ${
@@ -358,14 +421,31 @@ const CategoryAsideFilters = ({
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
-              </div>
+              </FilterContainerComponent>
             </label>
 
             <label className="flex flex-col gap-[10px] xl:border-none border-b border-silver border-opacity-20 py-5 xl:pb-0 px-[15px] xl:px-0">
-              <h4 className=" text-black font-semibold">
-                Filter By Strap Colors
-              </h4>
-              <div className="flex gap-3">
+              <div className="flex justify-between items-center">
+                <h4 className=" text-black font-semibold">
+                  Filter By Strap Colors
+                </h4>
+                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                  <button
+                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                      isOpenStrapsItem
+                        ? ''
+                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpenStrapsItem(
+                        (isOpenStrapsItem) => !isOpenStrapsItem
+                      );
+                    }}></button>
+                </div>
+              </div>
+              <FilterContainerComponent
+                filters={{ isOpen: isOpenStrapsItem, styles: 'flex gap-3' }}>
                 <button
                   onClick={(e) => handleSetStrapsColor(e, 'orange')}
                   className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#D39138] to-[#B95371] ${
@@ -398,7 +478,7 @@ const CategoryAsideFilters = ({
                       ? 'opacity-50'
                       : 'opacity-100'
                   }`}></button>
-              </div>
+              </FilterContainerComponent>
             </label>
           </div>
 
@@ -411,7 +491,7 @@ const CategoryAsideFilters = ({
       </aside>
 
       {/* mobile filters */}
-      <div className="z-50 top-0 xl:hidden">
+      <div className="z-50 top-0 xl:hidden bg-pearl">
         <div className="container">
           <form onSubmit={handleSubmitFormForMobile}>
             {isOpen && (
