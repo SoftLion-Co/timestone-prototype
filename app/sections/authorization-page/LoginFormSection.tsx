@@ -24,7 +24,7 @@ const LoginFormSection = () => {
           const { email, password } = loginForm.values;
           const response = await loginUser(email, password);
           if (response.success) {
-           
+            loginForm.reset();
           }
         }
       };

@@ -55,7 +55,7 @@ const RegistrationFormSection = () => {
   const [day, setDay] = useState("01");
   const dayOptions = getDaysInMonth(month);
 
-  const form = useForm({
+  const registrationForm = useForm({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -81,10 +81,10 @@ const RegistrationFormSection = () => {
   });
 
   const handleCreateAccount = async () => {
-    const errors = form.validate();
+    const errors = registrationForm.validate();
     if (!errors.hasErrors) {
       const { firstName, lastName, email, phone, password, receiveUpdates } =
-        form.values;
+      registrationForm.values;
       const dateOfBirth = `${month}, ${day}`;
       console.log(
         firstName,
@@ -108,7 +108,7 @@ const RegistrationFormSection = () => {
       if (response === "created") {
         window.scrollTo({ top: 0, behavior: "smooth" });
         setIsModalVisible(true);
-        form.reset();
+        registrationForm.reset();
       } else if (response === "unactivated") {
         setRegistrationMessage("Your account is not activated");
       } else if (response === "phone") {
@@ -143,7 +143,7 @@ const RegistrationFormSection = () => {
           type="text"
           bordered={true}
           fullWidth={true}
-          {...form.getInputProps("firstName")}
+          {...registrationForm.getInputProps("firstName")}
           errorType="critical"
           required={true}
         />
@@ -154,7 +154,7 @@ const RegistrationFormSection = () => {
           type="text"
           bordered={true}
           fullWidth={true}
-          {...form.getInputProps("lastName")}
+          {...registrationForm.getInputProps("lastName")}
           errorType="critical"
           required={true}
         />
@@ -189,7 +189,7 @@ const RegistrationFormSection = () => {
           type="text"
           bordered={true}
           fullWidth={true}
-          {...form.getInputProps("phone")}
+          {...registrationForm.getInputProps("phone")}
           errorType="critical"
           required={true}
         />
@@ -203,7 +203,7 @@ const RegistrationFormSection = () => {
               fullWidth={true}
               className="lg:min-w-[314px]"
               bordered={true}
-              {...form.getInputProps("email")}
+              {...registrationForm.getInputProps("email")}
               errorType="critical"
               required={true}
             />
@@ -217,7 +217,7 @@ const RegistrationFormSection = () => {
               fullWidth={true}
               className="lg:min-w-[314px]"
               bordered={true}
-              {...form.getInputProps("confirmEmail")}
+              {...registrationForm.getInputProps("confirmEmail")}
               errorType="critical"
               required={true}
             />
@@ -233,7 +233,7 @@ const RegistrationFormSection = () => {
               fullWidth={true}
               bordered={true}
               className="lg:min-w-[314px]"
-              {...form.getInputProps("password")}
+              {...registrationForm.getInputProps("password")}
               errorType="critical"
               required={true}
             />
@@ -247,7 +247,7 @@ const RegistrationFormSection = () => {
               bordered={true}
               fullWidth={true}
               className="lg:min-w-[314px]"
-              {...form.getInputProps("confirmPassword")}
+              {...registrationForm.getInputProps("confirmPassword")}
               errorType="critical"
               required={true}
             />
@@ -257,9 +257,9 @@ const RegistrationFormSection = () => {
         <div className="flex text-silver gap-[10px] mt-[10px] text-left">
           <input
             type="checkbox"
-            checked={form.values.receiveUpdates}
+            checked={registrationForm.values.receiveUpdates}
             onChange={(e) =>
-              form.setFieldValue("receiveUpdates", e.target.checked)
+              registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
             className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
