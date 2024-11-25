@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 
 import TitleComponents from '@/components/TitleComponents';
 import CategoryAsideFilters from './CategoryAsideFilters';
@@ -9,6 +9,7 @@ import { CardProps } from '@/config/types';
 import { FiltersProvider } from '@/hooks/useFilters';
 
 export const ProductsContext = createContext<CardProps[]>([]);
+const LIMIT = 16;
 
 const CategoryMain = () => {
   const [totalProducts, setTotalProducts] = useState<number>(0);
@@ -22,20 +23,22 @@ const CategoryMain = () => {
     setProducts(newProducts);
   };
 
-  // DONE можна прибрати загальну кількість товарів на сторінці
-
   return (
     <>
       <FiltersProvider>
         <ProductsContext.Provider value={products}>
-          <TitleComponents text="Products" />
+          <TitleComponents
+            text="Products"
+            additionalText={`${totalProducts} Total Products`}
+          />
           <div className="xl:flex lg:px-[150px] md:px-[75px]">
             <CategoryAsideFilters
               handleUpdateProducts={handleUpdateProducts}
               handleChangeTotalProducts={handleChangeTotalProducts}
+              limit={LIMIT}
             />
 
-            <CategorySection totalProducts={totalProducts} />
+            <CategorySection totalProducts={totalProducts} limit={LIMIT} />
           </div>
         </ProductsContext.Provider>
       </FiltersProvider>

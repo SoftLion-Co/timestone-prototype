@@ -80,7 +80,6 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
             </li>
           </ul> */}
 
-          {/* DONE переробити стилізацію (приклад в тг) */}
           <button
             onClick={(e) => onHandleClickRemoveQuantity(e, card.id)}
             className={`w-8 h-8 rounded-sm border-r-2 ${
