@@ -1,4 +1,4 @@
-import Auth from "@/app/sections/authorization-page/AuthorizationSection";
+import Auth from "@/app/sections/authorization-page/AuthorizationSection2";
 
 const Page = () => {
   return (
