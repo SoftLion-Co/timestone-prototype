@@ -76,7 +76,7 @@ const RegistrationFormSection = () => {
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
       phone: (value) =>
-        /^\d{10}$/.test(value) ? null : "Invalid phone number",
+        /^\+38\d{10}$/.test(value) ? null : "Invalid phone number",
     },
   });
 
@@ -84,7 +84,7 @@ const RegistrationFormSection = () => {
     const errors = registrationForm.validate();
     if (!errors.hasErrors) {
       const { firstName, lastName, email, phone, password, receiveUpdates } =
-      registrationForm.values;
+        registrationForm.values;
       const dateOfBirth = `${month}, ${day}`;
       console.log(
         firstName,
@@ -92,7 +92,7 @@ const RegistrationFormSection = () => {
         email,
         phone,
         dateOfBirth,
-        password, 
+        password,
         receiveUpdates
       );
       const response = await registrateNewUser(
@@ -115,11 +115,26 @@ const RegistrationFormSection = () => {
         setRegistrationMessage("Phone already in use");
       } else if (response === "email") {
         setRegistrationMessage("Email already in use");
-      } else{
+      } else {
         setRegistrationMessage("Error during registration");
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      registrationForm.values.phone &&
+      !registrationForm.values.phone.startsWith("+38")
+    ) {
+      registrationForm.setFieldValue(
+        "phone",
+        `+38${registrationForm.values.phone}`
+      );
+    }
+    if (registrationForm.values.phone.length === 2) {
+      registrationForm.setFieldValue("phone", "");
+    }
+  }, [registrationForm.values.phone]);
 
   return (
     <>
