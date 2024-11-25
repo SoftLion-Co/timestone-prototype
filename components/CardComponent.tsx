@@ -5,27 +5,45 @@ import Link from 'next/link';
 import React, { FC } from 'react';
 import Basket from '@/images/card-component/busket.svg';
 import { CardProps } from '@/config/types';
-
-const handleAddToBasket = (
-  e: React.MouseEvent<HTMLButtonElement>,
-  id: string
-) => {
-  e.preventDefault();
-  console.log(`add to basket product with id: ${id}`);
-};
+import { useCart } from '@/hooks/useCart';
 
 const CardComponent: FC<CardProps> = ({
   id,
+  handle,
   title,
-  minPrice,
-  images,
+  price,
+  image,
+  quantity,
   productType,
 }) => {
+  const { addToCart, isOpen, changeOpenState } = useCart();
+
+  const handleAddToBasket = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    e.preventDefault();
+
+    !isOpen && changeOpenState(true);
+
+    addToCart({
+      id: id,
+      handle: handle,
+      title: title,
+      price: +price,
+      image: image,
+      quantity: 1,
+      maxQuantity: quantity,
+      caseColor: 'red',
+      strapColor: 'red',
+    });
+  };
+
   return (
     <div className="flex flex-col items-center font-poppins">
       <div className="relative group rounded-md overflow-hidden">
         <Image
-          src={images[0]}
+          src={image}
           width={255}
           height={300}
           alt={`image of ${title}`}
@@ -48,11 +66,11 @@ const CardComponent: FC<CardProps> = ({
       </div>
 
       <Link
-        href={`products/${id}`}
+        href={`catalog/${id}`}
         className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>
-      <span className="font-normal text-xl text-onyx">${minPrice}</span>
+      <span className="font-normal text-xl text-onyx">${price}</span>
     </div>
   );
 };
