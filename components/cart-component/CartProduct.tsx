@@ -6,6 +6,7 @@ import { CartProductProps } from '@/config/types';
 import { useCart } from '@/hooks/useCart';
 
 import Delete from '@/images/cart-component/delete.svg';
+import { usePathname } from 'next/navigation';
 
 const CartProduct = ({ card }: { card: CartProductProps }) => {
   const {
@@ -15,6 +16,8 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
     removeFromCart,
     changeOpenState,
   } = useCart();
+
+  const pathname = usePathname();
 
   const onHandleClickDelete = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -57,13 +60,15 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between">
           <h4 className="text-[12px] text-silver">{card.title}</h4>
-          <button onClick={(e) => onHandleClickDelete(e, card.id)}>
-            <Image
-              src={Delete}
-              alt="delete button"
-              className="object-fit h-5 w-5 hover:scale-110 duration-300"
-            />
-          </button>
+          {pathname !== '/checkout' && (
+            <button onClick={(e) => onHandleClickDelete(e, card.id)}>
+              <Image
+                src={Delete}
+                alt="delete button"
+                className="object-fit h-5 w-5 hover:scale-110 duration-300"
+              />
+            </button>
+          )}
         </div>
 
         <span className="text-black text-[20px] mb-[15px]">${card.price}</span>
