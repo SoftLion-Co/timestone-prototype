@@ -100,7 +100,7 @@ const SliderSection = () => {
               loop
               align={isMobile && isTablet ? "center" : "start"}
               nextControlIcon={
-                <div className="mt-[30px] absolute top-1/2 right-[60px] sm:mt-[102px] sm:left-[260px]">
+                <div className="mt-[30px] w-[80px] absolute top-1/2 right-[60px] sm:mt-[102px] sm:left-[260px]">
                   <Image
                     src={ImgArrow}
                     alt="Next Arrow"
@@ -141,8 +141,10 @@ const SliderSection = () => {
             </Carousel>
           </div>
           <Button
-            text="Design Your Watch"
-            className="mt-[80px] mx-auto sm:mr-[20px] lg:mr-[60px] sm:ml-auto sm:mt-[90px]"
+            text="Your wathes"
+            tag="a"
+            href="/catalog"
+            className="mt-[80px] max-w-[200px] mx-auto sm:mr-[20px] sm:ml-auto sm:mt-[90px] lg:mr-[60px]"
           />
         </div>
       </section>
