@@ -65,6 +65,7 @@ const RegistrationFormSection = () => {
       password: "",
       confirmPassword: "",
       receiveUpdates: false,
+      registrationMessage: "",
     },
     validate: {
       firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
@@ -106,17 +107,13 @@ const RegistrationFormSection = () => {
       );
 
       if (response === "created") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: window.innerHeight * 0.3, behavior: "smooth" });
         setIsModalVisible(true);
         registrationForm.reset();
-      } else if (response === "unactivated") {
-        setRegistrationMessage("Your account is not activated");
-      } else if (response === "phone") {
-        setRegistrationMessage("Phone already in use");
-      } else if (response === "email") {
-        setRegistrationMessage("Email already in use");
+      } else if (response !== "server error") {
+        setRegistrationMessage(response);
       } else {
-        setRegistrationMessage("Error during registration");
+        setRegistrationMessage("Problems wih server");
       }
     }
   };
@@ -138,12 +135,15 @@ const RegistrationFormSection = () => {
 
   return (
     <>
-      {isModalVisible && (
-        <ModalWindowComponent
-          title="Almost finished"
-          message="Please, check your email to confirm registration."
-        />
-      )}
+      {/* <div className="top: 0"> */}
+        {isModalVisible && (
+          <ModalWindowComponent
+            title="Almost finished"
+            message="Please, check your email to confirm registration."
+          />
+        )}
+      {/* </div> */}
+
       <div className="text-center mb-[28px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?

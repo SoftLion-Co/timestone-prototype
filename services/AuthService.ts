@@ -18,27 +18,21 @@ export const registrateNewUser = async (
       phone,
       dateOfBirth,
       password,
-      receiveUpdates, 
+      receiveUpdates,
     });
-    console.log(result);
-    if (result.status === 201) {
+    console.log(result.data);
+    
+  } catch (error) {
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+    if (error.status === 201) {
       return "created";
-    }
-  } catch (error: unknown) {
-    const axiosError = error as AxiosError;
-    if (axiosError.response) {
-      
-      if (axiosError.response.status === 406) {
-        return "email";
-      } else if (axiosError.response.status === 405) {
-        return "phone";
-      } else {
-        return "error";  //тут ще не активований
-      }
+    } else if (error.status === 406) {
+      return error.response?.data;
     } else {
-      console.error("Failed to register user:", error);
-      throw error;
+      return "server error";
     }
+  }
   }
 };
 
