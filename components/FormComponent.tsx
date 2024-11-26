@@ -13,14 +13,14 @@ const FormComponent: FC<formProps> = ({ className, title, children }) => {
 
   return (
     <div
-      className={`${className} rounded-[5px] border-[1px] border-whisper w-full justify-center md:w-[500px] lg:w-[420px] mini:w-[420px] xl:w-[600px] mx-auto lg:mx-0`}
+      className={`${className} rounded-[5px] border-[1px] border-whisper w-full justify-center md:w-[500px] lg:w-[600px] mini:w-[420px] xl:w-[700px] mx-auto lg:mx-0`}
     >
       <p className="mx-[30px] my-[25px] flex justify-between">
         <span className="font-semibold">{title}</span>
         <Image
           src={Arrow}
           alt="Arrow"
-          className={`transition-transform  ${
+          className={`cursor-pointer transition-transform  ${
             isOpen ? "rotate-180" : "rotate-0"
           }`}
           onClick={() => setIsOpen(!isOpen)}
