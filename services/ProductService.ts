@@ -7,18 +7,30 @@ export const getProducts = async (
   limit?: number,
   pageCursor?: string,
   sortKey?: string,
-  reverse?: boolean
+  reverse?: boolean,
+  pagination?: boolean
 ): Promise<any> => {
   try {
+    let optionsString = '';
+
+    if (options) {
+      optionsString = Object.entries(options)
+        .flatMap(([key, values]) =>
+          values.map((value: any) => `${key}-${value}`)
+        )
+        .join(' ');
+    }
+
     const response = await axios.post(
       `${BASE_URL}/product`,
       {
         filters,
-        options,
+        optionsString,
         pageCursor,
         limit,
         sortKey,
         reverse,
+        pagination,
       },
       {
         headers: {
@@ -26,6 +38,7 @@ export const getProducts = async (
         },
       }
     );
+
     return response.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -39,15 +52,5 @@ export const getProductByHandle = async (handle: string): Promise<any> => {
     return response.data;
   } catch (error) {
     console.error('Failed to fetch product by handle:', error);
-  }
-};
-
-export const getProductsLength = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/productcount`);
-
-    return response.data;
-  } catch (error) {
-    console.error('Failed to fetch product length:', error);
   }
 };

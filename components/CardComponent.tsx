@@ -50,13 +50,13 @@ const CardComponent: FC<CardProps> = ({
         />
         <button
           onClick={(e) => handleAddToBasket(e, id)}
-          className="absolute font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundyOpacity ">
+          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300">
           <Image
             src={Basket}
-            width={35}
-            height={35}
+            width={33}
+            height={33}
             alt="basket image"
-            className="w-[35px] h-[35px] "
+            className="w-[33px] h-[33px] group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300"
           />
         </button>
       </div>
