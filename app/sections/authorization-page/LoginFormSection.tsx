@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React , { useState } from "react";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import { loginUser} from "@/services/AuthService";
@@ -7,6 +7,9 @@ import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
+  const [loginMessage, setLoginMessage] = useState<string | null>(
+    null
+  );
     const loginForm = useForm({
       initialValues: {
         email: "",
@@ -23,10 +26,19 @@ const LoginFormSection = () => {
         if (!errors.hasErrors) {
           const { email, password } = loginForm.values;
           const response = await loginUser(email, password);
-          if (response.success) {
+          if (response === "logged") {
             loginForm.reset();
+            setLoginMessage(null);
+          } else if (response !== "server error") {
+            setLoginMessage(response);
+          } else {
+            setLoginMessage("Problems wih server");
           }
         }
+
+
+
+        
       };
 
   const handleSignUpFacebook = () => {
@@ -82,6 +94,14 @@ const LoginFormSection = () => {
           <label>Remember me</label>
         </div>
       </div>
+
+      <div>
+          {loginMessage && (
+            <span className={`block text-center text-darkBurgundy`}>
+              {loginMessage}
+            </span>
+          )}
+        </div>
 
       <Button
         text="Sign In"

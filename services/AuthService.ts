@@ -21,18 +21,17 @@ export const registrateNewUser = async (
       receiveUpdates,
     });
     console.log(result.data);
-    
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {
-    if (error.status === 201) {
-      return "created";
-    } else if (error.status === 406) {
-      return error.response?.data;
-    } else {
-      return "server error";
+      if (error.status === 201) {
+        return "created";
+      } else if (error.status === 406) {
+        return error.response?.data;
+      } else {
+        return "server error";
+      }
     }
-  }
   }
 };
 
@@ -54,8 +53,16 @@ export const loginUser = async (
       return "";
     }
   } catch (error) {
-    console.error("Failed to login user:", error);
-    throw error;
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+      if (error.status === 201) {
+        return "logged";
+      } else if (error.status === 406) {
+        return error.response?.data;
+      } else {
+        return "server error";
+      }
+    }
   }
 };
 
