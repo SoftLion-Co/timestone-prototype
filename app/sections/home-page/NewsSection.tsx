@@ -120,7 +120,7 @@ const NewsSection = () => {
         <p>
           You agree to our
           <span> </span>
-          <a href="/ua/legal" className="font-medium underline">
+          <a href="/legal" className="font-medium underline">
             Terms and Conditions
           </a>
         </p>

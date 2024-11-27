@@ -8,10 +8,10 @@ const ShippingSection: FC<{
   isDisabled: boolean;
   isOpen: boolean;
   onContinue: (isValid: boolean) => void;
-}> = ({ isDisabled, isOpen, onContinue }) => {
+  setShippingValue: any
+}> = ({ isDisabled, isOpen, onContinue, setShippingValue}) => {
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [shippingValue, setShippingValue] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleContinue = () => {
