@@ -1,12 +1,11 @@
 "use client";
-import TitleComponents from "@/components/TitleComponents";
-import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
-import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
-import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
-import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
-import Button from "@/components/ButtonComponent";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Button from "@/components/ButtonComponent";
+import TitleComponents from "@/components/TitleComponents";
+import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
+import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
+import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
+import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
 
 export default function CheckoutPage() {
   const [BasicInfoOpen, setBasicInfoOpen] = useState(true);
@@ -15,7 +14,6 @@ export default function CheckoutPage() {
 
   const [basicInfo, setBasicInfo] = useState({});
   const [shippingValue, setShippingValue] = useState({});
-  const router = useRouter();
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
@@ -41,24 +39,20 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleBack = () => {
-    router.push("/catalog");
-  };
 
   return (
     <>
       <TitleComponents text="CHECKOUT" />
 
-      <div className="mx-[15px] mt-[30px]">
+      <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
         <Button
           bordered
-          onClick={handleBack}
-          className="text-[12px] py-[8px] px-[10px]"
-          text="Back to shopping"
-          icon="arrow"
+          className="flex !items-start text-[12px] py-[8px] px-[9px]"
+          text="Back"
+          href="/catalog"
+          icon="back"
           background="transparent"
-          type="button"
-          tag="button"
+          tag="a"
         />
       </div>
 

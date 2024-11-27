@@ -2,7 +2,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Carousel } from "@mantine/carousel";
 import { Loader, NumberInput, UnstyledButton } from "@mantine/core";
@@ -25,7 +24,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
@@ -111,10 +109,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     }
   };
 
-  const handleBackToCatalog = () => {
-    router.push("/catalog");
-  };
-
   return (
     <section>
       <TitleComponents
@@ -122,15 +116,15 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         additionalText="Products / Product Number One"
       />
 
-      <div className="container pt-[30px]">
+      <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
         <Button
-          text="Back to catalog"
           bordered
-          className="text-[12px] py-[8px] px-[10px]"
-          type="button"
-          tag="button"
+          className="flex !items-start text-[12px] py-[8px] px-[9px]"
+          text="Back to catalog"
+          href="/catalog"
+          icon="back"
           background="transparent"
-          onClick={handleBackToCatalog}
+          tag="a"
         />
       </div>
 

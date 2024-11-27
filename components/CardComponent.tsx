@@ -62,7 +62,7 @@ const CardComponent: FC<CardProps> = ({
       </div>
 
       <Link
-        href={`catalog/${id}`}
+        href={`catalog/${handle}`}
         className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>

@@ -1,4 +1,4 @@
-import ActivatingSection from "@/app/sections/execution-sections/ActivetedSection";
+import ActivatingSection from "@/app/sections/execution-sections/ActivatedSection";
 
 const Page = ({ params }: { params: any }) => {
 	const activatedToken = params.activatedToken;

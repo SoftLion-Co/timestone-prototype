@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 import Image from "next/image";
+
+import Back from"@/images/vectors/back.svg";
 import Cube from "@/images/vectors/cube.svg";
-import Profile from "@/images/vectors/profile.svg";
-import FacebookIcon from "@/images/authorization-page/facebook-icon.svg";
-import GoogleIcon from "@/images/authorization-page/google-icon.svg";
 import Logout from "@/images/vectors/logout.svg";
-import Arrow from "@/images/checkout-section/back-arrow.svg";
+import Profile from "@/images/vectors/profile.svg";
+import GoogleIcon from "@/images/authorization-page/google-icon.svg";
+import FacebookIcon from "@/images/authorization-page/facebook-icon.svg";
 interface ButtonProps {
   text: string;
   className?: string;
@@ -18,7 +19,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   disabled?: boolean;
   onClick?: () => void;
-  icon?: "cube" | "profile" | "facebook" | "google" | "logout" | "arrow";
+  icon?: "cube" | "profile" | "facebook" | "google" | "logout" | "back";
 }
 
 const Button: FC<ButtonProps> = ({
@@ -120,14 +121,14 @@ const Button: FC<ButtonProps> = ({
         />
       );
     }
-    if (icon == "arrow") {
+    if (icon == "back") {
       return (
         <Image
-          src={Arrow}
+          src={Back}
           alt="Back arrow icon"
-          width={22}
-          height={22}
-          className="mr-2 inline-block"
+          width={20}
+          height={20}
+          className="mr-2 inline-block inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300 ease-in-out"
         />
       );
     }
