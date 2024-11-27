@@ -1,14 +1,15 @@
 "use client";
-import Image from "next/image";
-import "@mantine/carousel/styles.css";
-import { Carousel } from "@mantine/carousel";
 import React, { FC, useEffect, useState } from "react";
-import { Loader, NumberInput, UnstyledButton} from "@mantine/core";
-
-import { Product } from "@/config/types";
 import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Carousel } from "@mantine/carousel";
+import { Loader, NumberInput, UnstyledButton } from "@mantine/core";
 import { getProductByHandle } from "@/services/ProductService";
+import { Product } from "@/config/types";
+import { useCart } from "@/hooks/useCart";
+import "@mantine/carousel/styles.css";
 
 import Arrow from "@/images/product-page/control-arrow.svg";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
@@ -23,7 +24,8 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const [maxQuantity, setMaxQuantity] = useState<number>(100);
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
@@ -70,17 +72,48 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   }, [productName]);
 
   if (!isLoading) {
-    return  <div className="container flex justify-center">
-    <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
-  </div>
+    return (
+      <div className="container flex justify-center">
+        <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
+      </div>
+    );
   }
 
-  const description = product?.description.split("&") || ["", ""];
-  const higherDescription = description[0] || "";
-  const lowerDescription = description[1].split(";").map((item) => {
-    const [key, value] = item.split(":").map((part) => part.trim());
-    return { key, value };
-  });
+  let higherDescription = "";
+  let lowerDescription: any[] = [];
+
+  if (product?.description) {
+    const description = product?.description.split("&") || ["", ""];
+    higherDescription = description[0] || "";
+    lowerDescription = description[1].split(";").map((item) => {
+      const [key, value] = item.split(":").map((part) => part.trim());
+      return { key, value };
+    });
+  }
+
+  const { addToCart, isOpen, changeOpenState } = useCart();
+
+  const handleAddToBasket = (id: string) => {
+    !isOpen && changeOpenState(true);
+
+    if (product) {
+      addToCart({
+        id: product.id,
+        handle: product.handle,
+        title: product.title,
+        price: +product.price,
+        image: product.images[0],
+        quantity: quantity,
+        maxQuantity: maxQuantity,
+        caseColor: "red",
+        strapColor: "red",
+      });
+    }
+  };
+
+  const handleBackToCatalog = () => {
+    router.push("/catalog");
+  };
 
   return (
     <section>
@@ -88,6 +121,19 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         text="products"
         additionalText="Products / Product Number One"
       />
+
+      <div className="container pt-[30px]">
+        <Button
+          text="Back to catalog"
+          bordered
+          className="text-[12px] py-[8px] px-[10px]"
+          type="button"
+          tag="button"
+          background="transparent"
+          onClick={handleBackToCatalog}
+        />
+      </div>
+
       <div className="container flex flex-col md:flex-row gap-[100px] justify-items-center py-[30px] xl:py-[65px]">
         <div className="hidden xl:block xl:flex xl:flex-wrap xl:flex-row xl:gap-[30px]">
           {product?.images?.slice(1).map((item, index) => (
@@ -168,14 +214,14 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
               <div className="absolute top-[-12px] right-[10px] h-full flex flex-col items-center justify-center gap-[4px]">
                 <UnstyledButton
-                  className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+                  className="flex items-center justify-center h-[15px] w-[15px] hover:bg-gray-200 rounded"
                   disabled={quantity >= maxQuantity || isOutOfStock}
                   onClick={handleIncrement}
                 >
                   <Image src={Arrow} alt="Up Arrow" />
                 </UnstyledButton>
                 <UnstyledButton
-                  className="flex items-center justify-center h-[20px] w-[20px] hover:bg-gray-200 rounded"
+                  className="flex items-center justify-center h-[15px] w-[15px] hover:bg-gray-200 rounded"
                   disabled={quantity <= 1 || isOutOfStock}
                   onClick={handleDecrement}
                 >
@@ -196,6 +242,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           <Button
             text="Place an order"
             className="mini:w-[80%] w-[100%] px-[50px] mb-[10px]"
+            onClick={() => handleAddToBasket(product?.id || "")}
           />
         </div>
       </div>
