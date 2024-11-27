@@ -37,7 +37,7 @@ export const registrateNewUser = async (
       }
     } else {
       console.error("Failed to register user:", error);
-      throw error;
+      // throw error;
     }
   }
 };
@@ -61,7 +61,7 @@ export const loginUser = async (
     }
   } catch (error) {
     console.error("Failed to login user:", error);
-    throw error;
+    // throw error;
   }
 };
 
