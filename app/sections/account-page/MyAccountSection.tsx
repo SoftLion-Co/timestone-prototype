@@ -40,23 +40,53 @@ const MyAccountSection = () => {
   ];
 
   const months = [
-    { value: "january", label: "January" },
-    { value: "february", label: "February" },
-    { value: "march", label: "March" },
-    { value: "april", label: "April" },
-    { value: "may", label: "May" },
-    { value: "june", label: "June" },
-    { value: "july", label: "July" },
-    { value: "august", label: "August" },
-    { value: "september", label: "September" },
-    { value: "october", label: "October" },
-    { value: "november", label: "November" },
-    { value: "december", label: "December" },
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
   ];
+
+  const getDaysInMonth = (month: string) => {
+    if (month === "02") {
+      return Array.from({ length: 29 }, (_, i) => ({
+        value: (i + 1).toString(),
+        label: (i + 1).toString(),
+      }));
+    }
+
+    if (["04", "06", "09", "11"].includes(month)) {
+      return Array.from({ length: 30 }, (_, i) => ({
+        value: (i + 1).toString(),
+        label: (i + 1).toString(),
+      }));
+    }
+
+    return Array.from({ length: 31 }, (_, i) => ({
+      value: (i + 1).toString(),
+      label: (i + 1).toString(),
+    }));
+  };
 
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false); //true
   const [subscribe, setSubscribe] = useState(false);
+  const [selectedMonth, setSelectedMonth] = React.useState<string>("");
+  const [days, setDays] = React.useState<{ value: string; label: string }[]>(
+    []
+  );
+
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value);
+    setDays(getDaysInMonth(value));
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -87,7 +117,7 @@ const MyAccountSection = () => {
 
   const form = useForm({
     initialValues: {
-      name: "настя",
+      name: "",
       fullname: "",
       email: "",
       phone: "",
@@ -106,9 +136,7 @@ const MyAccountSection = () => {
         value.length < 3 ? "Name must be at least 3 characters" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       phone: (value) =>
-        value && /^\+?\d{12}$/.test(value)
-          ? null
-          : "Invalid phone number. It should start with + and contain 12 digits.",
+        /^\+38\d{10}$/.test(value) ? null : "Invalid phone number",
     },
   });
 
@@ -170,6 +198,15 @@ const MyAccountSection = () => {
     //! обробка помилки
     form.reset();
   };
+
+  useEffect(() => {
+    if (form.values.phone && !form.values.phone.startsWith("+38")) {
+      form.setFieldValue("phone", `+38${form.values.phone}`);
+    }
+    if (form.values.phone.length === 2) {
+      form.setFieldValue("phone", "");
+    }
+  }, [form.values.phone]);
 
   return (
     <>
@@ -253,6 +290,8 @@ const MyAccountSection = () => {
                 <Input
                   placeholder="Month"
                   inputType="select"
+                  value={selectedMonth}
+                  onSelect={handleMonthChange}
                   options={months}
                   bordered={true}
                   scrollable={true}
@@ -264,6 +303,7 @@ const MyAccountSection = () => {
                   placeholder="Date"
                   inputType="select"
                   bordered={true}
+                  options={days}
                   scrollable={true}
                   className="mini:w-full lg:w-[45%]"
                   {...form.getInputProps("date")}
