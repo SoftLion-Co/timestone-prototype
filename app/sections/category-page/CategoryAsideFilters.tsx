@@ -8,16 +8,31 @@ import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
 import { CardProps } from '@/config/types';
-import { getProducts } from '@/services/ProductService';
-import { reverse } from 'dns';
+import { getProducts, getProductsLength } from '@/services/ProductService';
 import FilterContainerComponent from '@/components/filters-component/FilterContainerComponent';
+
+const DEF_COUNTRIES = [
+  'USA',
+  'Ukraine',
+  'Germany',
+  'France',
+  'Italy',
+  'Sweden',
+  'Albania',
+  'Poland',
+  'Greece',
+];
+const DEF_WATCHESCOLOR = ['black', 'silver', 'blue', 'white'];
+const DEF_STRAPSCOLOR = ['orange', 'purplegreen', 'purpleblue', 'black'];
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
   handleChangeTotalProducts,
+  limit,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
   handleChangeTotalProducts: (num: number) => void;
+  limit: number;
 }) => {
   const [searchText, setSearchText] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -39,11 +54,106 @@ const CategoryAsideFilters = ({
   const [isOpenCaseItem, setIsOpenCaseItem] = useState<boolean>(false);
   const [isOpenStrapsItem, setIsOpenStrapsItem] = useState<boolean>(false);
 
-  // get products
+  // TODO переробити пагінацію
+
+  // get all products on frontend
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const data = await getProducts();
+
+  //     const selectedFilters = {
+  //       productType: filters.productType,
+  //       minPrice: filters.minPrice,
+  //       maxPrice: filters.maxPrice,
+  //       searchText: filters.searchText,
+  //     };
+
+  //     const selectedOptions = {
+  //       colors: filters.watchesColor,
+  //       countries: filters.countries,
+  //       strapsColor: filters.strapsColor,
+  //     };
+
+  //     let hasNext = data.pageInfo.hasNextPage;
+  //     let end = data.pageInfo.endCursor;
+  //     let sum = data.products.length;
+  //     let allProducts = [...data.products];
+
+  //     while (hasNext) {
+  //       const newData = await getProducts(
+  //         selectedFilters,
+  //         selectedOptions,
+  //         end
+  //       );
+  //       sum += newData.products.length;
+  //       hasNext = newData.pageInfo.hasNextPage;
+  //       end = newData.pageInfo.endCursor;
+  //       allProducts.push(...newData.products);
+  //     }
+
+  //     handleUpdateProducts(allProducts);
+  //     handleChangeTotalProducts(sum);
+  //   };
+
+  //   getData();
+  // }, []);
+
+  // get filtered products
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const selectedFilters = {
+  //       productType: filters.productType,
+  //       minPrice: filters.minPrice,
+  //       maxPrice: filters.maxPrice,
+  //       searchText: filters.searchText,
+  //     };
+
+  //     const selectedOptions = {
+  //       colors: filters.watchesColor,
+  //       countries: filters.countries,
+  //       strapsColor: filters.strapsColor,
+  //     };
+
+  //     const data = await getProducts(
+  //       selectedFilters,
+  //       selectedOptions,
+  //       9,
+  //       '',
+  //       filters.sortedBy,
+  //       filters.reverse
+  //     );
+
+  //     let allProducts = [...data.products];
+
+  //     let hasNext = data.pageInfo.hasNextPage;
+  //     let end = data.pageInfo.endCursor;
+  //     let sum = data.products.length;
+
+  //     while (hasNext) {
+  //       const newData = await getProducts({
+  //         filters: selectedFilters,
+  //         options: selectedOptions,
+  //         pageCursor: end,
+  //       });
+
+  //       sum += newData.products.length;
+  //       hasNext = newData.pageInfo.hasNextPage;
+  //       end = newData.pageInfo.endCursor;
+  //       allProducts.push(...newData.filteredProducts);
+  //     }
+
+  //     handleUpdateProducts(allProducts);
+  //     handleChangeTotalProducts(sum);
+
+  //     window.scrollTo({ top: 100, behavior: 'smooth' });
+  //   };
+
+  //   getData();
+  // }, [filters]);
+
+  // new get method for products
   useEffect(() => {
     const getData = async () => {
-      const data = await getProducts();
-
       const selectedFilters = {
         productType: filters.productType,
         minPrice: filters.minPrice,
@@ -57,31 +167,17 @@ const CategoryAsideFilters = ({
         strapsColor: filters.strapsColor,
       };
 
-      let hasNext = data.pageInfo.hasNextPage;
-      let end = data.pageInfo.endCursor;
-      let sum = data.products.length;
-      let allProducts = [...data.products];
+      const data = await getProducts(selectedFilters, selectedOptions, 3);
+      const countData = await getProductsLength();
 
-      while (hasNext) {
-        const newData = await getProducts(
-          selectedFilters,
-          selectedOptions,
-          end
-        );
-        sum += newData.products.length;
-        hasNext = newData.pageInfo.hasNextPage;
-        end = newData.pageInfo.endCursor;
-        allProducts.push(...newData.products);
-      }
-
-      handleUpdateProducts(allProducts);
-      handleChangeTotalProducts(sum);
+      handleUpdateProducts([...data.products]);
+      handleChangeTotalProducts(countData.count);
     };
 
     getData();
   }, []);
 
-  // get filtered products
+  // new get method for products with filters
   useEffect(() => {
     const getData = async () => {
       const selectedFilters = {
@@ -100,35 +196,15 @@ const CategoryAsideFilters = ({
       const data = await getProducts(
         selectedFilters,
         selectedOptions,
-        9,
+        limit,
         '',
         filters.sortedBy,
         filters.reverse
       );
+      const countData = await getProductsLength();
 
-      let allProducts = [...data.products];
-
-      let hasNext = data.pageInfo.hasNextPage;
-      let end = data.pageInfo.endCursor;
-      let sum = data.products.length;
-
-      while (hasNext) {
-        const newData = await getProducts({
-          filters: selectedFilters,
-          options: selectedOptions,
-          pageCursor: end,
-        });
-
-        sum += newData.products.length;
-        hasNext = newData.pageInfo.hasNextPage;
-        end = newData.pageInfo.endCursor;
-        allProducts.push(...newData.filteredProducts);
-      }
-
-      handleUpdateProducts(allProducts);
-      handleChangeTotalProducts(sum);
-
-      window.scrollTo({ top: 100, behavior: 'smooth' });
+      handleUpdateProducts([...data.products]);
+      handleChangeTotalProducts(countData.count);
     };
 
     getData();
@@ -170,29 +246,26 @@ const CategoryAsideFilters = ({
 
   // set watch colors
   const handleSetWatchesColor = (
-    e: React.MouseEvent<HTMLButtonElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
     value: string
   ) => {
-    e.preventDefault();
-
-    setWatchesColor((watchesColor) =>
-      watchesColor.indexOf(value) !== -1
-        ? watchesColor.filter((color) => color !== value)
-        : [...watchesColor, value]
-    );
+    if (e.target.checked) {
+      setWatchesColor((watchesColor) => [...watchesColor, value]);
+    } else {
+      setWatchesColor(watchesColor.filter((c) => c !== value));
+    }
   };
 
   // set straps colors
   const handleSetStrapsColor = (
-    e: React.MouseEvent<HTMLButtonElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
     value: string
   ) => {
-    e.preventDefault();
-    setStrapsColor((strapsColor) =>
-      strapsColor.indexOf(value) !== -1
-        ? strapsColor.filter((color) => color !== value)
-        : [...strapsColor, value]
-    );
+    if (e.target.checked) {
+      setStrapsColor((strapsColor) => [...strapsColor, value]);
+    } else {
+      setStrapsColor(strapsColor.filter((c) => c !== value));
+    }
   };
 
   // set countries
@@ -234,7 +307,6 @@ const CategoryAsideFilters = ({
     setIsOpen(false);
   };
 
-  // TODO зробити щоб з'являлись фільтри (на плюс - показувати, мінус - ховати) приклад в тг
   return (
     <>
       {/* pc filters */}
@@ -242,14 +314,53 @@ const CategoryAsideFilters = ({
         <form onSubmit={handleSubmitFormForPc}>
           <div className="pb-5 text-silver text-[12px] font-poppins">
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5">
-              <h4 className=" text-black font-semibold ">Search</h4>
+              <h4 className=" text-black font-semibold">Search</h4>
               <input
-                className="rounded-sm bg-white py-[14px] px-5 w-full"
+                className="rounded-sm bg-white py-[14px] px-5 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                 type="text"
                 placeholder="Type Here"
                 value={searchText}
                 onChange={handleSearchText}
               />
+            </label>
+
+            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
+              <h4 className="text-black font-semibold">Price Range</h4>
+
+              <div className="flex gap-[15px] items-center">
+                <input
+                  className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+                  type="text"
+                  placeholder="$0"
+                  onChange={handleMinPrice}
+                />
+                <span className="text-silver text-[12px] font-poppins ">
+                  to
+                </span>
+                <input
+                  className="rounded-sm bg-white py-[14px] text-center w-[76px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+                  type="text"
+                  placeholder="$150"
+                  onChange={handleMaxPrice}
+                />
+              </div>
+            </label>
+
+            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
+              <h4 className=" text-black font-semibold ">Select Products</h4>
+
+              <div className="flex flex-col justify-start items-start gap-1">
+                <button
+                  onClick={(e) => handleProductType(e, 'watches')}
+                  className={`${productType === 'watches' ? 'font-bold' : ''}`}>
+                  Watches
+                </button>
+                <button
+                  onClick={(e) => handleProductType(e, 'straps')}
+                  className={`${productType === 'straps' ? 'font-bold' : ''}`}>
+                  Straps
+                </button>
+              </div>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
@@ -273,110 +384,29 @@ const CategoryAsideFilters = ({
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCountriesItem,
-                  styles:
-                    'flex flex-col justify-start items-start gap-1 overflow-y-scroll h-18',
+                  styles: '',
                 }}>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    onChange={(e) => handleSetCountries(e, 'USA')}
-                  />
-                  <span>USA</span>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    onChange={(e) => handleSetCountries(e, 'Ukraine')}
-                  />
-                  <span>Ukraine</span>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    onChange={(e) => handleSetCountries(e, 'Germany')}
-                  />
-                  <span>Germany</span>
+                <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                  {DEF_COUNTRIES.map((coutry) => (
+                    <div className="flex gap-2" key={coutry}>
+                      <input
+                        type="checkbox"
+                        className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                        checked={
+                          countries.find((item) => item === coutry)
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => handleSetCountries(e, coutry)}
+                      />
+                      <span>{coutry}</span>
+                    </div>
+                  ))}
                 </div>
               </FilterContainerComponent>
             </label>
 
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
-              <div className="flex justify-between items-center">
-                <h4 className=" text-black font-semibold ">Select Products</h4>
-                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
-                  <button
-                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
-                      isOpenTypeItem
-                        ? ''
-                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpenTypeItem((isOpenTypeItem) => !isOpenTypeItem);
-                    }}></button>
-                </div>
-              </div>
-              <FilterContainerComponent
-                filters={{
-                  isOpen: isOpenTypeItem,
-                  styles: 'flex flex-col justify-start items-start gap-1',
-                }}>
-                <button
-                  onClick={(e) => handleProductType(e, 'watches')}
-                  className={`${productType === 'watches' ? 'font-bold' : ''}`}>
-                  Watches
-                </button>
-                <button
-                  onClick={(e) => handleProductType(e, 'straps')}
-                  className={`${productType === 'straps' ? 'font-bold' : ''}`}>
-                  Straps
-                </button>
-              </FilterContainerComponent>
-            </label>
-
-            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
-              <div className="flex justify-between items-center">
-                <h4 className="text-black font-semibold">Price Range</h4>
-                <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
-                  <button
-                    className={`relative bg-darkBurgundy h-[2px] w-5 ${
-                      isOpenPriceItem
-                        ? ''
-                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpenPriceItem((isOpenPriceItem) => !isOpenPriceItem);
-                    }}></button>
-                </div>
-              </div>
-              <FilterContainerComponent
-                filters={{
-                  isOpen: isOpenPriceItem,
-                  styles: 'flex gap-[15px] items-center',
-                }}>
-                <input
-                  className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
-                  type="text"
-                  placeholder="$0"
-                  onChange={handleMinPrice}
-                />
-                <span className="text-silver text-[12px] font-poppins ">
-                  to
-                </span>
-                <input
-                  className="rounded-sm bg-white py-[14px] text-center w-[76px]"
-                  type="text"
-                  placeholder="$150"
-                  onChange={handleMaxPrice}
-                />
-              </FilterContainerComponent>
-            </label>
-
-            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px] xl:px-0">
               <div className="flex justify-between items-center">
                 <h4 className=" text-black font-semibold">Case Color</h4>
                 <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
@@ -395,36 +425,29 @@ const CategoryAsideFilters = ({
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCaseItem,
-                  styles: 'flex gap-3',
+                  styles: '',
                 }}>
-                <button
-                  onClick={(e) => handleSetWatchesColor(e, 'Black')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A] ${
-                    watchesColor.length !== 0 &&
-                    watchesColor.indexOf('Black') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
-                <button
-                  onClick={(e) => handleSetWatchesColor(e, 'Silver')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#e3e3e3] to-[#7B838F] ${
-                    watchesColor.length !== 0 &&
-                    watchesColor.indexOf('Silver') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
-                <button
-                  onClick={(e) => handleSetWatchesColor(e, 'Blue')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#58B2CE] to-[#023C96] ${
-                    watchesColor.length !== 0 &&
-                    watchesColor.indexOf('Blue') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
+                <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                  {DEF_WATCHESCOLOR.map((watchColor) => (
+                    <div className="flex gap-2" key={watchColor}>
+                      <input
+                        type="checkbox"
+                        className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                        checked={
+                          watchesColor.find((item) => item === watchColor)
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => handleSetWatchesColor(e, watchColor)}
+                      />
+                      <span>{watchColor}</span>
+                    </div>
+                  ))}
+                </div>
               </FilterContainerComponent>
             </label>
 
-            <label className="flex flex-col gap-[10px] xl:border-none border-b border-silver border-opacity-20 py-5 xl:pb-0 px-[15px] xl:px-0">
+            <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5">
               <div className="flex justify-between items-center">
                 <h4 className=" text-black font-semibold">
                   Filter By Strap Colors
@@ -445,39 +468,24 @@ const CategoryAsideFilters = ({
                 </div>
               </div>
               <FilterContainerComponent
-                filters={{ isOpen: isOpenStrapsItem, styles: 'flex gap-3' }}>
-                <button
-                  onClick={(e) => handleSetStrapsColor(e, 'orange')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#D39138] to-[#B95371] ${
-                    strapsColor.length !== 0 &&
-                    strapsColor.indexOf('orange') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
-                <button
-                  onClick={(e) => handleSetStrapsColor(e, 'purplegreen')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2D9B87] to-[#AF29CB] ${
-                    strapsColor.length !== 0 &&
-                    strapsColor.indexOf('purplegreen') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
-                <button
-                  onClick={(e) => handleSetStrapsColor(e, 'purpleblue')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2184CE] to-[#9020AD] ${
-                    strapsColor.length !== 0 &&
-                    strapsColor.indexOf('purpleblue') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
-                <button
-                  onClick={(e) => handleSetStrapsColor(e, 'black')}
-                  className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#707885] to-[#363636] ${
-                    strapsColor.length !== 0 &&
-                    strapsColor.indexOf('black') === -1
-                      ? 'opacity-50'
-                      : 'opacity-100'
-                  }`}></button>
+                filters={{ isOpen: isOpenStrapsItem, styles: '' }}>
+                <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                  {DEF_STRAPSCOLOR.map((strapColor) => (
+                    <div className="flex gap-2" key={strapColor}>
+                      <input
+                        type="checkbox"
+                        className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                        checked={
+                          strapsColor.find((item) => item === strapColor)
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => handleSetStrapsColor(e, strapColor)}
+                      />
+                      <span>{strapColor}</span>
+                    </div>
+                  ))}
+                </div>
               </FilterContainerComponent>
             </label>
           </div>
@@ -503,7 +511,7 @@ const CategoryAsideFilters = ({
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5 px-[15px]">
                   <h4 className=" text-black font-semibold ">Search</h4>
                   <input
-                    className="rounded-sm bg-white py-[14px] px-5 w-full"
+                    className="rounded-sm bg-white py-[14px] px-5 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                     type="text"
                     placeholder="Type Here"
                     value={searchText}
@@ -512,62 +520,10 @@ const CategoryAsideFilters = ({
                 </label>
 
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
-                  <h4 className=" text-black font-semibold ">
-                    Select Countries
-                  </h4>
-                  <div className="flex flex-col justify-start items-start gap-1">
-                    <div className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => handleSetCountries(e, 'USA')}
-                      />
-                      <span>USA</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => handleSetCountries(e, 'Ukraine')}
-                      />
-                      <span>Ukraine</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => handleSetCountries(e, 'Germany')}
-                      />
-                      <span>Germany</span>
-                    </div>
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
-                  <h4 className=" text-black font-semibold ">
-                    Select Products
-                  </h4>
-                  <div className="bg-white flex items-center w-fit rounded-sm overflow-hidden">
-                    <button
-                      className={`py-[14px] px-[52px] rounded-sm ${
-                        productType === 'watches' &&
-                        'bg-darkBurgundy text-white'
-                      }`}
-                      onClick={(e) => handleProductType(e, 'watches')}>
-                      Watches
-                    </button>
-                    <button
-                      className={`py-[14px] px-[52px] rounded-sm ${
-                        productType === 'straps' && 'bg-darkBurgundy text-white'
-                      }`}
-                      onClick={(e) => handleProductType(e, 'straps')}>
-                      Straps
-                    </button>
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
                   <h4 className="text-black font-semibold">Price Range</h4>
                   <div className="flex gap-[15px] items-center">
                     <input
-                      className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none"
+                      className="rounded-sm bg-white py-[14px] text-center w-[76px] appearance-none outline-1 focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                       type="text"
                       placeholder="$0"
                       onChange={handleMinPrice}
@@ -576,7 +532,7 @@ const CategoryAsideFilters = ({
                       to
                     </span>
                     <input
-                      className="rounded-sm bg-white py-[14px] text-center w-[76px]"
+                      className="rounded-sm bg-white py-[14px] text-center w-[76px] outline-1 focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                       type="text"
                       placeholder="$150"
                       onChange={handleMaxPrice}
@@ -585,73 +541,163 @@ const CategoryAsideFilters = ({
                 </label>
 
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
-                  <h4 className=" text-black font-semibold">Case Color</h4>
-                  <div className="flex gap-3">
+                  <h4 className=" text-black font-semibold ">
+                    Select Products
+                  </h4>
+                  <div className="bg-darkBurgundy border-darkBurgundy border flex items-center w-fit rounded-md overflow-hidden gap-[2px]">
                     <button
-                      onClick={(e) => handleSetWatchesColor(e, 'black')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#555555] to-[#0A0A0A] ${
-                        watchesColor.length !== 0 &&
-                        watchesColor.indexOf('black') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
+                      className={`py-[14px] px-[52px] ${
+                        productType === 'watches'
+                          ? 'bg-darkBurgundy text-white'
+                          : 'bg-white'
+                      }`}
+                      onClick={(e) => handleProductType(e, 'watches')}>
+                      Watches
+                    </button>
                     <button
-                      onClick={(e) => handleSetWatchesColor(e, 'silver')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#e3e3e3] to-[#7B838F] ${
-                        watchesColor.length !== 0 &&
-                        watchesColor.indexOf('silver') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
-                    <button
-                      onClick={(e) => handleSetWatchesColor(e, 'blue')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#58B2CE] to-[#023C96] ${
-                        watchesColor.length !== 0 &&
-                        watchesColor.indexOf('blue') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
+                      className={`py-[14px] px-[52px] ${
+                        productType === 'straps'
+                          ? 'bg-darkBurgundy text-white'
+                          : 'bg-white'
+                      }`}
+                      onClick={(e) => handleProductType(e, 'straps')}>
+                      Straps
+                    </button>
                   </div>
                 </label>
 
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
-                  <h4 className=" text-black font-semibold">
-                    Filter By Strap Colors
-                  </h4>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={(e) => handleSetStrapsColor(e, 'orange')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#D39138] to-[#B95371] ${
-                        strapsColor.length !== 0 &&
-                        strapsColor.indexOf('orange') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
-                    <button
-                      onClick={(e) => handleSetStrapsColor(e, 'purple-green')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2D9B87] to-[#AF29CB] ${
-                        strapsColor.length !== 0 &&
-                        strapsColor.indexOf('purple-green') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
-                    <button
-                      onClick={(e) => handleSetStrapsColor(e, 'purple-blue')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#2184CE] to-[#9020AD] ${
-                        strapsColor.length !== 0 &&
-                        strapsColor.indexOf('purple-blue') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
-                    <button
-                      onClick={(e) => handleSetStrapsColor(e, 'black')}
-                      className={`w-10 h-10 rounded-md bg-gradient-to-bl from-[#707885] to-[#363636] ${
-                        strapsColor.length !== 0 &&
-                        strapsColor.indexOf('black') === -1
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}></button>
+                  <div className="flex justify-between items-center">
+                    <h4 className=" text-black font-semibold ">
+                      Select Countries
+                    </h4>
+                    <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                      <button
+                        className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                          isOpenCountriesItem
+                            ? ''
+                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsOpenCountriesItem(
+                            (isOpenCountriesItem) => !isOpenCountriesItem
+                          );
+                        }}></button>
+                    </div>
                   </div>
+                  <FilterContainerComponent
+                    filters={{
+                      isOpen: isOpenCountriesItem,
+                      styles: '',
+                    }}>
+                    <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                      {DEF_COUNTRIES.map((coutry) => (
+                        <div className="flex gap-2" key={coutry}>
+                          <input
+                            type="checkbox"
+                            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                            checked={
+                              countries.find((item) => item === coutry)
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => handleSetCountries(e, coutry)}
+                          />
+                          <span>{coutry}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </FilterContainerComponent>
+                </label>
+
+                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
+                  <div className="flex justify-between items-center">
+                    <h4 className=" text-black font-semibold">Case Color</h4>
+                    <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                      <button
+                        className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                          isOpenCaseItem
+                            ? ''
+                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsOpenCaseItem(
+                            (isOpenCaseItem) => !isOpenCaseItem
+                          );
+                        }}></button>
+                    </div>
+                  </div>
+                  <FilterContainerComponent
+                    filters={{
+                      isOpen: isOpenCaseItem,
+                      styles: '',
+                    }}>
+                    <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                      {DEF_WATCHESCOLOR.map((watchColor) => (
+                        <div className="flex gap-2" key={watchColor}>
+                          <input
+                            type="checkbox"
+                            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                            checked={
+                              watchesColor.find((item) => item === watchColor)
+                                ? true
+                                : false
+                            }
+                            onChange={(e) =>
+                              handleSetWatchesColor(e, watchColor)
+                            }
+                          />
+                          <span>{watchColor}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </FilterContainerComponent>
+                </label>
+
+                <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 py-5 px-[15px]">
+                  <div className="flex justify-between items-center">
+                    <h4 className=" text-black font-semibold">
+                      Filter By Strap Colors
+                    </h4>
+                    <div className="flex justify-center items-center h-5 w-5 cursor-pointer">
+                      <button
+                        className={`relative bg-darkBurgundy h-[2px] w-5 ${
+                          isOpenStrapsItem
+                            ? ''
+                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsOpenStrapsItem(
+                            (isOpenStrapsItem) => !isOpenStrapsItem
+                          );
+                        }}></button>
+                    </div>
+                  </div>
+                  <FilterContainerComponent
+                    filters={{ isOpen: isOpenStrapsItem, styles: '' }}>
+                    <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
+                      {DEF_STRAPSCOLOR.map((strapColor) => (
+                        <div className="flex gap-2" key={strapColor}>
+                          <input
+                            type="checkbox"
+                            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                            checked={
+                              strapsColor.find((item) => item === strapColor)
+                                ? true
+                                : false
+                            }
+                            onChange={(e) =>
+                              handleSetStrapsColor(e, strapColor)
+                            }
+                          />
+                          <span>{strapColor}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </FilterContainerComponent>
                 </label>
               </motion.div>
             )}

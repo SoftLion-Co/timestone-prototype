@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
-import Basket from '@/images/card-component/busket.svg';
+import Basket from '@/images/vectors/basket.svg';
 import { CardProps } from '@/config/types';
 import { useCart } from '@/hooks/useCart';
 
@@ -14,7 +14,6 @@ const CardComponent: FC<CardProps> = ({
   price,
   image,
   quantity,
-  productType,
 }) => {
   const { addToCart, isOpen, changeOpenState } = useCart();
 
@@ -41,7 +40,7 @@ const CardComponent: FC<CardProps> = ({
 
   return (
     <div className="flex flex-col items-center font-poppins">
-      <div className="relative group rounded-md overflow-hidden">
+      <div className="relative rounded-md overflow-hidden">
         <Image
           src={image}
           width={255}
@@ -49,20 +48,17 @@ const CardComponent: FC<CardProps> = ({
           alt={`image of ${title}`}
           className="object-cover w-[255px] h-[300px]"
         />
-        <div className="absolute hidden top-0 left-0 w-full h-full group-hover:flex items-center justify-center flex-col gap-4 bg-darkBurgundy bg-opacity-85 transition-transform duration-300">
+        <button
+          onClick={(e) => handleAddToBasket(e, id)}
+          className="absolute font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundyOpacity ">
           <Image
             src={Basket}
-            width={45}
-            height={45}
+            width={35}
+            height={35}
             alt="basket image"
-            className="w-[45px] h-[45px]"
+            className="w-[35px] h-[35px] "
           />
-          <button
-            onClick={(e) => handleAddToBasket(e, id)}
-            className="font-default text-white font-normal hover:underline">
-            Order {productType}
-          </button>
-        </div>
+        </button>
       </div>
 
       <Link
