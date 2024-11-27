@@ -9,7 +9,7 @@ import { CardProps } from '@/config/types';
 import { FiltersProvider } from '@/hooks/useFilters';
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 16;
+const LIMIT = 1;
 
 const CategoryMain = () => {
   const [totalProducts, setTotalProducts] = useState<number>(0);

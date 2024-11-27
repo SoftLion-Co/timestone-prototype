@@ -8,7 +8,7 @@ import ArrowUp from '@/images/category-section/arrow-up.svg';
 import Button from '@/components/ButtonComponent';
 import { useFilters } from '@/hooks/useFilters';
 import { CardProps } from '@/config/types';
-import { getProducts, getProductsLength } from '@/services/ProductService';
+import { getProducts } from '@/services/ProductService';
 import FilterContainerComponent from '@/components/filters-component/FilterContainerComponent';
 
 const DEF_COUNTRIES = [
@@ -57,103 +57,10 @@ const CategoryAsideFilters = ({
   // TODO переробити пагінацію
 
   // get all products on frontend
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const data = await getProducts();
-
-  //     const selectedFilters = {
-  //       productType: filters.productType,
-  //       minPrice: filters.minPrice,
-  //       maxPrice: filters.maxPrice,
-  //       searchText: filters.searchText,
-  //     };
-
-  //     const selectedOptions = {
-  //       colors: filters.watchesColor,
-  //       countries: filters.countries,
-  //       strapsColor: filters.strapsColor,
-  //     };
-
-  //     let hasNext = data.pageInfo.hasNextPage;
-  //     let end = data.pageInfo.endCursor;
-  //     let sum = data.products.length;
-  //     let allProducts = [...data.products];
-
-  //     while (hasNext) {
-  //       const newData = await getProducts(
-  //         selectedFilters,
-  //         selectedOptions,
-  //         end
-  //       );
-  //       sum += newData.products.length;
-  //       hasNext = newData.pageInfo.hasNextPage;
-  //       end = newData.pageInfo.endCursor;
-  //       allProducts.push(...newData.products);
-  //     }
-
-  //     handleUpdateProducts(allProducts);
-  //     handleChangeTotalProducts(sum);
-  //   };
-
-  //   getData();
-  // }, []);
-
-  // get filtered products
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const selectedFilters = {
-  //       productType: filters.productType,
-  //       minPrice: filters.minPrice,
-  //       maxPrice: filters.maxPrice,
-  //       searchText: filters.searchText,
-  //     };
-
-  //     const selectedOptions = {
-  //       colors: filters.watchesColor,
-  //       countries: filters.countries,
-  //       strapsColor: filters.strapsColor,
-  //     };
-
-  //     const data = await getProducts(
-  //       selectedFilters,
-  //       selectedOptions,
-  //       9,
-  //       '',
-  //       filters.sortedBy,
-  //       filters.reverse
-  //     );
-
-  //     let allProducts = [...data.products];
-
-  //     let hasNext = data.pageInfo.hasNextPage;
-  //     let end = data.pageInfo.endCursor;
-  //     let sum = data.products.length;
-
-  //     while (hasNext) {
-  //       const newData = await getProducts({
-  //         filters: selectedFilters,
-  //         options: selectedOptions,
-  //         pageCursor: end,
-  //       });
-
-  //       sum += newData.products.length;
-  //       hasNext = newData.pageInfo.hasNextPage;
-  //       end = newData.pageInfo.endCursor;
-  //       allProducts.push(...newData.filteredProducts);
-  //     }
-
-  //     handleUpdateProducts(allProducts);
-  //     handleChangeTotalProducts(sum);
-
-  //     window.scrollTo({ top: 100, behavior: 'smooth' });
-  //   };
-
-  //   getData();
-  // }, [filters]);
-
-  // new get method for products
   useEffect(() => {
     const getData = async () => {
+      const data = await getProducts();
+
       const selectedFilters = {
         productType: filters.productType,
         minPrice: filters.minPrice,
@@ -167,17 +74,31 @@ const CategoryAsideFilters = ({
         strapsColor: filters.strapsColor,
       };
 
-      const data = await getProducts(selectedFilters, selectedOptions, 3);
-      const countData = await getProductsLength();
+      let hasNext = data.pageInfo.hasNextPage;
+      let end = data.pageInfo.endCursor;
+      let sum = data.products.length;
+      let allProducts = [...data.products];
 
-      handleUpdateProducts([...data.products]);
-      handleChangeTotalProducts(countData.count);
+      while (hasNext) {
+        const newData = await getProducts(
+          selectedFilters,
+          selectedOptions,
+          end
+        );
+        sum += newData.products.length;
+        hasNext = newData.pageInfo.hasNextPage;
+        end = newData.pageInfo.endCursor;
+        allProducts.push(...newData.products);
+      }
+
+      handleUpdateProducts(allProducts);
+      handleChangeTotalProducts(data.count);
     };
 
     getData();
   }, []);
 
-  // new get method for products with filters
+  // get filtered products
   useEffect(() => {
     const getData = async () => {
       const selectedFilters = {
@@ -196,19 +117,98 @@ const CategoryAsideFilters = ({
       const data = await getProducts(
         selectedFilters,
         selectedOptions,
-        limit,
+        9,
         '',
         filters.sortedBy,
         filters.reverse
       );
-      const countData = await getProductsLength();
 
-      handleUpdateProducts([...data.products]);
-      handleChangeTotalProducts(countData.count);
+      let allProducts = [...data.products];
+
+      let hasNext = data.pageInfo.hasNextPage;
+      let end = data.pageInfo.endCursor;
+      let sum = data.products.length;
+
+      while (hasNext) {
+        const newData = await getProducts({
+          filters: selectedFilters,
+          options: selectedOptions,
+          pageCursor: end,
+        });
+
+        sum += newData.products.length;
+        hasNext = newData.pageInfo.hasNextPage;
+        end = newData.pageInfo.endCursor;
+        allProducts.push(...newData.filteredProducts);
+      }
+
+      handleUpdateProducts(allProducts);
+      handleChangeTotalProducts(data.count);
+
+      window.scrollTo({ top: 100, behavior: 'smooth' });
     };
 
     getData();
   }, [filters]);
+
+  // new get method for products
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const selectedFilters = {
+  //       productType: filters.productType,
+  //       minPrice: filters.minPrice,
+  //       maxPrice: filters.maxPrice,
+  //       searchText: filters.searchText,
+  //     };
+
+  //     const selectedOptions = {
+  //       colors: filters.watchesColor,
+  //       countries: filters.countries,
+  //       strapsColor: filters.strapsColor,
+  //     };
+
+  //     const data = await getProducts(selectedFilters, selectedOptions, 3);
+  //     const countData = await getProductsLength();
+
+  //     handleUpdateProducts([...data.products]);
+  //     handleChangeTotalProducts(countData.count);
+  //   };
+
+  //   getData();
+  // }, []);
+
+  // new get method for products with filters
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const selectedFilters = {
+  //       productType: filters.productType,
+  //       minPrice: filters.minPrice,
+  //       maxPrice: filters.maxPrice,
+  //       searchText: filters.searchText,
+  //     };
+
+  //     const selectedOptions = {
+  //       colors: filters.watchesColor,
+  //       countries: filters.countries,
+  //       strapsColor: filters.strapsColor,
+  //     };
+
+  //     const data = await getProducts(
+  //       selectedFilters,
+  //       selectedOptions,
+  //       limit,
+  //       '',
+  //       filters.sortedBy,
+  //       filters.reverse
+  //     );
+  //     const countData = await getProductsLength();
+
+  //     handleUpdateProducts([...data.products]);
+  //     handleChangeTotalProducts(countData.count);
+  //   };
+
+  //   getData();
+  // }, [filters]);
 
   // open and close filters
   const handleOpenFilterClick = (e: React.MouseEvent<HTMLButtonElement>) => {

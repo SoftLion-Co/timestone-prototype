@@ -29,6 +29,8 @@ const CategorySection = ({
   const pagination = usePagination({
     total: Math.ceil(totalProducts / limit),
     initialPage: 1,
+    siblings: 1,
+    boundaries: 1,
     onChange(page) {
       const start = (page - 1) * limit;
       const end = start + limit;
@@ -38,7 +40,7 @@ const CategorySection = ({
 
   useEffect(() => {
     setVisibleProducts(allProducts.slice(0, limit));
-    pagination.setPage(1);
+    pagination.first();
     setIsLoading(false);
   }, [allProducts]);
 

@@ -7,7 +7,7 @@ type TitleProps = {
 
 const TitleComponents = ({ text, additionalText = '' }: TitleProps) => {
   return (
-    <div className="bg-darkBurgundy z-40 py-5 md:pt-[40px] md:pb-[22px] lg:pt-[90px] lg:pb-[52px] lg:px-[150px] md:px-[75px] px-5">
+    <div className="bg-darkBurgundy z-40 py-10 md:py-[40px] lg:py-[85px] lg:px-[125px] md:px-[75px] px-5">
       {additionalText ? (
         <>
           <h1
@@ -20,7 +20,7 @@ const TitleComponents = ({ text, additionalText = '' }: TitleProps) => {
         </>
       ) : (
         <h1
-          className={`font-spaceage text-snow text-[28px] leading-[25px] mb-4 md:text-[32px] md:mb-[20px] lg:text-[42px] lg:mb-[25px] text-center`}>
+          className={`font-spaceage text-snow text-[28px] leading-[25px] md:text-[32px] lg:text-[42px] text-center`}>
           {text}
         </h1>
       )}
