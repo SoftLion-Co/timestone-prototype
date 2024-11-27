@@ -2,17 +2,14 @@ import React, { ChangeEvent, FC, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import Input from "@/components/InputComponent";
-import { hasLength, useForm } from "@mantine/form";
-import exp from "constants";
+import { useForm } from "@mantine/form";
 
-const PaymentSection: FC<{ isDisabled: boolean; isOpen: boolean }> = ({
-  isDisabled,
-  isOpen,
-}) => {
+const PaymentSection: FC<{
+  isOpen: boolean;
+  toggleOpen: () => void;
+  completePayment: (isValid: boolean) => void;
+}> = ({ completePayment, isOpen, toggleOpen }) => {
   const [selectedOption, setSelectedOption] = useState("");
-  //const [cardNumber, setCardNumber] = useState("");
-  // const [cvv, setCvv] = useState("");
-  //const [expDate, setExpDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (
@@ -66,144 +63,136 @@ const PaymentSection: FC<{ isDisabled: boolean; isOpen: boolean }> = ({
   const handleCompletePayment = () => {
     if (!selectedOption) {
       setError("Please select a payment method");
+      completePayment(false);
     } else {
       setError(null);
-      console.log("Payment completed successfully!");
+      completePayment(true);
     }
   };
 
   return (
     <section>
-      <FormComponent
-        title="Payment"
-        className={`${isDisabled ? "opacity-50 pointer-events-none" : ""}`}
-      >
-        {isOpen && (
-          <>
-            <div className="flex flex-col gap-[30px] font-semibold pl-[30px]">
-              <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-                <input
-                  type="radio"
-                  value="creditCard"
-                  checked={selectedOption === "creditCard"}
-                  onChange={() => setSelectedOption("creditCard")}
-                  className="w-[25px] h-[25px] accent-darkBurgundy"
-                />
-                Credit Card
-              </label>
+      <FormComponent title="Payment" isOpen={isOpen} toggleOpen={toggleOpen}>
+        <div className="flex flex-col gap-[30px] font-semibold pl-[30px]">
+          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
+            <input
+              type="radio"
+              value="creditCard"
+              checked={selectedOption === "creditCard"}
+              onChange={() => setSelectedOption("creditCard")}
+              className="w-[25px] h-[25px] accent-darkBurgundy"
+            />
+            Credit Card
+          </label>
 
-              {selectedOption === "creditCard" && (
-                <>
-                  <div className="flex flex-col gap-[15px] mini:mx-[25px]">
-                    <div>
-                      <p className="pb-[10px] text-silver">Card Number</p>
-                      <Input
-                        inputType="input"
-                        type="text"
-                        placeholder="xxxx xxxx xxxx xxxx"
-                        {...form.getInputProps("cardNumber")}
-                        onChange={(e) => handleInputChange(e, "cardNumber")}
-                        errorType="critical"
-                        fullWidth
-                        required
-                        bordered
-                        className=" mb-[5px] mini:w-[90%]"
-                      />
-                    </div>
+          {selectedOption === "creditCard" && (
+            <>
+              <div className="flex flex-col gap-[15px] mini:mx-[25px]">
+                <div>
+                  <p className="pb-[10px] text-silver">Card Number</p>
+                  <Input
+                    inputType="input"
+                    type="text"
+                    placeholder="xxxx xxxx xxxx xxxx"
+                    {...form.getInputProps("cardNumber")}
+                    onChange={(e) => handleInputChange(e, "cardNumber")}
+                    errorType="critical"
+                    fullWidth
+                    required
+                    bordered
+                    className=" mb-[5px] mini:w-[90%]"
+                  />
+                </div>
 
-                    <div className="flex flex-row gap-[5px] justify-between">
-                      <div className="w-1/2">
-                        <p className="pb-[10px] text-silver">Expire Date</p>
-                        <Input
-                          inputType="input"
-                          type="text"
-                          placeholder="MM/YY"
-                          {...form.getInputProps("expDate")}
-                          onChange={(e) => handleInputChange(e, "expDate")}
-                          errorType="critical"
-                          fullWidth
-                          required
-                          bordered
-                          className="mb-[5px] mini:w-[80%]"
-                        />
-                      </div>
-
-                      <div className="w-1/2">
-                        <p className="pb-[10px] text-silver">CVV</p>
-                        <Input
-                          inputType="input"
-                          type="text"
-                          placeholder="xxx"
-                          {...form.getInputProps("cvv")}
-                          onChange={(e) => handleInputChange(e, "cvv")}
-                          errorType="critical"
-                          fullWidth
-                          required
-                          bordered
-                          className="mb-[5px] mini:w-[80%]"
-                        />
-                      </div>
-                    </div>
-
-                    <Button
-                      text="Pay"
-                      background="transparent"
+                <div className="flex flex-row gap-[5px] justify-between">
+                  <div className="w-1/2">
+                    <p className="pb-[10px] text-silver">Expire Date</p>
+                    <Input
+                      inputType="input"
+                      type="text"
+                      placeholder="MM/YY"
+                      {...form.getInputProps("expDate")}
+                      onChange={(e) => handleInputChange(e, "expDate")}
+                      errorType="critical"
+                      fullWidth
+                      required
                       bordered
-                      className=" w-[100%] mini:w-[90%]"
-                      onClick={handlePay}
+                      className="mb-[5px] mini:w-[80%]"
                     />
                   </div>
-                </>
-              )}
 
-              <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-                <input
-                  type="radio"
-                  value="paypal"
-                  checked={selectedOption === "paypal"}
-                  onChange={() => setSelectedOption("paypal")}
-                  className="w-[25px] h-[25px] accent-darkBurgundy"
+                  <div className="w-1/2">
+                    <p className="pb-[10px] text-silver">CVV</p>
+                    <Input
+                      inputType="input"
+                      type="text"
+                      placeholder="xxx"
+                      {...form.getInputProps("cvv")}
+                      onChange={(e) => handleInputChange(e, "cvv")}
+                      errorType="critical"
+                      fullWidth
+                      required
+                      bordered
+                      className="mb-[5px] mini:w-[80%]"
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  text="Pay"
+                  background="transparent"
+                  bordered
+                  className=" w-[100%] mini:w-[90%]"
+                  onClick={handlePay}
                 />
-                PayPal
-                {selectedOption === "paypal" && (
-                  <Button
-                    text="Pay"
-                    background="transparent"
-                    bordered
-                    className="ml-[30px] mini:w-[50%] w-[100%]"
-                  />
-                )}
-              </label>
-            </div>
+              </div>
+            </>
+          )}
 
-            {error && (
-              <p className="text-[14px] text-darkBurgundy text-center">
-                {error}
-              </p>
-            )}
-
-            <div className="flex flex-col items-center gap-y-[15px]">
+          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
+            <input
+              type="radio"
+              value="paypal"
+              checked={selectedOption === "paypal"}
+              onChange={() => setSelectedOption("paypal")}
+              className="w-[25px] h-[25px] accent-darkBurgundy"
+            />
+            PayPal
+            {selectedOption === "paypal" && (
               <Button
-                text="Complete Payment"
-                className="my-[30px] mini:w-[80%] w-[100%]"
-                onClick={handleCompletePayment}
+                text="Pay"
+                background="transparent"
+                bordered
+                className="ml-[30px] mini:w-[50%] w-[100%]"
               />
-              <p className="text-[10px] text-silver text-center mini:w-[80%] w-[100%]">
-                By placing your order you agree to our
-                <span> </span>
-                <a href="/legal" className="underline text-darkBurgundy">
-                  Terms & Conditions
-                </a>
-                and you understand that we will process your personal data on
-                the basis of our<span> </span>
-                <a href="/privacy" className="text-darkBurgundy underline">
-                  Privacy Policy
-                </a>
-                .
-              </p>
-            </div>
-          </>
+            )}
+          </label>
+        </div>
+
+        {error && (
+          <p className="text-[14px] text-darkBurgundy text-center">{error}</p>
         )}
+
+        <div className="flex flex-col items-center gap-y-[15px]">
+          <Button
+            text="Complete Payment"
+            className="my-[30px] mini:w-[80%] w-[100%]"
+            onClick={handleCompletePayment}
+          />
+          <p className="text-[10px] text-silver text-center mini:w-[80%] w-[100%]">
+            By placing your order you agree to our
+            <span> </span>
+            <a href="/legal" className="underline text-darkBurgundy">
+              Terms & Conditions
+            </a>
+            and you understand that we will process your personal data on the
+            basis of our<span> </span>
+            <a href="/privacy" className="text-darkBurgundy underline">
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
       </FormComponent>
     </section>
   );
