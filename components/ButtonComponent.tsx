@@ -5,6 +5,7 @@ import Profile from "@/images/vectors/profile.svg";
 import FacebookIcon from "@/images/authorization-page/facebook-icon.svg";
 import GoogleIcon from "@/images/authorization-page/google-icon.svg";
 import Logout from "@/images/vectors/logout.svg";
+import Arrow from "@/images/checkout-section/back-arrow.svg";
 interface ButtonProps {
   text: string;
   className?: string;
@@ -17,7 +18,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   disabled?: boolean;
   onClick?: () => void;
-  icon?: "cube" | "profile" | "facebook" | "google" | "logout";
+  icon?: "cube" | "profile" | "facebook" | "google" | "logout" | "arrow";
 }
 
 const Button: FC<ButtonProps> = ({
@@ -116,6 +117,17 @@ const Button: FC<ButtonProps> = ({
           width={22}
           height={22}
           className="mr-2 inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300 ease-in-out"
+        />
+      );
+    }
+    if (icon == "arrow") {
+      return (
+        <Image
+          src={Arrow}
+          alt="Back arrow icon"
+          width={22}
+          height={22}
+          className="mr-2 inline-block"
         />
       );
     }

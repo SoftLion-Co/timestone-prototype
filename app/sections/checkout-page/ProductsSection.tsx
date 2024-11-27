@@ -5,56 +5,54 @@ import { useCart } from "@/hooks/useCart";
 import { motion } from "framer-motion";
 import { CreateOrder } from "@/services/OrderService";
 
-const ProductsSection = ({basicInfo, shippingValue}:{basicInfo: any, shippingValue: any}) => {
+const ProductsSection = ({
+  basicInfo,
+  shippingValue,
+}: {
+  basicInfo: any;
+  shippingValue: any;
+}) => {
   const { products, totalAmount } = useCart();
 
-  const handleSubmit = async() => {
-    //  if (selectedOption) {
-    
-        const lineItems = products.map((product) => ({
-          productId: product.id,
-          title: product.title,
-          priceSet: {
-            shopMoney: {
-              amount: product.price,
-              currencyCode: "UAH",
-            },
-          },
-          quantity: product.quantity,
-        }));
+  const handleSubmit = async () => {
+    const lineItems = products.map((product) => ({
+      productId: product.id,
+      title: product.title,
+      priceSet: {
+        shopMoney: {
+          amount: product.price,
+          currencyCode: "UAH",
+        },
+      },
+      quantity: product.quantity,
+    }));
 
-        const data = {
-          currency: "UAH",
-          customerId: "",
-          email: basicInfo.email,
-          phone: "+38" + basicInfo.phone,
-          shippingAddress: {
-            firstName: basicInfo.firstName,
-            lastName: basicInfo.lastName,
-            address1: basicInfo.address1,
-            address2: basicInfo.address2,
-            city: basicInfo.city,
-            zip: basicInfo.zipCode,
-            countryCode: "UA",
-          },
-          shippingLines: shippingValue.shippingLines
-            ? shippingValue.shippingLines
-            : [],
-          lineItems: lineItems,
-        };
+    const data = {
+      currency: "UAH",
+      customerId: "",
+      email: basicInfo.email,
+      phone: "+38" + basicInfo.phone,
+      shippingAddress: {
+        firstName: basicInfo.firstName,
+        lastName: basicInfo.lastName,
+        address1: basicInfo.address1,
+        address2: basicInfo.address2,
+        city: basicInfo.city,
+        zip: basicInfo.zipCode,
+        countryCode: "UA",
+      },
+      shippingLines: shippingValue.shippingLines
+        ? shippingValue.shippingLines
+        : [],
+      lineItems: lineItems,
+    };
 
-        const response = await CreateOrder(data, {
-          sendReceipt: "true",
-          sendFulfillmentReceipt: "true",
-          inventoryBehaviour: "BYPASS",
-        });
-    //  };
-
-    console.log("data:" + data);
-    console.log("response" + response);
+    const response = await CreateOrder(data, {
+      sendReceipt: "true",
+      sendFulfillmentReceipt: "true",
+      inventoryBehaviour: "BYPASS",
+    });
   };
-
- 
 
   return (
     <section>

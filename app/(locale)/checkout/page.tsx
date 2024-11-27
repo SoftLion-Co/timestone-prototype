@@ -1,6 +1,6 @@
 "use client";
-import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
 import TitleComponents from "@/components/TitleComponents";
+import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
 import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
 import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
 import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
@@ -9,34 +9,35 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const [isBasicInfoValid, setIsBasicInfoValid] = useState(false);
-  const [isBasicInfoOpen, setIsBasicInfoOpen] = useState(true);
-  const [isShippingOpen, setIsShippingOpen] = useState(false);
-  const [isShippingValid, setIsShippingValid] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [BasicInfoOpen, setBasicInfoOpen] = useState(true);
+  const [ShippingOpen, setShippingOpen] = useState(false);
+  const [PaymentOpen, setPaymentOpen] = useState(false);
+
   const [basicInfo, setBasicInfo] = useState({});
   const [shippingValue, setShippingValue] = useState({});
   const router = useRouter();
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
-      setIsBasicInfoValid(true);
-      setIsBasicInfoOpen(false);
-
+      setBasicInfoOpen(false);
       setTimeout(() => {
-        setIsShippingOpen(true);
+        setShippingOpen(true);
       }, 300);
     }
   };
 
   const handleShippingContinue = (isValid: boolean) => {
     if (isValid) {
-      setIsShippingValid(true);
-      setIsShippingOpen(false);
-
+      setShippingOpen(false);
       setTimeout(() => {
-        setIsPaymentOpen(true);
+        setPaymentOpen(true);
       }, 300);
+    }
+  };
+
+  const handleCompletePayment = (isValid: boolean) => {
+    if (isValid) {
+      setPaymentOpen(false);
     }
   };
 
@@ -48,12 +49,13 @@ export default function CheckoutPage() {
     <>
       <TitleComponents text="CHECKOUT" />
 
-      <div className="container mt-[30px]">
+      <div className="mx-[15px] mt-[30px]">
         <Button
           bordered
           onClick={handleBack}
           className="text-[12px] py-[8px] px-[10px]"
           text="Back to shopping"
+          icon="arrow"
           background="transparent"
           type="button"
           tag="button"
@@ -67,21 +69,24 @@ export default function CheckoutPage() {
             shippingValue={shippingValue}
           />
         </div>
+
         <div className="flex flex-col gap-[30px] lg:flex-1">
           <BasicInfoSection
+            isOpen={BasicInfoOpen}
+            toggleOpen={() => setBasicInfoOpen(!BasicInfoOpen)}
             onContinue={handleBasicInfoContinue}
             setBasicInfo={setBasicInfo}
-            isOpen={isBasicInfoOpen}
           />
           <ShippingSection
-            isDisabled={!isBasicInfoValid}
-            isOpen={isShippingOpen}
+            isOpen={ShippingOpen}
+            toggleOpen={() => setShippingOpen(!ShippingOpen)}
             onContinue={handleShippingContinue}
             setShippingValue={setShippingValue}
           />
           <PaymentSection
-            isDisabled={!isShippingValid}
-            isOpen={isPaymentOpen}
+            isOpen={PaymentOpen}
+            toggleOpen={() => setPaymentOpen(!PaymentOpen)}
+            completePayment={handleCompletePayment}
           />
         </div>
       </div>

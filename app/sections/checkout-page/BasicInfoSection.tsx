@@ -6,10 +6,11 @@ import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 const BasicInfoSection: FC<{
+  isOpen: boolean;
+  toggleOpen: () => void;
   onContinue: (isValid: boolean) => void;
   setBasicInfo: any;
-  isOpen: boolean;
-}> = ({ onContinue, setBasicInfo, isOpen }) => {
+}> = ({ onContinue, setBasicInfo, toggleOpen, isOpen }) => {
   const form = useForm({
     initialValues: {
       email: "",
@@ -47,108 +48,109 @@ const BasicInfoSection: FC<{
 
   return (
     <section>
-      <FormComponent title="Basic Info" className="items-center">
-        {isOpen && (
-          <>
-            <Input
-              inputType="input"
-              placeholder="Email"
-              type="email"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("email")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+      <FormComponent
+        title="Basic Info"
+        className="items-center"
+        isOpen={isOpen}
+        toggleOpen={toggleOpen}
+      >
+        <Input
+          inputType="input"
+          placeholder="Email"
+          type="email"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("email")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <Input
-              inputType="input"
-              placeholder="Fist Name"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("firstName")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+        <Input
+          inputType="input"
+          placeholder="Fist Name"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("firstName")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <Input
-              inputType="input"
-              placeholder="Last Name"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("lastName")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+        <Input
+          inputType="input"
+          placeholder="Last Name"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("lastName")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <Input
-              inputType="input"
-              placeholder="Phone Number"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("phone")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+        <Input
+          inputType="input"
+          placeholder="Phone Number"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("phone")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <Input
-              inputType="input"
-              placeholder="Address 1"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("address1")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+        <Input
+          inputType="input"
+          placeholder="Address 1"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("address1")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <Input
-              inputType="input"
-              placeholder="Address 2"
-              required={true}
-              bordered={true}
-              {...form.getInputProps("address2")}
-              errorType="critical"
-              fullWidth
-              className="mini:w-[80%]"
-            />
+        <Input
+          inputType="input"
+          placeholder="Address 2"
+          required={true}
+          bordered={true}
+          {...form.getInputProps("address2")}
+          errorType="critical"
+          fullWidth
+          className="mini:w-[80%]"
+        />
 
-            <div className="flex gap-[10px] items-center mini:w-[80%]">
-              <Input
-                inputType="input"
-                placeholder="City"
-                required={true}
-                bordered={true}
-                {...form.getInputProps("city")}
-                errorType="critical"
-                fullWidth
-                className="mini:w-[60%]"
-              />
+        <div className="flex gap-[10px] items-center mini:w-[80%]">
+          <Input
+            inputType="input"
+            placeholder="City"
+            required={true}
+            bordered={true}
+            {...form.getInputProps("city")}
+            errorType="critical"
+            fullWidth
+            className="mini:w-[60%]"
+          />
 
-              <Input
-                inputType="input"
-                placeholder="Zip Code"
-                required={true}
-                bordered={true}
-                {...form.getInputProps("zipCode")}
-                errorType="critical"
-                fullWidth
-                className="mini:w-[40%]"
-              />
-            </div>
+          <Input
+            inputType="input"
+            placeholder="Zip Code"
+            required={true}
+            bordered={true}
+            {...form.getInputProps("zipCode")}
+            errorType="critical"
+            fullWidth
+            className="mini:w-[40%]"
+          />
+        </div>
 
-            <Button
-              text="Continue"
-              className="mini:w-[80%] w-[100%]"
-              type="button"
-              onClick={handleContinue}
-            />
-          </>
-        )}
+        <Button
+          text="Continue"
+          className="mini:w-[80%] w-[100%]"
+          type="button"
+          onClick={handleContinue}
+        />
       </FormComponent>
     </section>
   );

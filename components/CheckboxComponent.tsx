@@ -42,7 +42,9 @@ const CheckboxComponent: FC<checkboxProps> = ({
         </div>
       </div>
 
-      <p className="md:text-[18px] ml-[50px] xl:ml-[110px]">{price}</p>
+      <p className="md:text-[18px] ml-[50px] lg:ml-[100px] xl:ml-[200px]">
+        {price}
+      </p>
     </div>
   );
 };
