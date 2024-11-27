@@ -5,6 +5,7 @@ import { activateAccount } from "@/services/AuthService";
 
 import Button from "@/components/ButtonComponent";
 
+//!добавити обробку помилки, router on account, to set tokens
 const ActivatedSection = ({ activatedToken }: { activatedToken: string }) => {
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +32,7 @@ const ActivatedSection = ({ activatedToken }: { activatedToken: string }) => {
         </div>
       ) : (
         <Button
-          href="/"
+          href="/account"
           tag="a"
           text="Return to Homepage"
           className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"

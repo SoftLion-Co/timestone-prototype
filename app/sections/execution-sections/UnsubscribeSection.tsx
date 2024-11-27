@@ -5,6 +5,7 @@ import { removeReceiver } from "@/services/SubscribeService";
 
 import Button from "@/components/ButtonComponent";
 
+//!добавити обробку помилки, router on home,
 const UnsubscribeSection = ({ email }: { email: string }) => {
   const [loading, setLoading] = useState(true);
 
