@@ -1,45 +1,43 @@
 "use client";
-import React , { useState } from "react";
+import React, { useState } from "react";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
-import { loginUser} from "@/services/AuthService";
+import { loginUser } from "@/services/AuthService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
-  const [loginMessage, setLoginMessage] = useState<string | null>(
-    null
-  );
-    const loginForm = useForm({
-      initialValues: {
-        email: "",
-        password: "",
-      },
-      validate: {
-        email: isEmail("Invalid email"),
-        password: hasLength({ min: 6 }, "Password must be at least 6 characters"),
-      },
-    });
+  const [loginMessage, setLoginMessage] = useState<string | null>(null);
+  const loginForm = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: {
+      email: isEmail("Invalid email"),
+      password: hasLength({ min: 6 }, "Password must be at least 6 characters"),
+    },
+  });
 
-    const handleSignIn = async () => {
-        const errors = loginForm.validate();
-        if (!errors.hasErrors) {
-          const { email, password } = loginForm.values;
-          const response = await loginUser(email, password);
-          if (response === "logged") {
-            loginForm.reset();
-            setLoginMessage(null);
-          } else if (response !== "server error") {
-            setLoginMessage(response);
-          } else {
-            setLoginMessage("Problems wih server");
-          }
-        }
-
-
-
-        
-      };
+  const handleSignIn = async () => {
+    const errors = loginForm.validate();
+    if (!errors.hasErrors) {
+      const { email, password } = loginForm.values;
+      const response = await loginUser(email, password);
+      if (response === "logged") {
+        loginForm.reset();
+        setLoginMessage(null);
+      } else if (response == "email not exist") {
+        setLoginMessage("This email does not exist. Try again.");
+      } else if (response == "incorrect password") {
+        setLoginMessage("Іncorrect password. Try again.");
+      } else if (response == "user not activated") {
+        setLoginMessage("Your acc not activated. Check email box.");
+      } else {
+        setLoginMessage("Unexpected server error");
+      }
+    }
+  };
 
   const handleSignUpFacebook = () => {
     console.log("facebook");
@@ -95,7 +93,8 @@ const LoginFormSection = () => {
         </div>
       </div>
 
-      <div>
+      <div className=" mt-[34px]">
+        <div>
           {loginMessage && (
             <span className={`block text-center text-darkBurgundy`}>
               {loginMessage}
@@ -103,12 +102,13 @@ const LoginFormSection = () => {
           )}
         </div>
 
-      <Button
-        text="Sign In"
-        type="button"
-        className="!w-[208px] mx-auto mt-[38px] mb-[46px]"
-        onClick={handleSignIn}
-      />
+        <Button
+          text="Sign In"
+          type="button"
+          className="!w-[208px] mx-auto mt-[2px] mb-[46px]"
+          onClick={handleSignIn}
+        />
+      </div>
 
       {/* <p className="mt-[38px] font-bold text-[20px]">Express sing in</p> */}
 

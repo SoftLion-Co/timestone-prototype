@@ -110,8 +110,12 @@ const RegistrationFormSection = () => {
         window.scrollTo({ top: window.innerHeight * 0.3, behavior: "smooth" });
         setIsModalVisible(true);
         registrationForm.reset();
-      } else if (response !== "server error") {
-        setRegistrationMessage(response);
+      } else if (response == "phone exist") {
+        setRegistrationMessage("This phone already exist. Try another.");
+      } else if (response == "email exist") {
+        setRegistrationMessage("This email already exist. Try another.");
+      } else if (response == "user not activated") {
+        setRegistrationMessage("Your acc not activated. Check email box.");
       } else {
         setRegistrationMessage("Problems wih server");
       }
@@ -135,14 +139,12 @@ const RegistrationFormSection = () => {
 
   return (
     <>
-      {/* <div className="top: 0"> */}
-        {isModalVisible && (
-          <ModalWindowComponent
-            title="Almost finished"
-            message="Please, check your email to confirm registration."
-          />
-        )}
-      {/* </div> */}
+      {isModalVisible && (
+        <ModalWindowComponent
+          title="Almost finished"
+          message="Please, check your email to confirm registration."
+        />
+      )}
 
       <div className="text-center mb-[28px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
@@ -280,20 +282,22 @@ const RegistrationFormSection = () => {
           />
           <label>Sign-up to receive the latest updates and promotions</label>
         </div>
-        <div>
-          {registrationMessage && (
-            <span className={`block text-center text-darkBurgundy`}>
-              {registrationMessage}
-            </span>
-          )}
-        </div>
+        <div className=" mt-[34px]">
+          <div>
+            {registrationMessage && (
+              <span className={`block text-center text-darkBurgundy`}>
+                {registrationMessage}
+              </span>
+            )}
+          </div>
 
-        <Button
-          text="Create Account"
-          type="button"
-          className="!w-[208px] mx-auto mt-[38px] mb-[24px] lg:mb-[56px]"
-          onClick={handleCreateAccount}
-        />
+          <Button
+            text="Create Account"
+            type="button"
+            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            onClick={handleCreateAccount}
+          />
+        </div>
       </div>
     </>
   );
