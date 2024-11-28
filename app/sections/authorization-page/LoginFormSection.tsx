@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
+import LoaderComponent from "@/components/LoaderComponent";
 import { loginUser } from "@/services/AuthService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginForm = useForm({
     initialValues: {
       email: "",
@@ -22,8 +24,11 @@ const LoginFormSection = () => {
   const handleSignIn = async () => {
     const errors = loginForm.validate();
     if (!errors.hasErrors) {
+      setIsLoading(true);
       const { email, password } = loginForm.values;
       const response = await loginUser(email, password);
+
+      setIsLoading(false);
       if (response === "logged") {
         loginForm.reset();
         setLoginMessage(null);
@@ -49,6 +54,8 @@ const LoginFormSection = () => {
 
   return (
     <>
+      {isLoading && <LoaderComponent />}
+
       <div className="text-center mb-[28px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
           WELCOME BACK

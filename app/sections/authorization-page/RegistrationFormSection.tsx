@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
-import { registrateNewUser } from "@/services/AuthService";
 import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
+import LoaderComponent from "@/components/LoaderComponent";
+import { registrateNewUser } from "@/services/AuthService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
@@ -51,6 +52,7 @@ const RegistrationFormSection = () => {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [month, setMonth] = useState("january");
   const [day, setDay] = useState("01");
   const dayOptions = getDaysInMonth(month);
@@ -84,18 +86,10 @@ const RegistrationFormSection = () => {
   const handleCreateAccount = async () => {
     const errors = registrationForm.validate();
     if (!errors.hasErrors) {
+      setIsLoading(true);
       const { firstName, lastName, email, phone, password, receiveUpdates } =
         registrationForm.values;
       const dateOfBirth = `${month}, ${day}`;
-      console.log(
-        firstName,
-        lastName,
-        email,
-        phone,
-        dateOfBirth,
-        password,
-        receiveUpdates
-      );
       const response = await registrateNewUser(
         firstName,
         lastName,
@@ -105,7 +99,7 @@ const RegistrationFormSection = () => {
         password,
         receiveUpdates
       );
-
+      setIsLoading(false);
       if (response === "created") {
         window.scrollTo({ top: window.innerHeight * 0.3, behavior: "smooth" });
         setIsModalVisible(true);
@@ -139,6 +133,7 @@ const RegistrationFormSection = () => {
 
   return (
     <>
+      {isLoading && <LoaderComponent />}
       {isModalVisible && (
         <ModalWindowComponent
           title="Almost finished"
