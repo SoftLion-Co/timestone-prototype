@@ -21,12 +21,11 @@ export const registrateNewUser = async (
       receiveUpdates,
     });
     console.log(result.data);
+    return "created";
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 201) {
-        return "created";
-      } else if (error.status === 406) {
+      if (error.status === 406) {
         return error.response?.data;
       } else {
         return "server error";
@@ -50,14 +49,12 @@ export const loginUser = async (
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      return "";
+      return "logged";
     }
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 201) {
-        return "logged";
-      } else if (error.status === 406) {
+      if (error.status === 406) {
         return error.response?.data;
       } else {
         return "server error";
