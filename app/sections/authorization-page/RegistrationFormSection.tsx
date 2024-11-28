@@ -48,6 +48,10 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 };
 
 const RegistrationFormSection = () => {
+  const MAX_ATTEMPTS = 333;
+  const [value, setValue] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
     null
   );
@@ -86,6 +90,10 @@ const RegistrationFormSection = () => {
   const handleCreateAccount = async () => {
     const errors = registrationForm.validate();
     if (!errors.hasErrors) {
+      if (attempts < MAX_ATTEMPTS) {
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        localStorage.setItem("inputRegistrationAttempts", newAttempts.toString());
       setIsLoading(true);
       const { firstName, lastName, email, phone, password, receiveUpdates } =
         registrationForm.values;
@@ -114,9 +122,18 @@ const RegistrationFormSection = () => {
         setRegistrationMessage("Problems wih server");
       }
     }
+    }
   };
 
   useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
     if (
       registrationForm.values.phone &&
       !registrationForm.values.phone.startsWith("+38")
@@ -277,7 +294,16 @@ const RegistrationFormSection = () => {
           />
           <label>Sign-up to receive the latest updates and promotions</label>
         </div>
-        <div className=" mt-[34px]">
+
+        <div className=" mt-[16px]">
+        {isDisabled ? (
+          <p className="text-red-500">Ви вичерпали всі спроби!</p>
+        ) : (
+          <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+        )}
+      </div>
+
+        <div className=" mt-[16px]">
           <div>
             {registrationMessage && (
               <span className={`block text-center text-darkBurgundy`}>
@@ -291,6 +317,7 @@ const RegistrationFormSection = () => {
             type="button"
             className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
             onClick={handleCreateAccount}
+            disabled={isDisabled}
           />
         </div>
       </div>
