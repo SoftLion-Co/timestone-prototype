@@ -48,7 +48,6 @@ export const loginUser = async (
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
       return "logged";
     }
   } catch (error) {
@@ -67,7 +66,7 @@ export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
     console.log(res.data);
-    return res.data;
+    return res.data; // тут прибувають з бека return { accessToken, refreshToken };
   } catch (error) {
     console.error("Error during account activation:", error);
   }
@@ -79,7 +78,7 @@ export const updateUser = async (
 ): Promise<any> => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/update/${userId}`, userData);
-    return res.data;
+    return res.data; 
   } catch (error) {
     console.error("Error updating user:", error);
   }
@@ -102,7 +101,7 @@ export const updatePassword = async (
 export const refreshToken = async (): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/refresh`);
-    return res.data;
+    return res.data; //тут прибувають з бека return { newAccessToken, newRefreshToken };
   } catch (error) {
     console.error("Error refreshing token:", error);
   }
