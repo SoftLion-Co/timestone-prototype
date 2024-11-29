@@ -11,9 +11,13 @@ import ProductSceleton from './ProductSceleton';
 import { CardProps } from '@/config/types';
 import { ProductsContext } from './CategoryMain';
 
-const ITEM_TO_SHOW = 16;
-
-const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
+const CategorySection = ({
+  totalProducts,
+  limit,
+}: {
+  totalProducts: number;
+  limit: number;
+}) => {
   const allProducts = useContext(ProductsContext);
 
   const { filters, dispatch } = useFilters();
@@ -23,18 +27,20 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const pagination = usePagination({
-    total: Math.ceil(totalProducts / ITEM_TO_SHOW),
+    total: Math.ceil(totalProducts / limit),
     initialPage: 1,
+    siblings: 1,
+    boundaries: 1,
     onChange(page) {
-      const start = (page - 1) * ITEM_TO_SHOW;
-      const end = start + ITEM_TO_SHOW;
+      const start = (page - 1) * limit;
+      const end = start + limit;
       setVisibleProducts(allProducts.slice(start, end));
     },
   });
 
   useEffect(() => {
-    setVisibleProducts(allProducts.slice(0, ITEM_TO_SHOW));
-    pagination.setPage(1);
+    setVisibleProducts(allProducts.slice(0, limit));
+    pagination.first();
     setIsLoading(false);
   }, [allProducts]);
 
@@ -43,7 +49,6 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
-  // DONE зробити сортування
   const handleChangeSorting = (value: string) => {
     let newValue = value == 'HPRICE' || value == 'LPRICE' ? 'PRICE' : value;
 
@@ -85,7 +90,7 @@ const CategorySection = ({ totalProducts }: { totalProducts: number }) => {
 
       {isLoading ? (
         <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6  ">
-          {Array.from({ length: ITEM_TO_SHOW }, (_, index) => (
+          {Array.from({ length: limit }, (_, index) => (
             <ProductSceleton key={index} />
           ))}
         </div>

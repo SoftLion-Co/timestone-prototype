@@ -66,7 +66,7 @@ export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
     console.log(res.data);
-    return res.data; // тут прибувають з бека return { accessToken, refreshToken };
+    return res.data; 
   } catch (error) {
     console.error("Error during account activation:", error);
   }
@@ -101,7 +101,7 @@ export const updatePassword = async (
 export const refreshToken = async (): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/refresh`);
-    return res.data; //тут прибувають з бека return { newAccessToken, newRefreshToken };
+    return res.data; 
   } catch (error) {
     console.error("Error refreshing token:", error);
   }

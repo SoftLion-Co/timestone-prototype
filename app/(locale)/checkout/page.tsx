@@ -1,72 +1,87 @@
 "use client";
-import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
+import { useState } from "react";
+import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
 import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
-import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
 import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
-import { useRef, useState } from "react";
+import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
+import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
 
 export default function CheckoutPage() {
-  const [isBasicInfoValid, setIsBasicInfoValid] = useState(false);
-  const [isShippingOpen, setIsShippingOpen] = useState(false);
-  const [isShippingValid, setIsShippingValid] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [BasicInfoOpen, setBasicInfoOpen] = useState(true);
+  const [ShippingOpen, setShippingOpen] = useState(false);
+  const [PaymentOpen, setPaymentOpen] = useState(false);
 
-  const basicInfoRef = useRef<HTMLDivElement>(null);
-  const shippingRef = useRef<HTMLDivElement>(null);
-  const paymentRef = useRef<HTMLDivElement>(null);
+  const [basicInfo, setBasicInfo] = useState({});
+  const [shippingValue, setShippingValue] = useState({});
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
-      setIsBasicInfoValid(true);
-      setIsShippingOpen(true);
-
+      setBasicInfoOpen(false);
       setTimeout(() => {
-        shippingRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        setShippingOpen(true);
       }, 300);
     }
   };
 
   const handleShippingContinue = (isValid: boolean) => {
     if (isValid) {
-      setIsShippingValid(true);
-      setIsPaymentOpen(true);
-
+      setShippingOpen(false);
       setTimeout(() => {
-        paymentRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        setPaymentOpen(true);
       }, 300);
     }
   };
+
+  const handleCompletePayment = (isValid: boolean) => {
+    if (isValid) {
+      setPaymentOpen(false);
+    }
+  };
+
+
   return (
     <>
       <TitleComponents text="CHECKOUT" />
+
+      <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
+        <Button
+          bordered
+          className="flex !items-start text-[12px] py-[8px] px-[9px]"
+          text="Back"
+          href="/catalog"
+          icon="back"
+          background="transparent"
+          tag="a"
+        />
+      </div>
+
       <div className="container flex flex-col gap-[30px] py-[50px] lg:flex-row lg:flex-row-reverse lg:gap-[50px]">
-        <div className="lg:flex-1">
-          <ProductsSection />
+        <div className="lg:flex lg:flex-1 lg:justify-end">
+          <ProductsSection
+            basicInfo={basicInfo}
+            shippingValue={shippingValue}
+          />
         </div>
+
         <div className="flex flex-col gap-[30px] lg:flex-1">
-          <div ref={basicInfoRef}>
-            <BasicInfoSection onContinue={handleBasicInfoContinue} />
-          </div>
-          <div ref={shippingRef}>
-            <ShippingSection
-              isDisabled={!isBasicInfoValid}
-              isOpen={isShippingOpen}
-              onContinue={handleShippingContinue}
-            />
-          </div>
-          <div ref={paymentRef}>
-            <PaymentSection
-              isDisabled={!isShippingValid}
-              isOpen={isPaymentOpen}
-            />
-          </div>
+          <BasicInfoSection
+            isOpen={BasicInfoOpen}
+            toggleOpen={() => setBasicInfoOpen(!BasicInfoOpen)}
+            onContinue={handleBasicInfoContinue}
+            setBasicInfo={setBasicInfo}
+          />
+          <ShippingSection
+            isOpen={ShippingOpen}
+            toggleOpen={() => setShippingOpen(!ShippingOpen)}
+            onContinue={handleShippingContinue}
+            setShippingValue={setShippingValue}
+          />
+          <PaymentSection
+            isOpen={PaymentOpen}
+            toggleOpen={() => setPaymentOpen(!PaymentOpen)}
+            completePayment={handleCompletePayment}
+          />
         </div>
       </div>
     </>
