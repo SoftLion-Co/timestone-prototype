@@ -99,11 +99,12 @@ const RegistrationFormSection = () => {
           newAttempts.toString()
         );
         setIsLoading(true);
-       const address = ""
-        const { firstName, lastName, email, phone, password, receiveUpdates} =
+        const address = "";
+        const { firstName, lastName, email, phone, password, receiveUpdates } =
           registrationForm.values;
+        const name = `${firstName} ${lastName}`;
         if (receiveUpdates === true) {
-          await addNewReceiver(firstName, email);
+          await addNewReceiver(name, email);
         }
         const dateOfBirth = `${month}, ${day}`;
         const response = await registrateNewUser(
