@@ -5,6 +5,7 @@ import Input from "@/components/InputComponent";
 import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { registrateNewUser } from "@/services/AuthService";
+import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
@@ -93,35 +94,44 @@ const RegistrationFormSection = () => {
       if (attempts < MAX_ATTEMPTS) {
         const newAttempts = attempts + 1;
         setAttempts(newAttempts);
-        localStorage.setItem("inputRegistrationAttempts", newAttempts.toString());
-      setIsLoading(true);
-      const { firstName, lastName, email, phone, password, receiveUpdates } =
-        registrationForm.values;
-      const dateOfBirth = `${month}, ${day}`;
-      const response = await registrateNewUser(
-        firstName,
-        lastName,
-        email,
-        phone,
-        dateOfBirth,
-        password,
-        receiveUpdates
-      );
-      setIsLoading(false);
-      if (response === "created") {
-        window.scrollTo({ top: window.innerHeight * 0.3, behavior: "smooth" });
-        setIsModalVisible(true);
-        registrationForm.reset();
-      } else if (response == "phone exist") {
-        setRegistrationMessage("This phone already exist. Try another.");
-      } else if (response == "email exist") {
-        setRegistrationMessage("This email already exist. Try another.");
-      } else if (response == "user not activated") {
-        setRegistrationMessage("Your acc not activated. Check email box.");
-      } else {
-        setRegistrationMessage("Problems wih server");
+        localStorage.setItem(
+          "inputRegistrationAttempts",
+          newAttempts.toString()
+        );
+        setIsLoading(true);
+        const { firstName, lastName, email, phone, password, receiveUpdates } =
+          registrationForm.values;
+        if (receiveUpdates === true) {
+          await addNewReceiver(firstName, email);
+        }
+        const dateOfBirth = `${month}, ${day}`;
+        const response = await registrateNewUser(
+          firstName,
+          lastName,
+          email,
+          phone,
+          dateOfBirth,
+          password,
+          // receiveUpdates
+        );
+        setIsLoading(false);
+        if (response === "created") {
+          window.scrollTo({
+            top: window.innerHeight * 0.3,
+            behavior: "smooth",
+          });
+          setIsModalVisible(true);
+          registrationForm.reset();
+        } else if (response == "phone exist") {
+          setRegistrationMessage("This phone already exist. Try another.");
+        } else if (response == "email exist") {
+          setRegistrationMessage("This email already exist. Try another.");
+        } else if (response == "user not activated") {
+          setRegistrationMessage("Your acc not activated. Check email box.");
+        } else {
+          setRegistrationMessage("Problems wih server");
+        }
       }
-    }
     }
   };
 
@@ -296,12 +306,12 @@ const RegistrationFormSection = () => {
         </div>
 
         <div className=" mt-[16px]">
-        {isDisabled ? (
-          <p className="text-red-500">Ви вичерпали всі спроби!</p>
-        ) : (
-          <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
-        )}
-      </div>
+          {isDisabled ? (
+            <p className="text-red-500">Ви вичерпали всі спроби!</p>
+          ) : (
+            <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+          )}
+        </div>
 
         <div className=" mt-[16px]">
           <div>

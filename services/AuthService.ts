@@ -8,7 +8,7 @@ export const registrateNewUser = async (
   phone: string,
   dateOfBirth: string,
   password: string,
-  receiveUpdates: boolean
+  // receiveUpdates: boolean
 ): Promise<any> => {
   try {
     const result = await axios.post(`${BASE_URL}/auth/registration`, {
@@ -18,7 +18,7 @@ export const registrateNewUser = async (
       phone,
       dateOfBirth,
       password,
-      receiveUpdates,
+      // receiveUpdates,
     });
     console.log(result.data);
     return "created";
