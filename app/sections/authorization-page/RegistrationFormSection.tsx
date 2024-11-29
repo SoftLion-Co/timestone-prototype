@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
-import { registrateNewUser } from "@/services/AuthService";
 import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
+import LoaderComponent from "@/components/LoaderComponent";
+import { registrateNewUser } from "@/services/AuthService";
+import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
@@ -47,10 +49,15 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 };
 
 const RegistrationFormSection = () => {
+  const MAX_ATTEMPTS = 333;
+  const [value, setValue] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [month, setMonth] = useState("january");
   const [day, setDay] = useState("01");
   const dayOptions = getDaysInMonth(month);
@@ -65,6 +72,7 @@ const RegistrationFormSection = () => {
       password: "",
       confirmPassword: "",
       receiveUpdates: false,
+      registrationMessage: "",
     },
     validate: {
       firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
@@ -83,45 +91,61 @@ const RegistrationFormSection = () => {
   const handleCreateAccount = async () => {
     const errors = registrationForm.validate();
     if (!errors.hasErrors) {
-      const { firstName, lastName, email, phone, password, receiveUpdates } =
-        registrationForm.values;
-      const dateOfBirth = `${month}, ${day}`;
-      console.log(
-        firstName,
-        lastName,
-        email,
-        phone,
-        dateOfBirth,
-        password,
-        receiveUpdates
-      );
-      const response = await registrateNewUser(
-        firstName,
-        lastName,
-        email,
-        phone,
-        dateOfBirth,
-        password,
-        receiveUpdates
-      );
-
-      if (response === "created") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setIsModalVisible(true);
-        registrationForm.reset();
-      } else if (response === "unactivated") {
-        setRegistrationMessage("Your account is not activated");
-      } else if (response === "phone") {
-        setRegistrationMessage("Phone already in use");
-      } else if (response === "email") {
-        setRegistrationMessage("Email already in use");
-      } else {
-        setRegistrationMessage("Error during registration");
+      if (attempts < MAX_ATTEMPTS) {
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        localStorage.setItem(
+          "inputRegistrationAttempts",
+          newAttempts.toString()
+        );
+        setIsLoading(true);
+        const address = "";
+        const { firstName, lastName, email, phone, password, receiveUpdates } =
+          registrationForm.values;
+        const name = `${firstName} ${lastName}`;
+        if (receiveUpdates === true) {
+          await addNewReceiver(name, email);
+        }
+        const dateOfBirth = `${month}, ${day}`;
+        const response = await registrateNewUser(
+          firstName,
+          lastName,
+          email,
+          phone,
+          dateOfBirth,
+          password,
+          address
+        );
+        setIsLoading(false);
+        if (response === "created") {
+          window.scrollTo({
+            top: window.innerHeight * 0.3,
+            behavior: "smooth",
+          });
+          setIsModalVisible(true);
+          registrationForm.reset();
+        } else if (response == "phone exist") {
+          setRegistrationMessage("This phone already exist. Try another.");
+        } else if (response == "email exist") {
+          setRegistrationMessage("This email already exist. Try another.");
+        } else if (response == "user not activated") {
+          setRegistrationMessage("Your acc not activated. Check email box.");
+        } else {
+          setRegistrationMessage("Problems wih server");
+        }
       }
     }
   };
 
   useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
     if (
       registrationForm.values.phone &&
       !registrationForm.values.phone.startsWith("+38")
@@ -138,12 +162,14 @@ const RegistrationFormSection = () => {
 
   return (
     <>
+      {isLoading && <LoaderComponent />}
       {isModalVisible && (
         <ModalWindowComponent
           title="Almost finished"
           message="Please, check your email to confirm registration."
         />
       )}
+
       <div className="text-center mb-[28px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?
@@ -280,20 +306,32 @@ const RegistrationFormSection = () => {
           />
           <label>Sign-up to receive the latest updates and promotions</label>
         </div>
-        <div>
-          {registrationMessage && (
-            <span className={`block text-center text-darkBurgundy`}>
-              {registrationMessage}
-            </span>
+
+        <div className=" mt-[16px]">
+          {isDisabled ? (
+            <p className="text-red-500">Ви вичерпали всі спроби!</p>
+          ) : (
+            <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
           )}
         </div>
 
-        <Button
-          text="Create Account"
-          type="button"
-          className="!w-[208px] mx-auto mt-[38px] mb-[24px] lg:mb-[56px]"
-          onClick={handleCreateAccount}
-        />
+        <div className=" mt-[16px]">
+          <div>
+            {registrationMessage && (
+              <span className={`block text-center text-darkBurgundy`}>
+                {registrationMessage}
+              </span>
+            )}
+          </div>
+
+          <Button
+            text="Create Account"
+            type="button"
+            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            onClick={handleCreateAccount}
+            disabled={isDisabled}
+          />
+        </div>
       </div>
     </>
   );

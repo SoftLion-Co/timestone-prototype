@@ -8,7 +8,7 @@ export const registrateNewUser = async (
   phone: string,
   dateOfBirth: string,
   password: string,
-  receiveUpdates: boolean
+  address: string
 ): Promise<any> => {
   try {
     const result = await axios.post(`${BASE_URL}/auth/registration`, {
@@ -18,26 +18,18 @@ export const registrateNewUser = async (
       phone,
       dateOfBirth,
       password,
-      receiveUpdates, 
+      address,
     });
-    console.log(result);
-    if (result.status === 201) {
-      return "created";
-    }
-  } catch (error: unknown) {
-    const axiosError = error as AxiosError;
-    if (axiosError.response) {
-      
-      if (axiosError.response.status === 406) {
-        return "email";
-      } else if (axiosError.response.status === 405) {
-        return "phone";
+    console.log(result.data);
+    return "created";
+  } catch (error) {
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+      if (error.status === 406) {
+        return error.response?.data;
       } else {
-        return "error";  //тут ще не активований
+        return "server error";
       }
-    } else {
-      console.error("Failed to register user:", error);
-      // throw error;
     }
   }
 };
@@ -56,12 +48,17 @@ export const loginUser = async (
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
-      return "";
+      return "logged";
     }
   } catch (error) {
-    console.error("Failed to login user:", error);
-    // throw error;
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+      if (error.status === 406) {
+        return error.response?.data;
+      } else {
+        return "server error";
+      }
+    }
   }
 };
 
@@ -69,7 +66,7 @@ export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
     console.log(res.data);
-    return res.data;
+    return res.data; 
   } catch (error) {
     console.error("Error during account activation:", error);
   }
@@ -81,7 +78,7 @@ export const updateUser = async (
 ): Promise<any> => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/update/${userId}`, userData);
-    return res.data;
+    return res.data; 
   } catch (error) {
     console.error("Error updating user:", error);
   }
@@ -104,7 +101,7 @@ export const updatePassword = async (
 export const refreshToken = async (): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/refresh`);
-    return res.data;
+    return res.data; 
   } catch (error) {
     console.error("Error refreshing token:", error);
   }
