@@ -99,7 +99,8 @@ const RegistrationFormSection = () => {
           newAttempts.toString()
         );
         setIsLoading(true);
-        const { firstName, lastName, email, phone, password, receiveUpdates } =
+       const address = ""
+        const { firstName, lastName, email, phone, password, receiveUpdates} =
           registrationForm.values;
         if (receiveUpdates === true) {
           await addNewReceiver(firstName, email);
@@ -112,7 +113,7 @@ const RegistrationFormSection = () => {
           phone,
           dateOfBirth,
           password,
-          // receiveUpdates
+          address
         );
         setIsLoading(false);
         if (response === "created") {
