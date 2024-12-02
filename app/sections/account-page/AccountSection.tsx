@@ -7,9 +7,17 @@ import MyAccountSection from "@/app/sections/account-page/MyAccountSection";
 import OrderHistorySection from "@/app/sections/account-page/OrderHistorySection";
 import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarComponent";
 
+//! button log in(a:/auth)
+
 const AccountSection = () => {
   const [activeSection, setActiveSection] = useState("section1");
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
 
+  if (!accessToken || !refreshToken) {
+    return <div>Not authorized. Please log in.</div>;
+  }
+  
   const renderSection = () => {
     switch (activeSection) {
       case "section1":
