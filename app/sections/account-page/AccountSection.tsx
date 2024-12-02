@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import TitleComponents from "@/components/TitleComponents";
 import NewsSection from "@/app/sections/home-page/NewsSection";
@@ -11,13 +11,24 @@ import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarCom
 
 const AccountSection = () => {
   const [activeSection, setActiveSection] = useState("section1");
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  const [isToken, setIsToken] = useState(false);
 
-  if (!accessToken || !refreshToken) {
+
+  useEffect(() => {
+    const tokenAccess = localStorage.getItem("accessToken");
+    const tokenRefresh = localStorage.getItem("refreshToken");
+
+    if (!tokenAccess || !tokenRefresh) {
+         setIsToken(true)
+    }
+   ;
+  }, []); 
+
+
+  if (isToken !== true ) {
     return <div>Not authorized. Please log in.</div>;
   }
-  
+
   const renderSection = () => {
     switch (activeSection) {
       case "section1":
