@@ -46,7 +46,7 @@ const Links: FC<HeroProps> = ({ className }) => {
           </Link>
         ))}
       </div>
-
+{/* за=брати картинку, зробити текст вертикально */}
       <Image src={FollowUs} alt="Follow Us" className="hidden lg:block" />
 
       <p className="lg:hidden">FOLLOW US</p>

@@ -24,6 +24,7 @@
     "embla-carousel-react": "^8.2.0",
     "framer-motion": "^11.5.4",
     "next": "^15.0.3-canary.5",
+    "next-sitemap": "^4.2.3",
     "normalize.css": "^8.0.1",
     "postcss": "8.4.41",
     "project-prototype": "file:",

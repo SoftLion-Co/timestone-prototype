@@ -1,0 +1,15 @@
+user-agent: *,
+
+disallow: /account,
+disallow: /checkout,
+disallow: /auth/*,
+disallow: /unsubscribe/*,
+
+allow: /,
+allow: /catalog,
+allow: /catalog/*,
+allow: /contact-us,
+
+sitemap: https://timestone.com/sitemap.xml
+
+crawl-delay: 10
