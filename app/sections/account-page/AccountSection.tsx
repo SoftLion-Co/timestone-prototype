@@ -1,32 +1,41 @@
 "use client";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
+import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
 import NewsSection from "@/app/sections/home-page/NewsSection";
 import MyAccountSection from "@/app/sections/account-page/MyAccountSection";
 import OrderHistorySection from "@/app/sections/account-page/OrderHistorySection";
 import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarComponent";
 
-//! button log in(a:/auth)
-
 const AccountSection = () => {
   const [activeSection, setActiveSection] = useState("section1");
   const [isToken, setIsToken] = useState(false);
-
 
   useEffect(() => {
     const tokenAccess = localStorage.getItem("accessToken");
     const tokenRefresh = localStorage.getItem("refreshToken");
 
     if (!tokenAccess || !tokenRefresh) {
-         setIsToken(true)
+      setIsToken(true);
     }
-   ;
-  }, []); 
+  }, []);
 
-
-  if (isToken !== true ) {
-    return <div>Not authorized. Please log in.</div>;
+  if (isToken !== true) {
+    return (
+      <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px]">
+        <h1 className="text-black text-[24px] md:text-[32px] font-medium">
+          Not authorized. Please log in.
+        </h1>
+        <Button
+          text="Log in"
+          tag="a"
+          href="/auth"
+          background="darkBurgundy"
+          className="transition-all duration-300"
+        />
+      </section>
+    );
   }
 
   const renderSection = () => {

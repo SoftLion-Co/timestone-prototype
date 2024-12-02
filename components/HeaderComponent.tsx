@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCart } from "@/hooks/useCart";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC, useState, useEffect } from "react";
-import { Modal, Button, ActionIcon} from "@mantine/core";
+import { Modal, Button, ActionIcon } from "@mantine/core";
 
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
@@ -91,7 +91,7 @@ const Header = () => {
           </button>
           {!isLoggedIn ? (
             <MainButton
-              text="Login"
+              text="Log in"
               tag="a"
               href="/auth"
               background="transparent"
