@@ -1,4 +1,5 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import { api } from "@/config/config";
 import { BASE_URL } from "@/config/config";
 
 export const registrateNewUser = async (
@@ -39,7 +40,7 @@ export const loginUser = async (
   password: string
 ): Promise<any> => {
   try {
-    console.log("login333");
+    // console.log("login333");
     const response = await axios.post(`${BASE_URL}/auth/login`, {
       email,
       password,
@@ -66,30 +67,29 @@ export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
     console.log(res.data);
-    return res.data; 
+    return res.data;
   } catch (error) {
     console.error("Error during account activation:", error);
   }
 };
 
 export const updateUser = async (
-  userId: string,
   userData: any
 ): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/update/${userId}`, userData);
-    return res.data; 
+    const res = await api.post(`/auth/update`, userData);
+    return res.data;
   } catch (error) {
     console.error("Error updating user:", error);
   }
 };
 
+
 export const updatePassword = async (
-  userId: string,
   newPassword: string
 ): Promise<any> => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/update-password/${userId}`, {
+    const res = await api.post(`/auth/update-password`, {
       password: newPassword,
     });
     return res.data;
@@ -98,90 +98,45 @@ export const updatePassword = async (
   }
 };
 
-export const refreshToken = async (): Promise<any> => {
+
+export const updateRefreshToken = async (): Promise<any> => {
   try {
-    const res = await axios.get(`${BASE_URL}/auth/refresh`);
-    return res.data; 
+    const refreshToken = localStorage.getItem("refreshToken");
+    const res = await axios.post(`${BASE_URL}/auth/refresh`,  refreshToken);
+    return res.data;
   } catch (error) {
     console.error("Error refreshing token:", error);
   }
 };
 
-export const getUser = async (accessToken: string): Promise<any> => {
+export const getUser = async (): Promise<any> => {
   try {
-    const res = await axios.get(`${BASE_URL}/auth/user`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await api.get(`/auth/user`);
     return res.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 };
 
-export const googleLogin = async (googleToken: string): Promise<any> => {
-  try {
-    const res = await axios.post(`${BASE_URL}/auth/google`, {
-      token: googleToken,
-    });
-    return res.data;
-  } catch (error) {
-    console.error("Error during Google login:", error);
-  }
-};
 
-export const facebookLogin = async (facebookToken: string): Promise<any> => {
-  try {
-    const res = await axios.post(`${BASE_URL}/auth/facebook`, {
-      token: facebookToken,
-    });
-    return res.data;
-  } catch (error) {
-    console.error("Error during Facebook login:", error);
-  }
-};
+// export const googleLogin = async (googleToken: string): Promise<any> => {
+//   try {
+//     const res = await axios.post(`${BASE_URL}/auth/google`, {
+//       token: googleToken,
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.error("Error during Google login:", error);
+//   }
+// };
 
-/* const api = axios.create({
-   baseURL: BASE_URL,
- });
-
-api.interceptors.request.use(
-	(config) => {
-	  const accessToken = localStorage.getItem("accessToken");
-	  if (accessToken) {
-		 config.headers["Authorization"] = `Bearer ${accessToken}`;
-	  }
-	  return config;
-	},
-	(error) => {
-	  return Promise.reject(error);
-	}
- );
-
- api.interceptors.response.use(
-	(response) => {
-	  return response;
-	},
-	async (error) => {
-	  const originalRequest = error.config;
- 
-	  if (error.response?.status === 401 && !originalRequest._retry) {
-		 originalRequest._retry = true;
- 
-		 try {
-			const refreshedToken = await refreshToken();
-			if (refreshedToken?.accessToken) {
-			  localStorage.setItem("accessToken", refreshedToken.accessToken);
-			  originalRequest.headers["Authorization"] = `Bearer ${refreshedToken.accessToken}`;
-			  return api(originalRequest);
-			}
-		 } catch (refreshError) {
-			console.error("Failed to refresh token", refreshError);
-		 }
-	  }
- 
-	  console.error("API Error:", error.response?.data || error.message);
-	  return Promise.reject(error);
-	}
- );*/
+// export const facebookLogin = async (facebookToken: string): Promise<any> => {
+//   try {
+//     const res = await axios.post(`${BASE_URL}/auth/facebook`, {
+//       token: facebookToken,
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.error("Error during Facebook login:", error);
+//   }
+// };
