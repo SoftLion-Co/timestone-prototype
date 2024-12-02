@@ -130,6 +130,7 @@ const NewsSection = () => {
         src={Background}
         alt="Background"
         className="top-0 bg-darkBurgundyOpacity object-cover absolute -z-10 h-[100%] w-[100%]"
+        loading="lazy"
       />
     </section>
   );

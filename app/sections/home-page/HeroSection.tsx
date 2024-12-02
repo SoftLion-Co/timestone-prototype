@@ -85,6 +85,7 @@ const HeroSection: FC = () => {
         className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[620px] xl:w-auto"
         src={Watch}
         alt="Watch"
+        loading="lazy"
       />
     </section>
   );

@@ -17,6 +17,7 @@ const AuthorizationSection = () => {
           className="w-full h-full"
           layout="fill"
           objectFit="cover"
+          loading="lazy"
         />
       </div>
 
