@@ -94,7 +94,8 @@ const Header = () => {
               text="Login"
               tag="a"
               href="/auth"
-              className="text-onyx font-semibold transition-all duration-300"
+              background="transparent"
+              className="!px-[5px] text-onyx font-semibold transition-all duration-300"
             />
           ) : (
             <Link
