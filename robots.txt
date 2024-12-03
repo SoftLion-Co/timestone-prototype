@@ -9,6 +9,7 @@ allow: /,
 allow: /catalog,
 allow: /catalog/*,
 allow: /contact-us,
+allow: /legal
 
 sitemap: https://timestone.com/sitemap.xml
 
