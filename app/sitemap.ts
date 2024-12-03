@@ -1,11 +1,10 @@
-import { MetadataRoute } from "next";
-import { CardProps } from "@/config/types";
+import { Product } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
 
 export default async function sitemap() {
-  const products = await getProducts();
+  const products: Product[] = await getProducts();
   
-  const getTitle = products.map((product: CardProps) => ({
+  const getTitle = products.map((product: Product) => ({
     url: `https://timestone.com/catalog/${product.handle}`,
     lastModified: new Date(),
   }));

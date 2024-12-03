@@ -2,6 +2,7 @@ import axios from "axios";
 import { updateRefreshToken } from "@/services/AuthService";
 
 export const BASE_URL ="https://wellness.markets";
+export const CLIENT_URL ="https://timestone.com";
 
 export const api = axios.create({
     baseURL: BASE_URL,
