@@ -1,4 +1,5 @@
 import axios from "axios";
+import { api } from "@/config/config";
 import { BASE_URL } from "@/config/config";
 
 export const CreateOrder = async (order: any, options: any): Promise<any> => {
@@ -12,18 +13,12 @@ export const CreateOrder = async (order: any, options: any): Promise<any> => {
   }
 };
 
-// accessToken: string, authToken: string
-export const getUserOrders = async (customerId: string): Promise<any> => {
-	try {
-		const res = await axios.get(`${BASE_URL}/order/${customerId}`);
-	//   const res = await axios.get(`${BASE_URL}/order`, {
-	// 	 headers: {
-	// 		Authorization: `Bearer ${accessToken}`,  
-	// 		'x-auth-token': authToken,               
-	// 	 }
-	//   });
-	  return res.data;  
-	} catch (error) {
-	  console.error("Error fetching user orders:", error);
-	}
- };
+export const getUserOrders = async (): Promise<any> => {
+  try {
+    const res = await api.get(`/order`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+  }
+};
+

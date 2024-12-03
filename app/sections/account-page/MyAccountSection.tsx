@@ -91,7 +91,7 @@ const MyAccountSection = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const { user, subscribe } = await getUser("673c567340ace23b1904132c"); // треба буде замінити на tokens
+        const { user, subscribe } = await getUser();
         setUserName(`${user.firstName} ${user.lastName}` || "");
         form.setValues({
           name: user.firstName || "",
@@ -164,7 +164,7 @@ const MyAccountSection = () => {
       return;
     }
 
-    const response = await updateUser("", {
+    const response = await updateUser( {
       lastname: values1.fullname,
       firstname: values1.name,
       email: values1.email,
@@ -189,7 +189,7 @@ const MyAccountSection = () => {
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
     console.log(5, values2.password, values2.verify);
-    const response = await updatePassword("", values2.password);
+    const response = await updatePassword(values2.password);
 
     if (Object.keys(errors.errors).length > 0) {
       console.log("Form has errors:", errors);

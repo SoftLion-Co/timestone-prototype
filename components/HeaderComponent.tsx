@@ -1,49 +1,68 @@
-'use client';
-import { useRouter } from "next/navigation";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { FC, useState } from "react";
+import { useCart } from "@/hooks/useCart";
+import { useDisclosure } from "@mantine/hooks";
+import React, { FC, useState, useEffect } from "react";
+import { Modal, Button, ActionIcon } from "@mantine/core";
+
+import MainButton from "@/components/ButtonComponent";
+import { updateRefreshToken } from "@/services/AuthService";
+
 import Logo from "@/images/vectors/logo.svg";
+import Close from "@/images/vectors/close.svg";
+import Burger from "@/images/vectors/burger.svg";
 import Basket from "@/images/vectors/basket.svg";
 import Profile from "@/images/vectors/profile.svg";
 
-import MainButton from "@/components/ButtonComponent";
-
-import { Modal, Button, ActionIcon, Menu } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import Close from "@/images/vectors/close.svg";
-import Burger from "@/images/vectors/burger.svg";
-import { useCart } from "@/hooks/useCart";
-
 const navData = [
-  { link: '/#about-us', text: 'About Us' },
-  { link: '/contact-us', text: 'Contact us' },
-  { link: '/legal', text: 'FAQ' },
+  { link: "/#about-us", text: "About Us" },
+  { link: "/contact-us", text: "Contact us" },
+  { link: "/legal", text: "FAQ" },
 ];
 
 const Header = () => {
-  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
 
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = () => {
-    router.push('/auth');
-    setIsLoggedIn(false);
-  };
+  useEffect(() => {
+    const fetchTokens = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          if (accessToken) {
+            setIsLoggedIn(true);
+          } else {
+            const tokens = await updateRefreshToken();
+            localStorage.setItem("accessToken", tokens.accessToken);
+            localStorage.setItem("refreshToken", tokens.refreshToken);
+            setIsLoggedIn(true);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      }
+    };
+
+    fetchTokens();
+  }, []);
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}>
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}
+      >
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
             {navData.map((item, index) => (
               <Link
                 key={index}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
+              >
                 {item.text}
               </Link>
             ))}
@@ -61,7 +80,8 @@ const Header = () => {
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
-            }}>
+            }}
+          >
             {products.length > 0 && (
               <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-3.5">
                 {products.length}
@@ -70,19 +90,20 @@ const Header = () => {
             <Image src={Basket} alt="Basket" />
           </button>
           {!isLoggedIn ? (
-            <button
-              onClick={handleLogin}
-              className="text-onyx font-semibold transition-all duration-300"
-            >
-              Login
-            </button>
+            <MainButton
+              text="Log in"
+              tag="a"
+              href="/auth"
+              background="transparent"
+              className="!px-[5px] text-onyx font-semibold transition-all duration-300"
+            />
           ) : (
-              <Link
-                href="/account"
-                className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
-              >
-                <Image src={Profile} alt="profile" />
-              </Link>
+            <Link
+              href="/account"
+              className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
+            >
+              <Image src={Profile} alt="profile" />
+            </Link>
           )}
         </div>
       </div>
@@ -115,32 +136,34 @@ const Header = () => {
           fullScreen
           withCloseButton={false}
           radius={0}
-          transitionProps={{ transition: 'scale-x', duration: 200 }}
+          transitionProps={{ transition: "scale-x", duration: 200 }}
           className="xl:hidden"
           styles={{
             body: {
-              padding: '0',
+              padding: "0",
             },
             content: {
-              backgroundColor: '#ffffff',
+              backgroundColor: "#ffffff",
               zIndex: 9999,
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
             },
             header: {
-              backgroundColor: '#ffffff',
+              backgroundColor: "#ffffff",
             },
-          }}>
+          }}
+        >
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]">
+              className="w-[24px] h-[24px]"
+            >
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>

@@ -17,12 +17,10 @@ const OrderHistorySection = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const ordersData = await getUserOrders("8479676301598");
-        console.log(ordersData);
+        const ordersData = await getUserOrders();
+        // console.log(ordersData);
         setOrders(ordersData);
-        setTimeout(() => {
-          setLoading(true);
-        }, 1000);
+        setLoading(true);
       } catch (error) {
         console.error("Failed to fetch orders", error);
       }
