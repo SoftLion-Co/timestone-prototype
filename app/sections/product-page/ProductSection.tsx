@@ -109,8 +109,28 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     }
   };
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product?.title,
+    "image": product?.images[0],
+    "description": product?.description,
+    "brand": product?.vendor,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "UAH",
+      "price": product?.price,
+      "availability": product?.quantity,
+      "url": `https://timestone.com/product/${product?.handle}`
+    }
+  };
+
   return (
     <section>
+       <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
       <TitleComponents
         text="products"
         additionalText="Products / Product Number One"
