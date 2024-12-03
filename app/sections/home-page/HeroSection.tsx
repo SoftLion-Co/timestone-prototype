@@ -10,8 +10,8 @@ import Facebook from "@/images/social-networks/facebook.svg";
 import FollowUs from "@/images/social-networks/follow-us.svg";
 
 import Button from "@/components/ButtonComponent";
-import TitleComponents from "@/components/TitleComponents";
 
+//! social networks
 interface HeroProps {
   className?: string;
 }

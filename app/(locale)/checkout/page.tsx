@@ -18,18 +18,14 @@ export default function CheckoutPage() {
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
       setBasicInfoOpen(false);
-      setTimeout(() => {
-        setShippingOpen(true);
-      }, 300);
+      setShippingOpen(true);
     }
   };
 
   const handleShippingContinue = (isValid: boolean) => {
     if (isValid) {
       setShippingOpen(false);
-      setTimeout(() => {
-        setPaymentOpen(true);
-      }, 300);
+      setPaymentOpen(true);
     }
   };
 
@@ -38,7 +34,6 @@ export default function CheckoutPage() {
       setPaymentOpen(false);
     }
   };
-
 
   return (
     <>
