@@ -46,7 +46,7 @@ const Links: FC<HeroProps> = ({ className }) => {
           </Link>
         ))}
       </div>
-
+{/* за=брати картинку, зробити текст вертикально */}
       <Image src={FollowUs} alt="Follow Us" className="hidden lg:block" />
 
       <p className="lg:hidden">FOLLOW US</p>
@@ -85,6 +85,7 @@ const HeroSection: FC = () => {
         className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[620px] xl:w-auto"
         src={Watch}
         alt="Watch"
+        loading="lazy"
       />
     </section>
   );

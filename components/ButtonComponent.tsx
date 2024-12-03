@@ -103,7 +103,7 @@ const Button: FC<ButtonProps> = ({
       return (
         <Image
           src={GoogleIcon}
-          alt="Facebook icon"
+          alt="Google icon"
           width={22}
           height={22}
           className="mr-2 inline-block"
