@@ -7,9 +7,10 @@ import CategoryAsideFilters from './CategoryAsideFilters';
 import CategorySection from './CategorySection';
 import { CardProps } from '@/config/types';
 import { FiltersProvider } from '@/hooks/useFilters';
+import { PaginationProvider } from '@/hooks/useCustomPagination';
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 1;
+const LIMIT = 2;
 
 const CategoryMain = () => {
   const [totalProducts, setTotalProducts] = useState<number>(0);
@@ -25,23 +26,25 @@ const CategoryMain = () => {
 
   return (
     <>
-      <FiltersProvider>
-        <ProductsContext.Provider value={products}>
-          <TitleComponents
-            text="Products"
-            additionalText={`${totalProducts} Total Products`}
-          />
-          <div className="xl:flex lg:px-[150px] md:px-[75px]">
-            <CategoryAsideFilters
-              handleUpdateProducts={handleUpdateProducts}
-              handleChangeTotalProducts={handleChangeTotalProducts}
-              limit={LIMIT}
+      <PaginationProvider>
+        <FiltersProvider>
+          <ProductsContext.Provider value={products}>
+            <TitleComponents
+              text="Products"
+              additionalText={`${totalProducts} Total Products`}
             />
+            <div className="xl:flex lg:px-[150px] md:px-[75px]">
+              <CategoryAsideFilters
+                handleUpdateProducts={handleUpdateProducts}
+                handleChangeTotalProducts={handleChangeTotalProducts}
+                limit={LIMIT}
+              />
 
-            <CategorySection totalProducts={totalProducts} limit={LIMIT} />
-          </div>
-        </ProductsContext.Provider>
-      </FiltersProvider>
+              <CategorySection totalProducts={totalProducts} limit={LIMIT} />
+            </div>
+          </ProductsContext.Provider>
+        </FiltersProvider>
+      </PaginationProvider>
     </>
   );
 };
