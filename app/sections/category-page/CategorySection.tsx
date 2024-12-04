@@ -10,6 +10,7 @@ import CustomSelect from '@/components/SelectComponent';
 import ProductSceleton from './ProductSceleton';
 import { CardProps } from '@/config/types';
 import { ProductsContext } from './CategoryMain';
+import { useCustomPagination } from '@/hooks/useCustomPagination';
 
 const CategorySection = ({
   totalProducts,
@@ -18,13 +19,36 @@ const CategorySection = ({
   totalProducts: number;
   limit: number;
 }) => {
-  const allProducts = useContext(ProductsContext);
-
   const { filters, dispatch } = useFilters();
+  const { goToPage } = useCustomPagination();
+
+  const allProducts = useContext(ProductsContext);
 
   const [visibleProducts, setVisibleProducts] = useState<CardProps[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const generatePaginationRange = () => {
+    const range = [];
+    const totalPages = Math.ceil(totalProducts / limit);
+    const currentPage = pagination.active;
+    if (currentPage !== 1) {
+      range.push(1);
+    }
+    if (currentPage > 3) {
+      range.push('...');
+    }
+    if (currentPage > 2) range.push(currentPage - 1);
+    range.push(currentPage);
+    if (currentPage < totalPages - 1) range.push(currentPage + 1);
+    if (currentPage < totalPages - 2) {
+      range.push('...');
+    }
+    if (totalPages > 1 && !range.includes(totalPages)) {
+      range.push(totalPages);
+    }
+    return range;
+  };
 
   const pagination = usePagination({
     total: Math.ceil(totalProducts / limit),
@@ -39,13 +63,12 @@ const CategorySection = ({
   });
 
   useEffect(() => {
-    setVisibleProducts(allProducts.slice(0, limit));
-    pagination.first();
     setIsLoading(false);
-  }, [allProducts]);
+  }, []);
 
   const handleChangePage = (range: number) => {
-    pagination.setPage(+range);
+    pagination.setPage(range);
+    goToPage(range);
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
@@ -97,13 +120,16 @@ const CategorySection = ({
       ) : (
         <>
           <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {visibleProducts.map((card: CardProps) => (
+            {/* {visibleProducts.map((card: CardProps) => (
+              <CardComponent {...card} key={card.id} />
+            ))} */}
+            {allProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
           </div>
 
           {/* TODO 1, 2, [...], lastIndex - ось така має бути пагінація  */}
-          <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
+          {/* <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
             {pagination.range.map((range) =>
               range === 'dots' ? (
                 <button
@@ -124,6 +150,40 @@ const CategorySection = ({
                 </button>
               )
             )}
+          </div> */}
+          <div className="flex justify-center gap-2 mt-10 items-center">
+            {/* <button
+              disabled={pagination.active === 1}
+              onClick={() => handleChangePage(pagination.active - 1)}
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold">
+              &lt;
+            </button> */}
+            {generatePaginationRange().map((range, index) =>
+              range === '...' ? (
+                <button
+                  key={index}
+                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2">
+                  ...
+                </button>
+              ) : (
+                <button
+                  key={index}
+                  className={`h-7 w-7 rounded-sm ${
+                    pagination.active === range
+                      ? 'bg-darkBurgundy text-white'
+                      : 'bg-pearl text-silver hover:font-bold'
+                  }`}
+                  onClick={() => handleChangePage(range as number)}>
+                  {range}
+                </button>
+              )
+            )}
+            {/* <button
+              disabled={pagination.active === Math.ceil(totalProducts / limit)}
+              onClick={() => handleChangePage(pagination.active + 1)}
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold ">
+              &gt;
+            </button> */}
           </div>
         </>
       )}
