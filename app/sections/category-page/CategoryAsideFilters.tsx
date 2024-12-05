@@ -10,6 +10,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { CardProps } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
 import FilterContainerComponent from "@/components/filters-component/FilterContainerComponent";
+import FilterComponent from "@/components/filters-component/FilterComponent";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const DEF_COUNTRIES = [
@@ -36,10 +37,10 @@ const CategoryAsideFilters = ({
   limit: number;
 }) => {
   const { filters, dispatch } = useFilters();
-  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } =
+  const { setPageInfo, setTotalPages, pageInfo, currentPage, totalPages } =
     useCustomPagination();
 
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
   const [productType, setProductType] = useState<string>("");

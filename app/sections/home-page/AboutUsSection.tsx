@@ -2,7 +2,10 @@ import React from "react";
 
 const AboutUsSection = () => {
   return (
-    <section id="about-us" className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] ">
+    <section
+      id="about-us"
+      className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] "
+    >
       <div className="flex flex-col text-center lg:text-left lg:w-[400px]">
         <h2 className="font-spaceage text-[28px] mb-6 lg:text-[42px]">
           ABOUT US
@@ -15,6 +18,7 @@ const AboutUsSection = () => {
       </div>
       <div className="w-[90%] rounded-xl overflow-hidden lg:w-[700px]">
         <iframe
+          title="About us"
           src="https://drive.google.com/file/d/1YMfoAVXgCdZz1NdW1CSHqd6t6JzzZMQ-/preview"
           width="100%"
           height="auto"
