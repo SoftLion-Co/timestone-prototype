@@ -91,9 +91,9 @@ const CategorySection = ({
     dispatch({ type: 'SET_SORTING', payload: newValue });
   };
 
-  useEffect(() => {
-    console.log(filters.sortedBy);
-  }, [filters.sortedBy]);
+//   useEffect(() => {
+//     console.log(filters.sortedBy);
+//   }, [filters.sortedBy]);
 
   return (
     <section className="pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">

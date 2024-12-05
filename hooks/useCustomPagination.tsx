@@ -11,6 +11,7 @@ interface PageInfo {
 
 interface PaginationContextProps {
   currentPage: number;
+  setCurrentPage: (page: number) => void;
   totalPages: number;
   setTotalPages: (pages: number) => void;
   goToPage: (page: number) => void;
@@ -44,6 +45,7 @@ export const PaginationProvider: React.FC<{ children: ReactNode }> = ({
     <PaginationContext.Provider
       value={{
         currentPage,
+		  setCurrentPage,
         totalPages,
         setTotalPages,
         goToPage,

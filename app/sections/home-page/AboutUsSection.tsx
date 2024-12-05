@@ -15,7 +15,7 @@ const AboutUsSection = () => {
       </div>
       <div className="w-[90%] rounded-xl overflow-hidden lg:w-[700px]">
         <iframe
-          src="https://drive.google.com/file/d/1ay7Rh_APemR9OjGzaNAGNode0Mt2OxRO/preview"
+          src="https://drive.google.com/file/d/1YMfoAVXgCdZz1NdW1CSHqd6t6JzzZMQ-/preview"
           width="100%"
           height="auto"
           style={{ aspectRatio: "16/9", objectFit: "contain" }}

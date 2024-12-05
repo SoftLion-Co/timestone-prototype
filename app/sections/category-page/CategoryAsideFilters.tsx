@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
-import ArrowUp from '@/images/category-section/arrow-up.svg';
-import Button from '@/components/ButtonComponent';
-import { useFilters } from '@/hooks/useFilters';
-import { CardProps } from '@/config/types';
-import { getProducts } from '@/services/ProductService';
-import FilterContainerComponent from '@/components/filters-component/FilterContainerComponent';
-import { useCustomPagination } from '@/hooks/useCustomPagination';
+import ArrowUp from "@/images/category-section/arrow-up.svg";
+import Button from "@/components/ButtonComponent";
+import { useFilters } from "@/hooks/useFilters";
+import { CardProps } from "@/config/types";
+import { getProducts } from "@/services/ProductService";
+import FilterContainerComponent from "@/components/filters-component/FilterContainerComponent";
+import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const DEF_COUNTRIES = [
-  'USA',
-  'Ukraine',
-  'Germany',
-  'France',
-  'Italy',
-  'Sweden',
-  'Albania',
-  'Poland',
-  'Greece',
+  "USA",
+  "Ukraine",
+  "Germany",
+  "France",
+  "Italy",
+  "Sweden",
+  "Albania",
+  "Poland",
+  "Greece",
 ];
-const DEF_WATCHESCOLOR = ['black', 'silver', 'blue', 'white'];
-const DEF_STRAPSCOLOR = ['orange', 'purplegreen', 'purpleblue', 'black'];
+const DEF_WATCHESCOLOR = ["black", "silver", "blue", "white"];
+const DEF_STRAPSCOLOR = ["orange", "purplegreen", "purpleblue", "black"];
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
@@ -36,226 +36,114 @@ const CategoryAsideFilters = ({
   limit: number;
 }) => {
   const { filters, dispatch } = useFilters();
-  const { setPageInfo, setTotalPages, pageInfo, currentPage, totalPages } =
+  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } =
     useCustomPagination();
 
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
-  const [productType, setProductType] = useState<string>('');
+  const [productType, setProductType] = useState<string>("");
   const [watchesColor, setWatchesColor] = useState<string[]>([]);
   const [strapsColor, setStrapsColor] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
+  const [previousPage, setPreviousPage] = useState<number>(0);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // open and close filters
   const [isOpenCountriesItem, setIsOpenCountriesItem] =
     useState<boolean>(false);
   const [isOpenCaseItem, setIsOpenCaseItem] = useState<boolean>(false);
   const [isOpenStrapsItem, setIsOpenStrapsItem] = useState<boolean>(false);
 
-  // TODO переробити пагінацію
-
-  // get all products on frontend
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const data = await getProducts();
-
-  //     const selectedFilters = {
-  //       productType: filters.productType,
-  //       minPrice: filters.minPrice,
-  //       maxPrice: filters.maxPrice,
-  //       searchText: filters.searchText,
-  //     };
-
-  //     const selectedOptions = {
-  //       colors: filters.watchesColor,
-  //       countries: filters.countries,
-  //       strapsColor: filters.strapsColor,
-  //     };
-
-  //     let hasNext = data.pageInfo.hasNextPage;
-  //     let end = data.pageInfo.endCursor;
-  //     let sum = data.products.length;
-  //     let allProducts = [...data.products];
-
-  //     while (hasNext) {
-  //       const newData = await getProducts(
-  //         selectedFilters,
-  //         selectedOptions,
-  //         end
-  //       );
-  //       sum += newData.products.length;
-  //       hasNext = newData.pageInfo.hasNextPage;
-  //       end = newData.pageInfo.endCursor;
-  //       allProducts.push(...newData.products);
-  //     }
-
-  //     handleUpdateProducts(allProducts);
-  //     handleChangeTotalProducts(data.count);
-  //   };
-
-  //   getData();
-  // }, []);
-
-  // get filtered products
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const selectedFilters = {
-  //       productType: filters.productType,
-  //       minPrice: filters.minPrice,
-  //       maxPrice: filters.maxPrice,
-  //       searchText: filters.searchText,
-  //     };
-
-  //     const selectedOptions = {
-  //       colors: filters.watchesColor,
-  //       countries: filters.countries,
-  //       strapsColor: filters.strapsColor,
-  //     };
-
-  //     const data = await getProducts(
-  //       selectedFilters,
-  //       selectedOptions,
-  //       9,
-  //       '',
-  //       filters.sortedBy,
-  //       filters.reverse
-  //     );
-
-  //     let allProducts = [...data.products];
-
-  //     let hasNext = data.pageInfo.hasNextPage;
-  //     let end = data.pageInfo.endCursor;
-  //     let sum = data.products.length;
-
-  //     while (hasNext) {
-  //       const newData = await getProducts({
-  //         filters: selectedFilters,
-  //         options: selectedOptions,
-  //         pageCursor: end,
-  //       });
-
-  //       sum += newData.products.length;
-  //       hasNext = newData.pageInfo.hasNextPage;
-  //       end = newData.pageInfo.endCursor;
-  //       allProducts.push(...newData.filteredProducts);
-  //     }
-
-  //     handleUpdateProducts(allProducts);
-  //     handleChangeTotalProducts(data.count);
-
-  //     window.scrollTo({ top: 100, behavior: 'smooth' });
-  //   };
-
-  //   getData();
-  // }, [filters]);
-
-  // new get method for products
   useEffect(() => {
     const getData = async () => {
-      const selectedFilters = {
-        productType: filters.productType,
-        minPrice: filters.minPrice,
-        maxPrice: filters.maxPrice,
-        searchText: filters.searchText,
-      };
-
-      const selectedOptions = {
-        colors: filters.watchesColor,
-        countries: filters.countries,
-        strapsColor: filters.strapsColor,
-      };
-
-      const cursor = pageInfo.hasNextPage
-        ? pageInfo.endCursor
-        : pageInfo.startCursor;
-
-      console.log(cursor);
-
-      let data;
-
-      if (currentPage === totalPages) {
-        data = await getProducts(
-          selectedFilters,
-          selectedOptions,
-          limit,
-          '',
-          filters.sortedBy,
-          filters.reverse,
-          pageInfo.hasNextPage
-        );
-      } else {
-        data = await getProducts(
-          selectedFilters,
-          selectedOptions,
-          limit,
-          cursor,
-          filters.sortedBy,
-          filters.reverse,
-          pageInfo.hasNextPage
-        );
-      }
-
-      console.log(data.pageInfo);
-
-      setPageInfo(data.pageInfo);
-
-      setTotalPages(Math.ceil(data.count / limit));
-
-      handleUpdateProducts([...data.products]);
-      handleChangeTotalProducts(data.count);
+      await getProductData(false);
     };
 
     getData();
   }, [currentPage]);
 
-  // new get method for products with filters
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const selectedFilters = {
-  //       productType: filters.productType,
-  //       minPrice: filters.minPrice,
-  //       maxPrice: filters.maxPrice,
-  //       searchText: filters.searchText,
-  //     };
+  const handleSubmitFilters = async () => {
+    await getProductData(true);
+  };
 
-  //     const selectedOptions = {
-  //       colors: filters.watchesColor,
-  //       countries: filters.countries,
-  //       strapsColor: filters.strapsColor,
-  //     };
+  const getProductData = async (isForm: boolean) => {
+    const selectedFilters = {
+      productType: filters.productType,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      searchText: filters.searchText,
+    };
 
-  //     const data = await getProducts(
-  //       selectedFilters,
-  //       selectedOptions,
-  //       limit,
-  //       '',
-  //       filters.sortedBy,
-  //       filters.reverse
-  //     );
-  //
+    const selectedOptions = {
+      colors: filters.watchesColor,
+      countries: filters.countries,
+      strapsColor: filters.strapsColor,
+    };
 
-  //     handleUpdateProducts([...data.products]);
-  //     handleChangeTotalProducts(countData.count);
-  //   };
+    let data;
 
-  //   getData();
-  // }, [filters]);
+    if (currentPage == 1 || isForm) {
+		console.log(10);
+      data = await getProducts(
+        selectedFilters,
+        selectedOptions,
+        limit,
+        "",
+        filters.sortedBy,
+        filters.reverse,
+        true
+      );
+      // } else if (currentPage == totalPages) {
+      //   data = await getProducts(
+      //     selectedFilters,
+      //     selectedOptions,
+      //     limit,
+      //     "",
+      //     filters.sortedBy,
+      //     filters.reverse,
+      //     false
+      //   );
+    } else if (previousPage < currentPage) {
+      data = await getProducts(
+        selectedFilters,
+        selectedOptions,
+        limit,
+        pageInfo.endCursor,
+        filters.sortedBy,
+        filters.reverse,
+        true
+      );
+    } else {
+      data = await getProducts(
+        selectedFilters,
+        selectedOptions,
+        limit,
+        pageInfo.startCursor,
+        filters.sortedBy,
+        filters.reverse,
+        false
+      );
+    }
+    console.log("d", data);
 
-  // open and close filters
+    setPageInfo(data.pageInfo);
+    setPreviousPage(currentPage);
+    setTotalPages(data.count === 0 ? 1 : Math.ceil(data.count / limit));
+
+    handleUpdateProducts([...data.products]);
+    handleChangeTotalProducts(data.count);
+  };
+
   const handleOpenFilterClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsOpen((isOpen) => !isOpen);
   };
 
-  // search text
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
-  // set max and min price
   const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinPrice(+e.target.value);
   };
@@ -264,7 +152,6 @@ const CategoryAsideFilters = ({
     setMaxPrice(+e.target.value);
   };
 
-  // change product type in filter
   const handleProductType = (
     e: React.MouseEvent<HTMLButtonElement>,
     type: string
@@ -274,11 +161,10 @@ const CategoryAsideFilters = ({
     if (type !== productType) {
       setProductType(type);
     } else {
-      setProductType('');
+      setProductType("");
     }
   };
 
-  // set watch colors
   const handleSetWatchesColor = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -290,7 +176,6 @@ const CategoryAsideFilters = ({
     }
   };
 
-  // set straps colors
   const handleSetStrapsColor = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -302,7 +187,6 @@ const CategoryAsideFilters = ({
     }
   };
 
-  // set countries
   const handleSetCountries = (
     e: React.ChangeEvent<HTMLInputElement>,
     country: string
@@ -314,29 +198,28 @@ const CategoryAsideFilters = ({
     }
   };
 
-  // submit filters
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch({ type: 'SET_SEARCH_TEXT', payload: searchText });
-    dispatch({ type: 'SET_MIN_PRICE', payload: minPrice });
-    dispatch({ type: 'SET_MAX_PRICE', payload: maxPrice });
-    dispatch({ type: 'SET_PRODUCT_TYPE', payload: productType });
-    dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
-    dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
-    dispatch({ type: 'SET_COUNTRIES', payload: countries });
+    dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    dispatch({ type: "SET_MIN_PRICE", payload: minPrice });
+    dispatch({ type: "SET_MAX_PRICE", payload: maxPrice });
+    dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
+    dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+    dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+    dispatch({ type: "SET_COUNTRIES", payload: countries });
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch({ type: 'SET_SEARCH_TEXT', payload: searchText });
-    dispatch({ type: 'SET_MIN_PRICE', payload: minPrice });
-    dispatch({ type: 'SET_MAX_PRICE', payload: maxPrice });
-    dispatch({ type: 'SET_PRODUCT_TYPE', payload: productType });
-    dispatch({ type: 'TOGGLE_WATCH_COLOR', payload: watchesColor });
-    dispatch({ type: 'TOGGLE_STRAP_COLOR', payload: strapsColor });
-    dispatch({ type: 'SET_COUNTRIES', payload: countries });
+    dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    dispatch({ type: "SET_MIN_PRICE", payload: minPrice });
+    dispatch({ type: "SET_MAX_PRICE", payload: maxPrice });
+    dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
+    dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+    dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+    dispatch({ type: "SET_COUNTRIES", payload: countries });
 
     setIsOpen(false);
   };
@@ -385,13 +268,15 @@ const CategoryAsideFilters = ({
 
               <div className="flex flex-col justify-start items-start gap-1">
                 <button
-                  onClick={(e) => handleProductType(e, 'watches')}
-                  className={`${productType === 'watches' ? 'font-bold' : ''}`}>
+                  onClick={(e) => handleProductType(e, "watches")}
+                  className={`${productType === "watches" ? "font-bold" : ""}`}
+                >
                   Watches
                 </button>
                 <button
-                  onClick={(e) => handleProductType(e, 'straps')}
-                  className={`${productType === 'straps' ? 'font-bold' : ''}`}>
+                  onClick={(e) => handleProductType(e, "straps")}
+                  className={`${productType === "straps" ? "font-bold" : ""}`}
+                >
                   Straps
                 </button>
               </div>
@@ -404,22 +289,24 @@ const CategoryAsideFilters = ({
                   <button
                     className={`relative bg-darkBurgundy h-[2px] w-5 ${
                       isOpenCountriesItem
-                        ? ''
-                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        ? ""
+                        : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                     }`}
                     onClick={(e) => {
                       e.preventDefault();
                       setIsOpenCountriesItem(
                         (isOpenCountriesItem) => !isOpenCountriesItem
                       );
-                    }}></button>
+                    }}
+                  ></button>
                 </div>
               </div>
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCountriesItem,
-                  styles: '',
-                }}>
+                  styles: "",
+                }}
+              >
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_COUNTRIES.map((coutry) => (
                     <div className="flex gap-2" key={coutry}>
@@ -447,20 +334,22 @@ const CategoryAsideFilters = ({
                   <button
                     className={`relative bg-darkBurgundy h-[2px] w-5 ${
                       isOpenCaseItem
-                        ? ''
-                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        ? ""
+                        : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                     }`}
                     onClick={(e) => {
                       e.preventDefault();
                       setIsOpenCaseItem((isOpenCaseItem) => !isOpenCaseItem);
-                    }}></button>
+                    }}
+                  ></button>
                 </div>
               </div>
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCaseItem,
-                  styles: '',
-                }}>
+                  styles: "",
+                }}
+              >
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_WATCHESCOLOR.map((watchColor) => (
                     <div className="flex gap-2" key={watchColor}>
@@ -490,19 +379,21 @@ const CategoryAsideFilters = ({
                   <button
                     className={`relative bg-darkBurgundy h-[2px] w-5 ${
                       isOpenStrapsItem
-                        ? ''
-                        : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                        ? ""
+                        : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                     }`}
                     onClick={(e) => {
                       e.preventDefault();
                       setIsOpenStrapsItem(
                         (isOpenStrapsItem) => !isOpenStrapsItem
                       );
-                    }}></button>
+                    }}
+                  ></button>
                 </div>
               </div>
               <FilterContainerComponent
-                filters={{ isOpen: isOpenStrapsItem, styles: '' }}>
+                filters={{ isOpen: isOpenStrapsItem, styles: "" }}
+              >
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_STRAPSCOLOR.map((strapColor) => (
                     <div className="flex gap-2" key={strapColor}>
@@ -541,7 +432,8 @@ const CategoryAsideFilters = ({
                 className="bg-pearl pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}>
+                transition={{ duration: 0.5 }}
+              >
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5 px-[15px]">
                   <h4 className=" text-black font-semibold ">Search</h4>
                   <input
@@ -581,20 +473,22 @@ const CategoryAsideFilters = ({
                   <div className="bg-darkBurgundy border-darkBurgundy border flex items-center w-fit rounded-md overflow-hidden gap-[2px]">
                     <button
                       className={`py-[14px] px-[52px] ${
-                        productType === 'watches'
-                          ? 'bg-darkBurgundy text-white'
-                          : 'bg-white'
+                        productType === "watches"
+                          ? "bg-darkBurgundy text-white"
+                          : "bg-white"
                       }`}
-                      onClick={(e) => handleProductType(e, 'watches')}>
+                      onClick={(e) => handleProductType(e, "watches")}
+                    >
                       Watches
                     </button>
                     <button
                       className={`py-[14px] px-[52px] ${
-                        productType === 'straps'
-                          ? 'bg-darkBurgundy text-white'
-                          : 'bg-white'
+                        productType === "straps"
+                          ? "bg-darkBurgundy text-white"
+                          : "bg-white"
                       }`}
-                      onClick={(e) => handleProductType(e, 'straps')}>
+                      onClick={(e) => handleProductType(e, "straps")}
+                    >
                       Straps
                     </button>
                   </div>
@@ -609,22 +503,24 @@ const CategoryAsideFilters = ({
                       <button
                         className={`relative bg-darkBurgundy h-[2px] w-5 ${
                           isOpenCountriesItem
-                            ? ''
-                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                            ? ""
+                            : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
                           setIsOpenCountriesItem(
                             (isOpenCountriesItem) => !isOpenCountriesItem
                           );
-                        }}></button>
+                        }}
+                      ></button>
                     </div>
                   </div>
                   <FilterContainerComponent
                     filters={{
                       isOpen: isOpenCountriesItem,
-                      styles: '',
-                    }}>
+                      styles: "",
+                    }}
+                  >
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_COUNTRIES.map((coutry) => (
                         <div className="flex gap-2" key={coutry}>
@@ -652,22 +548,24 @@ const CategoryAsideFilters = ({
                       <button
                         className={`relative bg-darkBurgundy h-[2px] w-5 ${
                           isOpenCaseItem
-                            ? ''
-                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                            ? ""
+                            : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
                           setIsOpenCaseItem(
                             (isOpenCaseItem) => !isOpenCaseItem
                           );
-                        }}></button>
+                        }}
+                      ></button>
                     </div>
                   </div>
                   <FilterContainerComponent
                     filters={{
                       isOpen: isOpenCaseItem,
-                      styles: '',
-                    }}>
+                      styles: "",
+                    }}
+                  >
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_WATCHESCOLOR.map((watchColor) => (
                         <div className="flex gap-2" key={watchColor}>
@@ -699,19 +597,21 @@ const CategoryAsideFilters = ({
                       <button
                         className={`relative bg-darkBurgundy h-[2px] w-5 ${
                           isOpenStrapsItem
-                            ? ''
-                            : ' after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90'
+                            ? ""
+                            : " after:absolute after:h-[2px] after:bg-darkBurgundy after:w-5 after:top-0 after:left-0 after:rotate-90"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
                           setIsOpenStrapsItem(
                             (isOpenStrapsItem) => !isOpenStrapsItem
                           );
-                        }}></button>
+                        }}
+                      ></button>
                     </div>
                   </div>
                   <FilterContainerComponent
-                    filters={{ isOpen: isOpenStrapsItem, styles: '' }}>
+                    filters={{ isOpen: isOpenStrapsItem, styles: "" }}
+                  >
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_STRAPSCOLOR.map((strapColor) => (
                         <div className="flex gap-2" key={strapColor}>
@@ -741,6 +641,7 @@ const CategoryAsideFilters = ({
                   text="Apply Filters"
                   className="px-[50px] text-[14px] font-default"
                   type="submit"
+                  onClick={handleSubmitFilters}
                 />
               ) : (
                 <h2 className="font-spaceage text-[28px] leading-[25px]">
@@ -750,12 +651,13 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}>
+                onClick={handleOpenFilterClick}
+              >
                 <Image
                   src={ArrowUp}
                   alt="arrow up"
                   className={`object-fit transition-transform ${
-                    isOpen ? '' : 'rotate-180'
+                    isOpen ? "" : "rotate-180"
                   }`}
                 />
               </button>
