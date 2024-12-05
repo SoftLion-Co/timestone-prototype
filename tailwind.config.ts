@@ -41,10 +41,6 @@ const config: Config = {
         darkMaroon: '#420808',
         vividRed: '#EF2A2A',
         cream: '#F2DEBA',
-        // silver: "#939393",
-        // onyx: "#000000",
-        // snow: "#ffffff",
-        // charcoal: "#202020",
       },
       keyframes: {
         pulse: {},

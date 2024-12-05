@@ -20,9 +20,15 @@ import RightArrow from "@/images/product-page/arrow-right.svg";
 export const metadata: Metadata = {
   title: "Timestone - продукт",
   description: "Пропонуємо найбільший вибір годиннників",
-  keywords: ["Годинники", "Чернівці", "онлайн-магазин", "продукт", "онлайн шопінг"],
+  keywords: [
+    "Годинники",
+    "Чернівці",
+    "онлайн-магазин",
+    "продукт",
+    "онлайн шопінг",
+  ],
   icons: { icon: "@/app/favicon.ico" },
-  viewport: { initialScale: 1.0, width: "device-width"},
+  viewport: { initialScale: 1.0, width: "device-width" },
   openGraph: {
     title: "Timestone - продукт",
     description: "Ознайомтесь з широким асортиментом годинників",
@@ -52,7 +58,13 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
-      <Image src={item} width={350} height={365} alt={`Image${index + 1}`} loading="lazy"/>
+      <Image
+        src={item}
+        width={350}
+        height={365}
+        alt={`Image${index + 1}`}
+        loading="lazy"
+      />
     </Carousel.Slide>
   ));
 
@@ -216,7 +228,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         </div>
 
         <div className="flex flex-col items-center text-center">
-          <h3 className="text-[32px]">{product?.title}</h3>
+          <h2 className="text-[32px]">{product?.title}</h2>
           <p className="text-[12px] my-[20px] w-[350px] md:w-[400px] text-silver">
             {higherDescription}
           </p>
@@ -238,6 +250,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
             <div className="relative">
               <NumberInput
                 type="text"
+                aria-label="quantity"
                 max={maxQuantity}
                 min={1}
                 value={quantity}
@@ -258,18 +271,14 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   disabled={quantity >= maxQuantity || isOutOfStock}
                   onClick={handleIncrement}
                 >
-                  <Image src={Arrow} alt="Up Arrow" />
+                  +
                 </UnstyledButton>
                 <UnstyledButton
                   className="flex items-center justify-center h-[15px] w-[15px] hover:bg-gray-200 rounded"
                   disabled={quantity <= 1 || isOutOfStock}
                   onClick={handleDecrement}
                 >
-                  <Image
-                    src={Arrow}
-                    alt="Down Arrow"
-                    className="transform rotate-180"
-                  />
+                  -
                 </UnstyledButton>
               </div>
             </div>

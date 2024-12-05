@@ -6,6 +6,14 @@ import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
 import ShippingSection from "@/app/sections/checkout-page/ShippingSection";
 import ProductsSection from "@/app/sections/checkout-page/ProductsSection";
 import BasicInfoSection from "@/app/sections/checkout-page/BasicInfoSection";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "TIMESTONE - Оформлення замовлення",
+  description: "Швидке оформлення замовлення",
+  icons: { icon: "@/app/favicon.ico" },
+  viewport: { initialScale: 1.0, width: "device-width" },
+};
 
 export default function CheckoutPage() {
   const [BasicInfoOpen, setBasicInfoOpen] = useState(true);
