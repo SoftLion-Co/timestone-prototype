@@ -9,10 +9,35 @@ import { getProductByHandle } from "@/services/ProductService";
 import { Product } from "@/config/types";
 import { useCart } from "@/hooks/useCart";
 import "@mantine/carousel/styles.css";
+import { Metadata } from "next";
 
 import Arrow from "@/images/product-page/control-arrow.svg";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
+
+//! потрібно зробити динамічно для кожного продукту
+
+export const metadata: Metadata = {
+  title: "Timestone - продукт",
+  description: "Пропонуємо найбільший вибір годиннників",
+  keywords: ["Годинники", "Чернівці", "онлайн-магазин", "продукт", "онлайн шопінг"],
+  icons: { icon: "@/app/favicon.ico" },
+  viewport: { initialScale: 1.0, width: "device-width"},
+  openGraph: {
+    title: "Timestone - продукт",
+    description: "Ознайомтесь з широким асортиментом годинників",
+    url: "https://timestone.com/catalog",
+    images: [
+      {
+        url: "",
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "ua",
+    type: "website",
+  },
+};
 
 interface productProps {
   productName: string;
@@ -27,7 +52,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
-      <img src={item} width={350} height={365} alt={`Image${index + 1}`} />
+      <Image src={item} width={350} height={365} alt={`Image${index + 1}`} loading="lazy"/>
     </Carousel.Slide>
   ));
 
@@ -112,28 +137,28 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": product?.title,
-    "image": product?.images[0],
-    "description": product?.description,
-    "brand": product?.vendor,
-    "offers": {
+    name: product?.title,
+    image: product?.images[0],
+    description: product?.description,
+    brand: product?.vendor,
+    offers: {
       "@type": "Offer",
-      "priceCurrency": "UAH",
-      "price": product?.price,
-      "availability": product?.quantity,
-      "url": `https://timestone.com/product/${product?.handle}`
-    }
+      priceCurrency: "UAH",
+      price: product?.price,
+      availability: product?.quantity,
+      url: `https://timestone.com/product/${product?.handle}`,
+    },
   };
 
   return (
     <section>
-       <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-        />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <TitleComponents
-        text="products"
-        additionalText="Products / Product Number One"
+        text="product"
+        additionalText="Product / Product Number One"
       />
 
       <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
@@ -157,6 +182,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
               width={350}
               height={365}
               alt={`Image${index + 1}`}
+              loading="lazy"
             />
           ))}
         </div>

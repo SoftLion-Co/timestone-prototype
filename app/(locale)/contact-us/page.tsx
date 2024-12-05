@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "Чернівці",
     "онлайн-магазин",
   ],
+  icons: { icon: "@/app/favicon.ico" },
+  viewport: { initialScale: 1.0, width: "device-width" },
   openGraph: {
     title: "Timestone - зворотній зв'язок",
     description: "Зв'яжіться з нами, щоб дізнатися більше про годинники",
@@ -22,6 +24,8 @@ export const metadata: Metadata = {
         height: 600,
       },
     ],
+    locale: "ua",
+    type: "website",
   },
 };
 
