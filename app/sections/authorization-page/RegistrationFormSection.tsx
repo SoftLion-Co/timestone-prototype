@@ -298,13 +298,16 @@ const RegistrationFormSection = () => {
         <div className="flex text-silver gap-[10px] mt-[10px] text-left">
           <input
             type="checkbox"
+            id="sign-up-update"
             checked={registrationForm.values.receiveUpdates}
             onChange={(e) =>
               registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
             className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label>Sign-up to receive the latest updates and promotions</label>
+          <label htmlFor="sign-up-update">
+            Sign-up to receive the latest updates and promotions
+          </label>
         </div>
 
         <div className=" mt-[16px]">

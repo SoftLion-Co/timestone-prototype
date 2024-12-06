@@ -80,7 +80,7 @@ const OrderHistorySection = () => {
         <h1 className="text-black text-[32px] md:text-[46px] font-medium">
           Your Order History
         </h1>
-        <p className="text-[12px] text-[#939393] md:text-[14px] text-center">
+        <p className="text-[12px] text-silver md:text-[14px] text-center">
           Here you can find a summary of your past orders, track their status,
           and manage returns or exchanges.
         </p>

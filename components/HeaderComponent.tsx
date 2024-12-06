@@ -113,14 +113,14 @@ const Header = () => {
   const HeaderLogo = () => {
     return (
       <Link href="/">
-        <Image src={Logo} alt="Logo" />
+        <Image src={Logo} alt="Logo" loading="lazy" />
       </Link>
     );
   };
 
   return (
     <header className="mx-[20px] lg:mx-[60px]">
-      <div className="flex justify-between items-center py-[20px]">
+      <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 
         <Button onClick={open} className="xl:hidden px-0 hover:bg-transparent">

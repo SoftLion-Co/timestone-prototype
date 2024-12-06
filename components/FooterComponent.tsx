@@ -6,7 +6,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col items-center gap-[60px] pt-[80px]">
+    <footer className="flex flex-col items-center gap-[50px] pt-[70px]">
       <Link href="/">
         <Image src={Logo} alt="Logo" width={380} className="w-[380px]" />
       </Link>

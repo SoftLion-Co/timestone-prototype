@@ -164,7 +164,7 @@ const MyAccountSection = () => {
       return;
     }
 
-    const response = await updateUser( {
+    const response = await updateUser({
       lastname: values1.fullname,
       firstname: values1.name,
       email: values1.email,
@@ -220,7 +220,7 @@ const MyAccountSection = () => {
             <h1 className="text-black text-[32px] md:text-[46px] font-medium">
               Hey, {userName}
             </h1>
-            <p className="text-[12px] text-[#939393] md:text-[14px] text-center">
+            <p className="text-[12px] text-silver md:text-[14px] text-center">
               Welcome to your dashboard, your one-stop-shop for all your recent
               Timestone account activity.
             </p>
@@ -231,7 +231,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmit}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">My Info</h2>
+              <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
                 <div className="w-full lg:w-[45%] flex flex-col">
                   <Input
@@ -311,7 +311,7 @@ const MyAccountSection = () => {
               </div>
             </div>
             <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 Address Book
               </h2>
 
@@ -374,7 +374,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmitPassword}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 New password
               </h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
