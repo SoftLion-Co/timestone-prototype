@@ -21,9 +21,9 @@ export const getProducts = async (
         .join(' ');
     }
 
-    const response = await axios.post(
-      `${BASE_URL}/product`,
-      {
+    const response = await axios.get(
+      `${BASE_URL}/product`, { 
+		params:{
         filters,
         optionsString,
         pageCursor,
@@ -31,12 +31,11 @@ export const getProducts = async (
         sortKey,
         reverse,
         pagination,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+		},
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+		}
     );
 
     return response.data;

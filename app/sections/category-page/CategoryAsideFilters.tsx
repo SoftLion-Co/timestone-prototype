@@ -85,7 +85,6 @@ const CategoryAsideFilters = ({
     let data;
 
     if (currentPage == 1 || isForm) {
-		console.log(10);
       data = await getProducts(
         selectedFilters,
         selectedOptions,
