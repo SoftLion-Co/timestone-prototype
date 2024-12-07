@@ -16,9 +16,10 @@ const Footer = () => {
           className="w-[380px] h-[80px]"
           loading="lazy"
         />
+
       </Link>
 
-      <p className="bg-pearl w-[100%] py-[20px] text-center text-silver">
+      <p className="bg-pearl w-[100%] py-[20px] text-center text-silver min-h-[60px] leading-[25px]">
         © Copyright {currentYear} TIMESTONE - All rights reserved.
       </p>
     </footer>

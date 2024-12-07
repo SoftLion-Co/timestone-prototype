@@ -49,8 +49,8 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 };
 
 const RegistrationFormSection = () => {
-  const MAX_ATTEMPTS = 333;
-  const [value, setValue] = useState("");
+  const MAX_ATTEMPTS = 5;
+  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
@@ -118,20 +118,17 @@ const RegistrationFormSection = () => {
         );
         setIsLoading(false);
         if (response === "created") {
-          window.scrollTo({
-            top: window.innerHeight * 0.3,
-            behavior: "smooth",
-          });
           setIsModalVisible(true);
           registrationForm.reset();
-        } else if (response == "phone exist") {
+        } else if (response == "A user with this phone number already exists" ) {
           setRegistrationMessage("This phone already exist. Try another.");
-        } else if (response == "email exist") {
+        } else if (response == "A user with this email address already exists") {
           setRegistrationMessage("This email already exist. Try another.");
-        } else if (response == "user not activated") {
+        } else if (response == "User not activated") {
           setRegistrationMessage("Your acc not activated. Check email box.");
         } else {
           setRegistrationMessage("Problems wih server");
+          
         }
       }
     }
@@ -331,7 +328,13 @@ const RegistrationFormSection = () => {
             text="Create Account"
             type="button"
             className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
-            onClick={handleCreateAccount}
+            onClick={() => {
+              handleCreateAccount();
+              window.scrollTo({
+                top: 0, 
+                behavior: "smooth", 
+              });
+            }}
             disabled={isDisabled}
           />
         </div>

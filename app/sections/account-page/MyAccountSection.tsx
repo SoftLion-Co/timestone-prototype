@@ -359,9 +359,10 @@ const MyAccountSection = () => {
                 <input
                   {...form.getInputProps("subscribe")}
                   type="checkbox"
+                  id="sign-up-update"
                   className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
                 />
-                <label className="ml-2 text-gray-700">
+                <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
                   Sign-up to receive the latest updates and promotions
                 </label>
               </div>

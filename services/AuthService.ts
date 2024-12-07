@@ -26,7 +26,7 @@ export const registrateNewUser = async (
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 406) {
+      if (error.status === 400 || error.status === 409) {
         return error.response?.data;
       } else {
         return "server error";

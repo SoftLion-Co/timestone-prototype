@@ -23,7 +23,7 @@ const AccountSection = () => {
 
   if (isToken !== true) {
     return (
-      <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px]">
+      <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px] min-h-screen">
         <h1 className="text-black text-[24px] md:text-[32px] font-medium">
           Not authorized. Please log in.
         </h1>
@@ -50,7 +50,7 @@ const AccountSection = () => {
   };
   return (
     <>
-      <section className="bg-[#F4F6F6] bg-opacity-50">
+      <section className="bg-[#F4F6F6] bg-opacity-50 min-h-screen">
         <TitleComponents text="Timestone Account" />
         <ProfileSideBarComponent
           className="container pt-[20px] xl:pt-[40px]"
