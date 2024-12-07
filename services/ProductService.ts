@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { BASE_URL } from '@/config/config';
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
 
 export const getProducts = async (
   filters?: object,
@@ -11,19 +11,18 @@ export const getProducts = async (
   pagination?: boolean
 ): Promise<any> => {
   try {
-    let optionsString = '';
+    let optionsString = "";
 
     if (options) {
       optionsString = Object.entries(options)
         .flatMap(([key, values]) =>
           values.map((value: any) => `${key}-${value}`)
         )
-        .join(' ');
+        .join(" ");
     }
 
-    const response = await axios.get(
-      `${BASE_URL}/product`, { 
-		params:{
+    const response = await axios.get(`${BASE_URL}/product`, {
+      params: {
         filters,
         optionsString,
         pageCursor,
@@ -31,16 +30,15 @@ export const getProducts = async (
         sortKey,
         reverse,
         pagination,
-		},
-			headers: {
-			  'Content-Type': 'application/json',
-			},
-		}
-    );
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error("Failed to fetch products:", error);
   }
 };
 
@@ -50,6 +48,6 @@ export const getProductByHandle = async (handle: string): Promise<any> => {
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch product by handle:', error);
+    console.error("Failed to fetch product by handle:", error);
   }
 };

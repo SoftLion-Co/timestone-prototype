@@ -10,8 +10,20 @@ import { useFilters } from "@/hooks/useFilters";
 import { CardProps } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
 import FilterContainerComponent from "@/components/filters-component/FilterContainerComponent";
-import FilterComponent from "@/components/filters-component/FilterComponent";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
+import CustomFilterComponent from "@/components/filters-component/CustomFilterComponent";
+
+interface Category {
+  name: string;
+  keys: string[];
+}
+
+interface Filters {
+  searchQuery: "";
+  priceRange: number[];
+  buttons: string[];
+  checkboxes: Category[];
+}
 
 const DEF_COUNTRIES = [
   "USA",
@@ -36,11 +48,41 @@ const CategoryAsideFilters = ({
   handleChangeTotalProducts: (num: number) => void;
   limit: number;
 }) => {
+  const [filters1, setFilters1] = useState<Filters>({
+    searchQuery: "",
+    priceRange: [0, 100],
+    buttons: ["straps", "watches"],
+    checkboxes: [
+      {
+        name: "country",
+        keys: [
+          "USA",
+          "Ukraine",
+          "Germany",
+          "France",
+          "Italy",
+          "Sweden",
+          "Albania",
+          "Poland",
+          "Greece",
+        ],
+      },
+      {
+        name: "watches",
+        keys: ["black", "silver", "blue", "white"],
+      },
+      {
+        name: "country",
+        keys: ["orange", "purplegreen", "purpleblue", "black"],
+      },
+    ],
+  });
+
   const { filters, dispatch } = useFilters();
   const { setPageInfo, setTotalPages, pageInfo, currentPage, totalPages } =
     useCustomPagination();
 
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
   const [productType, setProductType] = useState<string>("");
@@ -165,6 +207,14 @@ const CategoryAsideFilters = ({
     }
   };
 
+  const changeProductType = (type: string) => {
+    if (type !== productType) {
+      setProductType(type);
+    } else {
+      setProductType("");
+    }
+  };
+
   const handleSetWatchesColor = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -198,6 +248,29 @@ const CategoryAsideFilters = ({
     }
   };
 
+  const handleSetWatchesColor1 = (value: string) => {
+    handleChangeCategory(value, setWatchesColor);
+  };
+
+  const handleSetStrapsColor1 = (value: string) => {
+    handleChangeCategory(value, setStrapsColor);
+  };
+
+  const handleSetCountries1 = (value: string) => {
+    handleChangeCategory(value, setCountries);
+  };
+
+  const handleChangeCategory = function <T>(
+    value: T,
+    setState: React.Dispatch<React.SetStateAction<T[]>>
+  ) {
+    setState((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -229,7 +302,7 @@ const CategoryAsideFilters = ({
       {/* pc filters */}
       <aside className="hidden xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form onSubmit={handleSubmitFormForPc}>
-          <div className="pb-5 text-silver text-[12px] font-poppins">
+          {/* <div className="pb-5 text-silver text-[12px] font-poppins">
             <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5">
               <h4 className=" text-black font-semibold">Search</h4>
               <input
@@ -269,14 +342,12 @@ const CategoryAsideFilters = ({
               <div className="flex flex-col justify-start items-start gap-1">
                 <button
                   onClick={(e) => handleProductType(e, "watches")}
-                  className={`${productType === "watches" ? "font-bold" : ""}`}
-                >
+                  className={`${productType === "watches" ? "font-bold" : ""}`}>
                   Watches
                 </button>
                 <button
                   onClick={(e) => handleProductType(e, "straps")}
-                  className={`${productType === "straps" ? "font-bold" : ""}`}
-                >
+                  className={`${productType === "straps" ? "font-bold" : ""}`}>
                   Straps
                 </button>
               </div>
@@ -297,16 +368,14 @@ const CategoryAsideFilters = ({
                       setIsOpenCountriesItem(
                         (isOpenCountriesItem) => !isOpenCountriesItem
                       );
-                    }}
-                  ></button>
+                    }}></button>
                 </div>
               </div>
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCountriesItem,
                   styles: "",
-                }}
-              >
+                }}>
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_COUNTRIES.map((coutry) => (
                     <div className="flex gap-2" key={coutry}>
@@ -340,16 +409,14 @@ const CategoryAsideFilters = ({
                     onClick={(e) => {
                       e.preventDefault();
                       setIsOpenCaseItem((isOpenCaseItem) => !isOpenCaseItem);
-                    }}
-                  ></button>
+                    }}></button>
                 </div>
               </div>
               <FilterContainerComponent
                 filters={{
                   isOpen: isOpenCaseItem,
                   styles: "",
-                }}
-              >
+                }}>
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_WATCHESCOLOR.map((watchColor) => (
                     <div className="flex gap-2" key={watchColor}>
@@ -387,13 +454,11 @@ const CategoryAsideFilters = ({
                       setIsOpenStrapsItem(
                         (isOpenStrapsItem) => !isOpenStrapsItem
                       );
-                    }}
-                  ></button>
+                    }}></button>
                 </div>
               </div>
               <FilterContainerComponent
-                filters={{ isOpen: isOpenStrapsItem, styles: "" }}
-              >
+                filters={{ isOpen: isOpenStrapsItem, styles: "" }}>
                 <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                   {DEF_STRAPSCOLOR.map((strapColor) => (
                     <div className="flex gap-2" key={strapColor}>
@@ -419,6 +484,45 @@ const CategoryAsideFilters = ({
             text="Apply Filters"
             className="w-full text-[14px] font-default"
             type="submit"
+          /> */}
+
+          <CustomFilterComponent
+            showSearch
+            searchQuery={searchText}
+            onSearchChange={(query) => setSearchText(query)}
+            clearSearchQuery={() => setSearchText("")}
+            showPrice
+            // min={minPrice}
+            // max={maxPrice}
+            handleMinPrice={(number) => setMinPrice(number)}
+            handleMaxPrice={(number) => setMaxPrice(number)}
+            showButtons
+            buttons={["watches", "straps"]}
+            activeButton={productType}
+            onChangeButton={(value) => changeProductType(value)}
+            checkboxes={[
+              {
+                title: "Countries",
+                keys: DEF_COUNTRIES,
+                activeItems: countries,
+                onChange: handleSetCountries1,
+              },
+              {
+                title: "Straps",
+                keys: DEF_STRAPSCOLOR,
+                activeItems: strapsColor,
+                onChange: handleSetStrapsColor1,
+              },
+              {
+                title: "Watches",
+                keys: DEF_WATCHESCOLOR,
+                activeItems: watchesColor,
+                onChange: handleSetWatchesColor1,
+              },
+            ]}
+            onApplyClick={() => {
+              console.log("Applied filters");
+            }}
           />
         </form>
       </aside>
@@ -432,8 +536,7 @@ const CategoryAsideFilters = ({
                 className="bg-pearl pt-9 pb-5 text-silver text-[10px] font-poppins md:text-[12px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <label className="flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5 px-[15px]">
                   <h4 className=" text-black font-semibold ">Search</h4>
                   <input
@@ -477,8 +580,7 @@ const CategoryAsideFilters = ({
                           ? "bg-darkBurgundy text-white"
                           : "bg-white"
                       }`}
-                      onClick={(e) => handleProductType(e, "watches")}
-                    >
+                      onClick={(e) => handleProductType(e, "watches")}>
                       Watches
                     </button>
                     <button
@@ -487,8 +589,7 @@ const CategoryAsideFilters = ({
                           ? "bg-darkBurgundy text-white"
                           : "bg-white"
                       }`}
-                      onClick={(e) => handleProductType(e, "straps")}
-                    >
+                      onClick={(e) => handleProductType(e, "straps")}>
                       Straps
                     </button>
                   </div>
@@ -511,16 +612,14 @@ const CategoryAsideFilters = ({
                           setIsOpenCountriesItem(
                             (isOpenCountriesItem) => !isOpenCountriesItem
                           );
-                        }}
-                      ></button>
+                        }}></button>
                     </div>
                   </div>
                   <FilterContainerComponent
                     filters={{
                       isOpen: isOpenCountriesItem,
                       styles: "",
-                    }}
-                  >
+                    }}>
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_COUNTRIES.map((coutry) => (
                         <div className="flex gap-2" key={coutry}>
@@ -556,16 +655,14 @@ const CategoryAsideFilters = ({
                           setIsOpenCaseItem(
                             (isOpenCaseItem) => !isOpenCaseItem
                           );
-                        }}
-                      ></button>
+                        }}></button>
                     </div>
                   </div>
                   <FilterContainerComponent
                     filters={{
                       isOpen: isOpenCaseItem,
                       styles: "",
-                    }}
-                  >
+                    }}>
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_WATCHESCOLOR.map((watchColor) => (
                         <div className="flex gap-2" key={watchColor}>
@@ -605,13 +702,11 @@ const CategoryAsideFilters = ({
                           setIsOpenStrapsItem(
                             (isOpenStrapsItem) => !isOpenStrapsItem
                           );
-                        }}
-                      ></button>
+                        }}></button>
                     </div>
                   </div>
                   <FilterContainerComponent
-                    filters={{ isOpen: isOpenStrapsItem, styles: "" }}
-                  >
+                    filters={{ isOpen: isOpenStrapsItem, styles: "" }}>
                     <div className="flex flex-col justify-start items-start gap-2 overflow-y-scroll h-24">
                       {DEF_STRAPSCOLOR.map((strapColor) => (
                         <div className="flex gap-2" key={strapColor}>
@@ -651,8 +746,7 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}
-              >
+                onClick={handleOpenFilterClick}>
                 <Image
                   src={ArrowUp}
                   alt="arrow up"
