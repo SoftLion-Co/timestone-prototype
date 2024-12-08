@@ -195,20 +195,40 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         )}
 
         {type === "buttons" && (
-          <div className="flex flex-col justify-start items-start gap-1">
-            {items?.map((btn) => (
-              <button
-                key={btn}
-                onClick={() => onChangeButton?.(btn)}
-                className={`${
-                  activeButton === btn
-                    ? "font-bold text-darkBurgundy"
-                    : "text-silver"
-                } `}>
-                {btn}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="hidden xl:flex flex-col justify-start items-start gap-1">
+              {items?.map((btn) => (
+                <button
+                  key={btn}
+                  onClick={() => onChangeButton?.(btn)}
+                  className={`${
+                    activeButton === btn
+                      ? "font-bold text-darkBurgundy"
+                      : "text-silver"
+                  } `}>
+                  {btn}
+                </button>
+              ))}
+            </div>
+
+            <div className="xl:hidden bg-darkBurgundy border-darkBurgundy border flex items-center w-fit rounded-md overflow-hidden gap-[2px]">
+              {items?.map((btn) => (
+                <button
+                  key={btn}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onChangeButton?.(btn);
+                  }}
+                  className={`${
+                    activeButton === btn
+                      ? "bg-darkBurgundy text-white"
+                      : "bg-white"
+                  } py-[14px] px-[52px]`}>
+                  {btn}
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         {type === "checkboxes" && (
