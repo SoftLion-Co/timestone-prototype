@@ -14,6 +14,32 @@ export const ProductsContext = createContext<CardProps[]>([]);
 const LIMIT = 2;
 
 const CategoryMain = () => {
+  const filter = {
+    search: {
+      title: "Search",
+    },
+    buttons: {
+      title: "Types",
+      value: ["Wathes", "Other"],
+    },
+    priceRange: {
+      title: "Price",
+      value: [0, 150],
+    },
+    checkboxes: [
+      {
+        title: "example",
+        value: ["1", "2", "3"],
+      },
+      {
+        title: "example2",
+        value: ["1", "2", "3"],
+      },
+    ],
+  };
+
+  const [filters, setFilters] = useState(filter);
+
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [products, setProducts] = useState<CardProps[]>([]);
 
@@ -39,6 +65,7 @@ const CategoryMain = () => {
                 handleUpdateProducts={handleUpdateProducts}
                 handleChangeTotalProducts={handleChangeTotalProducts}
                 limit={LIMIT}
+                filtersData={filters}
               />
 
               <CategorySection totalProducts={totalProducts} limit={LIMIT} />

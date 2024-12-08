@@ -13,18 +13,6 @@ import FilterContainerComponent from "@/components/filters-component/FilterConta
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 import CustomFilterComponent from "@/components/filters-component/CustomFilterComponent";
 
-interface Category {
-  name: string;
-  keys: string[];
-}
-
-interface Filters {
-  searchQuery: "";
-  priceRange: number[];
-  buttons: string[];
-  checkboxes: Category[];
-}
-
 const DEF_COUNTRIES = [
   "USA",
   "Ukraine",
@@ -43,44 +31,20 @@ const CategoryAsideFilters = ({
   handleUpdateProducts,
   handleChangeTotalProducts,
   limit,
+  filtersData,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
   handleChangeTotalProducts: (num: number) => void;
   limit: number;
+  filtersData: any;
 }) => {
-  const [filters1, setFilters1] = useState<Filters>({
-    searchQuery: "",
-    priceRange: [0, 100],
-    buttons: ["straps", "watches"],
-    checkboxes: [
-      {
-        name: "country",
-        keys: [
-          "USA",
-          "Ukraine",
-          "Germany",
-          "France",
-          "Italy",
-          "Sweden",
-          "Albania",
-          "Poland",
-          "Greece",
-        ],
-      },
-      {
-        name: "watches",
-        keys: ["black", "silver", "blue", "white"],
-      },
-      {
-        name: "country",
-        keys: ["orange", "purplegreen", "purpleblue", "black"],
-      },
-    ],
-  });
-
   const { filters, dispatch } = useFilters();
   const { setPageInfo, setTotalPages, pageInfo, currentPage, totalPages } =
     useCustomPagination();
+
+  const [priceRangeFromObject, setPriceRangeFromObject] = useState<
+    [number, number]
+  >([0, 30000]);
 
   const [searchText, setSearchText] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -185,6 +149,9 @@ const CategoryAsideFilters = ({
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+  const newHandleSearchText = (query: string) => {
+    setSearchText(query);
+  };
 
   const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinPrice(+e.target.value);
@@ -269,6 +236,10 @@ const CategoryAsideFilters = ({
         ? prev.filter((item) => item !== value)
         : [...prev, value]
     );
+  };
+
+  const handlePriceChange = (value: [number, number]) => {
+    setPriceRangeFromObject(value);
   };
 
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
@@ -478,51 +449,60 @@ const CategoryAsideFilters = ({
                 </div>
               </FilterContainerComponent>
             </label>
-          </div>
+          </div> */}
+
+          {filtersData.search.title && (
+            <CustomFilterComponent
+              title={filtersData.search.title}
+              type="search"
+              onSearchChange={newHandleSearchText}
+              clearSearchQuery={() => setSearchText("")}
+              onApplyClick={() => {
+                console.log(`Applied search`);
+              }}
+            />
+          )}
+
+          {filtersData.buttons.title && (
+            <CustomFilterComponent
+              title={filtersData.buttons.title}
+              type="buttons"
+              items={filtersData.buttons.value}
+              activeButton={productType}
+              onChangeButton={changeProductType}
+            />
+          )}
+
+          {filtersData.priceRange.title && (
+            <CustomFilterComponent
+              title={filtersData.priceRange.title}
+              type="price"
+              rangeValue={priceRangeFromObject}
+              step={1}
+              onRangeChange={handlePriceChange}
+              onApplyClick={() => {
+                console.log(`Applied price`);
+              }}
+            />
+          )}
+
+          {/* TODO для кожного блоку useState */}
+          {filtersData.checkboxes.length > 0 &&
+            filtersData.checkboxes.map((item: any) => (
+              <CustomFilterComponent
+                key={item.title}
+                title={item.title}
+                type="checkboxes"
+                items={item.value}
+                selectedItems={countries}
+                onItemChange={handleSetCountries1}
+              />
+            ))}
 
           <Button
             text="Apply Filters"
             className="w-full text-[14px] font-default"
             type="submit"
-          /> */}
-
-          <CustomFilterComponent
-            showSearch
-            searchQuery={searchText}
-            onSearchChange={(query) => setSearchText(query)}
-            clearSearchQuery={() => setSearchText("")}
-            showPrice
-            // min={minPrice}
-            // max={maxPrice}
-            handleMinPrice={(number) => setMinPrice(number)}
-            handleMaxPrice={(number) => setMaxPrice(number)}
-            showButtons
-            buttons={["watches", "straps"]}
-            activeButton={productType}
-            onChangeButton={(value) => changeProductType(value)}
-            checkboxes={[
-              {
-                title: "Countries",
-                keys: DEF_COUNTRIES,
-                activeItems: countries,
-                onChange: handleSetCountries1,
-              },
-              {
-                title: "Straps",
-                keys: DEF_STRAPSCOLOR,
-                activeItems: strapsColor,
-                onChange: handleSetStrapsColor1,
-              },
-              {
-                title: "Watches",
-                keys: DEF_WATCHESCOLOR,
-                activeItems: watchesColor,
-                onChange: handleSetWatchesColor1,
-              },
-            ]}
-            onApplyClick={() => {
-              console.log("Applied filters");
-            }}
           />
         </form>
       </aside>
