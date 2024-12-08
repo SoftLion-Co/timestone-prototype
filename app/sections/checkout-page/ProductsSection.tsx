@@ -76,7 +76,7 @@ const ProductsSection = ({
           onClick={handleSubmit}
         >
           <h2 className="text-[20px] md:text-[25px]">${totalAmount}</h2>
-          <p className="text-[10px] md:text-[15px]">Grand Total</p>
+          <p className="text-[16px] md:text-[15px]">Grand Total</p>
         </div>
       </div>
     </section>

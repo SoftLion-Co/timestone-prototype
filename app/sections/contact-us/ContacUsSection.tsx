@@ -32,7 +32,6 @@ const ContactUsSection = () => {
     },
   });
 
-
   useEffect(() => {
     const savedAttempts = localStorage.getItem("contactUsAttempts");
     if (savedAttempts) {
@@ -82,11 +81,13 @@ const ContactUsSection = () => {
             onSubmit={handleSubmit}
             className="w-full flex flex-col items-center gap-[30px] lg:items-start"
           >
-             {isDisabled ? (
-            <p className="text-red-500">Ви вичерпали всі спроби!</p>
-          ) : (
-            <p className="text-black">Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
-          )}
+            {isDisabled ? (
+              <p className="text-red-500">Ви вичерпали всі спроби!</p>
+            ) : (
+              <p className="text-black">
+                Залишилось спроб: {MAX_ATTEMPTS - attempts}
+              </p>
+            )}
             <div className="w-full flex flex-col gap-[14px]">
               <Input
                 inputType="input"
@@ -145,6 +146,7 @@ const ContactUsSection = () => {
             className="object-cover w-[100%] lg:w-[500px] xl:w-[550px]"
             height={540}
             width={640}
+            loading="lazy"
           />
         </div>
       </div>
