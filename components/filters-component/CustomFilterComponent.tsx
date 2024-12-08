@@ -6,6 +6,7 @@ import OpenedFilter from "./OpenedFilter";
 import { motion } from "framer-motion";
 
 import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
 
 interface Category {
   title: string;
@@ -86,24 +87,26 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
   return (
     <>
-      <label className="relative flex flex-col gap-[10px] border-b border-silver border-opacity-20 pb-5">
+      <label className="relative flex flex-col gap-[10px] border-b text-[14px] border-silver border-opacity-20 pb-5">
         <div
-          className="flex justify-between items-center cursor-pointer mb-[16px]"
+          className={`flex justify-between items-center ${
+            type === "checkboxes" ? "cursor-pointer" : ""
+          }`}
           onClick={toggleOpen}>
-          <h3 className="font-semibold">{title}</h3>
+          <h3 className="font-semibold text-[16px]">{title}</h3>
 
           {type === "checkboxes" && (
             <motion.div
               initial={{ rotate: 0 }}
               animate={{ rotate: isOpen ? 45 : 0 }}
               transition={{ duration: 0.3 }}>
-              <span className="text-2xl">+</span>
+              <span className="text-3xl">+</span>
             </motion.div>
           )}
         </div>
 
         {type === "search" && (
-          <div>
+          <div className="flex gap-3">
             <input
               className="rounded-sm bg-white py-[14px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
@@ -114,13 +117,13 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-2 top-[55px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
+                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
                 ✕
               </button>
             )}
             <button
               onClick={onApplyClick}
-              className=" text-black px-4 p-2 border rounded-[4px] border-[#D7DADD]">
+              className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
               OK
             </button>
           </div>
@@ -128,28 +131,46 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
         {type === "price" && (
           <>
-            <div>
+            <div className="flex flex-col gap-4">
               <RangeSlider
                 value={rangeValue}
                 onChange={onRangeChange}
                 min={rangeValue[0]}
                 max={rangeValue[1]}
                 step={step}
-                className={"mb-[30px] relative"}
-                classNames={{
-                  root: "w-[90%] md:w-[80%] xl:w-[100%]",
-                  bar: "bg-[#17696A]",
-                  thumb: "border-[#17696A]",
+                marks={[
+                  { value: 0, label: "$0" },
+                  { value: 1000, label: "$1000" },
+                ]}
+                styles={{
+                  bar: {
+                    backgroundColor: "#1971c2", // Синя лінія
+                  },
+                  thumb: {
+                    borderColor: "#1971c2", // Синя рамка для повзунка
+                    backgroundColor: "#ffffff", // Білий повзунок
+                  },
+                  mark: {
+                    backgroundColor: "#1971c2", // Сині мітки
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                  },
+                  markLabel: {
+                    color: "#1971c2", // Синій текст міток
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  },
                 }}
               />
-              <div className="flex gap-[12px] items-center justify-between">
+              <div className="flex gap-[5px] items-center justify-between">
                 <input
                   type="number"
                   value={rangeValue[0]}
                   onChange={(e) =>
                     onRangeChange?.([+e.target.value, rangeValue[1]])
                   }
-                  className="w-[48%] p-2 border rounded-[4px] border-[#D7DADD]"
+                  className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Мінімальна ціна"
                 />
                 <span>—</span>
@@ -159,13 +180,13 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   onChange={(e) =>
                     onRangeChange?.([rangeValue[0], +e.target.value])
                   }
-                  className="w-[48%] p-2 border rounded-[4px] border-[#D7DADD]"
+                  className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Максимальна ціна"
                 />
 
                 <button
                   onClick={onApplyClick}
-                  className=" text-black px-4 p-2 border rounded-[4px] border-[#D7DADD]">
+                  className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
                   OK
                 </button>
               </div>
@@ -179,7 +200,11 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
               <button
                 key={btn}
                 onClick={() => onChangeButton?.(btn)}
-                className={`${activeButton === btn ? "font-bold" : ""}`}>
+                className={`${
+                  activeButton === btn
+                    ? "font-bold text-darkBurgundy"
+                    : "text-silver"
+                } `}>
                 {btn}
               </button>
             ))}
@@ -198,17 +223,19 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             style={{ overflow: "hidden" }}>
             <div className="flex flex-col justify-start items-start overflow-y-scroll h-24">
               {items?.map((item, index) => (
-                <div key={index}>
-                  <label className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gra-200 rounded-md  transition-all duration-200">
-                    <input
-                      type="checkbox"
-                      className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                      checked={selectedItems?.includes(item)}
-                      onChange={() => onItemChange?.(item)}
-                    />
-                    <span className="first-letter:uppercase">{item}</span>
-                  </label>
-                </div>
+                <label
+                  key={index}
+                  htmlFor={`checkbox-item-${title.toLowerCase}-${item}`}
+                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gra-200 rounded-md  transition-all duration-200">
+                  <input
+                    id={`checkbox-item-${title.toLowerCase}-${item}`}
+                    type="checkbox"
+                    className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                    checked={selectedItems?.includes(item)}
+                    onChange={() => onItemChange?.(item)}
+                  />
+                  <span className="first-letter:uppercase">{item}</span>
+                </label>
               ))}
             </div>
           </motion.div>
