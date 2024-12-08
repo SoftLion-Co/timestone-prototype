@@ -60,7 +60,7 @@ const CategoryMain = () => {
               text="Products"
               additionalText={`${totalProducts} Total Products`}
             />
-            <div className="xl:flex md:px-[75px]">
+            <div className="xl:flex xl:px-[75px]">
               <CategoryAsideFilters
                 handleUpdateProducts={handleUpdateProducts}
                 handleChangeTotalProducts={handleChangeTotalProducts}

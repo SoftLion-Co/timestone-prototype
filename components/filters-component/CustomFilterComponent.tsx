@@ -246,7 +246,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                 <label
                   key={index}
                   htmlFor={`checkbox-item-${title.toLowerCase}-${item}`}
-                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gra-200 rounded-md  transition-all duration-200">
+                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200">
                   <input
                     id={`checkbox-item-${title.toLowerCase}-${item}`}
                     type="checkbox"
