@@ -38,17 +38,23 @@ const CategorySection = ({
     if (currentPage > 3) {
       range.push('...');
     }
-    if (currentPage > 2) range.push(currentPage - 1);
+    if (currentPage > 2) {
+      range.push(currentPage - 1);
+    }
     range.push(currentPage);
-    if (currentPage < totalPages - 1) range.push(currentPage + 1);
+    if (currentPage < totalPages - 1) {
+      range.push(currentPage + 1);
+    }
+    if (currentPage === totalPages - 1) {
+      range.push(totalPages);
+    }
     if (currentPage < totalPages - 2) {
       range.push('...');
     }
-    if (totalPages > 1 && !range.includes(totalPages)) {
-      range.push(totalPages);
-    }
     return range;
   };
+  
+  
 
   const pagination = usePagination({
     total: Math.ceil(totalProducts / limit),
@@ -152,12 +158,12 @@ const CategorySection = ({
             )}
           </div> */}
           <div className="flex justify-center gap-2 mt-10 items-center">
-            {/* <button
+           <button
               disabled={pagination.active === 1}
               onClick={() => handleChangePage(pagination.active - 1)}
               className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold">
               &lt;
-            </button> */}
+            </button> 
             {generatePaginationRange().map((range, index) =>
               range === '...' ? (
                 <button
@@ -178,12 +184,12 @@ const CategorySection = ({
                 </button>
               )
             )}
-            {/* <button
+            <button
               disabled={pagination.active === Math.ceil(totalProducts / limit)}
               onClick={() => handleChangePage(pagination.active + 1)}
               className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold ">
               &gt;
-            </button> */}
+            </button>
           </div>
         </>
       )}
