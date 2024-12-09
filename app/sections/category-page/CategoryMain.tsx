@@ -8,39 +8,48 @@ import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
 import { FiltersProvider } from "@/hooks/useFilters";
 import { PaginationProvider } from "@/hooks/useCustomPagination";
+import { getFilters } from "@/services/ProductService";
 
 export const ProductsContext = createContext<CardProps[]>([]);
 const LIMIT = 2;
 
+const filter = {
+  search: {
+    title: "Search",
+  },
+  buttons: {
+    title: "Types",
+    value: ["Wathes", "Other"],
+  },
+  priceRange: {
+    title: "Price",
+    value: [0, 150],
+  },
+  checkboxes: [
+    {
+      title: "example",
+      value: ["1", "2", "3"],
+    },
+    {
+      title: "example2",
+      value: ["1", "2", "3"],
+    },
+  ],
+};
+
 const CategoryMain = () => {
-  const filter = {
-    search: {
-      title: "Search",
-    },
-    buttons: {
-      title: "Types",
-      value: ["Wathes", "Other"],
-    },
-    priceRange: {
-      title: "Price",
-      value: [0, 150],
-    },
-    checkboxes: [
-      {
-        title: "example",
-        value: ["1", "2", "3"],
-      },
-      {
-        title: "example2",
-        value: ["1", "2", "3"],
-      },
-    ],
-  };
-
   const [filters, setFilters] = useState(filter);
-
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [products, setProducts] = useState<CardProps[]>([]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      const data = await getFilters();
+      setFilters(data);
+    };
+
+    fetchFilters();
+  }, []);
 
   const handleChangeTotalProducts = (num: number) => {
     setTotalProducts(num);
@@ -66,7 +75,6 @@ const CategoryMain = () => {
                 limit={LIMIT}
                 filtersData={filters}
               />
-
               <CategorySection totalProducts={totalProducts} limit={LIMIT} />
             </div>
           </ProductsContext.Provider>

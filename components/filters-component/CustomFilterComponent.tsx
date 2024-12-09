@@ -1,42 +1,9 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import Button from "../ButtonComponent";
-import OpenedFilter from "./OpenedFilter";
 import { motion } from "framer-motion";
-
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
-
-interface Category {
-  title: string;
-  keys: string[];
-  activeItems: string[];
-  onChange: (value: string) => void;
-}
-
-// type FilterComponentProps = {
-//   type: "checkboxes" | "buttons" | "search" | "price";
-//   title: string;
-
-//   searchQuery: string;
-//   onSearchChange: (query: string) => void;
-//   clearSearchQuery: () => void;
-
-//   min?: number;
-//   max?: number;
-//   step?: number;
-//   handleMinPrice?: (min: number) => void;
-//   handleMaxPrice?: (max: number) => void;
-
-//   buttons?: string[];
-//   activeButton?: string;
-//   onChangeButton?: (value: string) => void;
-
-//   checkboxes?: Category[];
-
-//   onApplyClick: () => void;
-// };
 
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
@@ -108,7 +75,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "search" && (
           <div className="flex gap-3">
             <input
-              className="rounded-sm bg-white py-[10px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+              className="rounded-sm bg-white py-[14px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
               placeholder="Type Here"
               value={searchQuery}
@@ -117,7 +84,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-20 top-[56px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
+                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
                 ✕
               </button>
             )}

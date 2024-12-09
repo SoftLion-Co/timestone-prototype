@@ -3,7 +3,7 @@ import { BASE_URL } from "@/config/config";
 
 export const getProducts = async (
   filters?: object,
-  options?: object,
+  optionsString?: string,
   limit?: number,
   pageCursor?: string,
   sortKey?: string,
@@ -11,15 +11,6 @@ export const getProducts = async (
   pagination?: boolean
 ): Promise<any> => {
   try {
-    let optionsString = "";
-
-    if (options) {
-      optionsString = Object.entries(options)
-        .flatMap(([key, values]) =>
-          values.map((value: any) => `${key}-${value}`)
-        )
-        .join(" ");
-    }
 
     const response = await axios.get(`${BASE_URL}/product`, {
       params: {
@@ -45,9 +36,17 @@ export const getProducts = async (
 export const getProductByHandle = async (handle: string): Promise<any> => {
   try {
     const response = await axios.get(`${BASE_URL}/product/${handle}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch product by handle:", error);
   }
 };
+
+export const getFilters = async (): Promise<any> => {
+	try {
+	  const response = await axios.get(`${BASE_URL}/filter`);
+	  return response.data;
+	} catch (error) {
+	  console.error("Failed to fetch product by handle:", error);
+	}
+ };

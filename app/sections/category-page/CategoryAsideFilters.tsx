@@ -12,20 +12,6 @@ import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 import CustomFilterComponent from "@/components/filters-component/CustomFilterComponent";
 
-const DEF_COUNTRIES = [
-  "USA",
-  "Ukraine",
-  "Germany",
-  "France",
-  "Italy",
-  "Sweden",
-  "Albania",
-  "Poland",
-  "Greece",
-];
-const DEF_WATCHESCOLOR = ["black", "silver", "blue", "white"];
-const DEF_STRAPSCOLOR = ["orange", "purplegreen", "purpleblue", "black"];
-
 const CategoryAsideFilters = ({
   handleUpdateProducts,
   handleChangeTotalProducts,
@@ -38,7 +24,7 @@ const CategoryAsideFilters = ({
   filtersData: any;
 }) => {
   const { filters, dispatch } = useFilters();
-  const { setPageInfo, setTotalPages, pageInfo, currentPage, totalPages } =
+  const { setPageInfo, setTotalPages, pageInfo, currentPage } =
     useCustomPagination();
 
   const [searchText, setSearchText] = useState<string>("");
@@ -46,12 +32,21 @@ const CategoryAsideFilters = ({
     [number, number]
   >([0, 30000]);
   const [productType, setProductType] = useState<string>("");
-  const [watchesColor, setWatchesColor] = useState<string[]>([]);
-  const [strapsColor, setStrapsColor] = useState<string[]>([]);
-  const [countries, setCountries] = useState<string[]>([]);
+  const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (filtersData.checkboxes) {
+      const initialStates = filtersData.checkboxes.reduce(
+        (acc: Record<string, string[]>, item: any) => {
+          acc[item.title] = [];
+          return acc;
+        }
+      );
+      setCheckboxes(initialStates);
+    }
+  }, [filtersData.checkboxes]);
 
   useEffect(() => {
     const getData = async () => {
@@ -61,6 +56,15 @@ const CategoryAsideFilters = ({
     getData();
   }, [currentPage]);
 
+  const handleCheckboxChange = (title: string, value: string) => {
+	setCheckboxes((prev) => ({
+	  ...prev,
+	  [title]: prev[title].includes(value)
+		 ? prev[title].filter((item) => item !== value)
+		 : [...prev[title], value],
+	}));
+ };
+ 
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
@@ -73,11 +77,10 @@ const CategoryAsideFilters = ({
       searchText: filters.searchText,
     };
 
-    const selectedOptions = {
-      colors: filters.watchesColor,
-      countries: filters.countries,
-      strapsColor: filters.strapsColor,
-    };
+	 const selectedOptions = Object.entries(checkboxes)
+    .flatMap(([key, values]) =>
+      values.map((value) => `${key.toLowerCase()}-${value.toLowerCase()}`))
+    .join(" ");
 
     let data;
 
@@ -91,16 +94,6 @@ const CategoryAsideFilters = ({
         filters.reverse,
         true
       );
-      // } else if (currentPage == totalPages) {
-      //   data = await getProducts(
-      //     selectedFilters,
-      //     selectedOptions,
-      //     limit,
-      //     "",
-      //     filters.sortedBy,
-      //     filters.reverse,
-      //     false
-      //   );
     } else if (previousPage < currentPage) {
       data = await getProducts(
         selectedFilters,
@@ -122,7 +115,7 @@ const CategoryAsideFilters = ({
         false
       );
     }
-    console.log("d", data);
+   //  console.log("d", data);
 
     setPageInfo(data.pageInfo);
     setPreviousPage(currentPage);
@@ -137,24 +130,8 @@ const CategoryAsideFilters = ({
     setIsOpen((isOpen) => !isOpen);
   };
 
-  const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
   const newHandleSearchText = (query: string) => {
     setSearchText(query);
-  };
-
-  const handleProductType = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    type: string
-  ) => {
-    e.preventDefault();
-
-    if (type !== productType) {
-      setProductType(type);
-    } else {
-      setProductType("");
-    }
   };
 
   const changeProductType = (type: string) => {
@@ -165,74 +142,16 @@ const CategoryAsideFilters = ({
     }
   };
 
-  const handleSetWatchesColor = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    value: string
-  ) => {
-    if (e.target.checked) {
-      setWatchesColor((watchesColor) => [...watchesColor, value]);
-    } else {
-      setWatchesColor(watchesColor.filter((c) => c !== value));
-    }
-  };
-
-  const handleSetStrapsColor = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    value: string
-  ) => {
-    if (e.target.checked) {
-      setStrapsColor((strapsColor) => [...strapsColor, value]);
-    } else {
-      setStrapsColor(strapsColor.filter((c) => c !== value));
-    }
-  };
-
-  const handleSetCountries = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    country: string
-  ) => {
-    if (e.target.checked) {
-      setCountries((countries) => [...countries, country]);
-    } else {
-      setCountries(countries.filter((c) => c !== country));
-    }
-  };
-
-  const handleSetWatchesColor1 = (value: string) => {
-    handleChangeCategory(value, setWatchesColor);
-  };
-
-  const handleSetStrapsColor1 = (value: string) => {
-    handleChangeCategory(value, setStrapsColor);
-  };
-
-  const handleSetCountries1 = (value: string) => {
-    handleChangeCategory(value, setCountries);
-  };
-
-  const handleChangeCategory = function <T>(
-    value: T,
-    setState: React.Dispatch<React.SetStateAction<T[]>>
-  ) {
-    setState((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
-    );
-  };
-
   const handlePriceChange = (value: [number, number]) => {
     setPriceRangeFromObject(value);
   };
 
   const handleApplyPrice = () => {
-    console.log(priceRangeFromObject);
     dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
     dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
   };
 
   const handleApplySearch = () => {
-    console.log(searchText);
     dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
   };
 
@@ -243,9 +162,10 @@ const CategoryAsideFilters = ({
     dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
     dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
     dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    dispatch({ type: "SET_COUNTRIES", payload: countries });
+    dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
+   //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+   //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+   //  dispatch({ type: "SET_COUNTRIES", payload: countries });
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
@@ -255,9 +175,10 @@ const CategoryAsideFilters = ({
     dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
     dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
     dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    dispatch({ type: "SET_COUNTRIES", payload: countries });
+    dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
+   //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+   //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+   //  dispatch({ type: "SET_COUNTRIES", payload: countries });
 
     setIsOpen(false);
   };
@@ -265,7 +186,7 @@ const CategoryAsideFilters = ({
   return (
     <>
       {/* pc filters */}
-      <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[30px]">
+      <aside className="hidden w-1/5 xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
           className="pb-5 flex flex-col gap-5 font-poppins ">
@@ -309,8 +230,8 @@ const CategoryAsideFilters = ({
                 title={item.title}
                 type="checkboxes"
                 items={item.value}
-                selectedItems={countries}
-                onItemChange={handleSetCountries1}
+                selectedItems={checkboxes[item.title]}
+                onItemChange={(value: string) => handleCheckboxChange(item.title, value)}
               />
             ))}
 
@@ -326,9 +247,10 @@ const CategoryAsideFilters = ({
       <div className="z-20 top-0 xl:hidden bg-pearl">
         <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
+
             {/* {isOpen && ( */}
             <motion.div
-              className={`bg-pearl flex flex-col gap-5 font-poppins h-fit ${
+              className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
                 isOpen ? "pt-5" : ""
               }`}
               initial={{
@@ -376,20 +298,19 @@ const CategoryAsideFilters = ({
                 />
               )}
 
-              {/* TODO для кожного блоку useState */}
-              {filtersData.checkboxes.length > 0 &&
-                filtersData.checkboxes.map((item: any) => (
-                  <CustomFilterComponent
-                    key={item.title}
-                    title={item.title}
-                    type="checkboxes"
-                    items={item.value}
-                    selectedItems={countries}
-                    onItemChange={handleSetCountries1}
-                  />
-                ))}
-            </motion.div>
-            {/* )} */}
+                {filtersData.checkboxes.length > 0 &&
+                  filtersData.checkboxes.map((item: any) => (
+                    <CustomFilterComponent
+                      key={item.title}
+                      title={item.title}
+                      type="checkboxes"
+                      items={item.value}
+                      selectedItems={checkboxes[item.title]}
+                      onItemChange={(value: string) => handleCheckboxChange(item.title, value)}
+                    />
+                  ))}
+              </motion.div>
+
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
                 <Button
@@ -406,7 +327,8 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}>
+                onClick={handleOpenFilterClick}
+              >
                 <Image
                   src={ArrowUp}
                   alt="arrow up"

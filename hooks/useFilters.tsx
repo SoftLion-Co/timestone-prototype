@@ -12,9 +12,10 @@ interface FiltersState {
   minPrice: number;
   maxPrice: number;
   productType: string;
-  watchesColor: string[];
-  strapsColor: string[];
-  countries: string[];
+//   watchesColor: string[];
+//   strapsColor: string[];
+//   countries: string[];
+  checkboxes: Record<string, string[]>;
   sortedBy: string;
   reverse: boolean;
 }
@@ -24,9 +25,10 @@ const initialFilters: FiltersState = {
   minPrice: 0,
   maxPrice: 0,
   productType: '',
-  watchesColor: [],
-  strapsColor: [],
-  countries: [],
+  checkboxes: {},
+//   watchesColor: [],
+//   strapsColor: [],
+//   countries: [],
   sortedBy: 'RELEVANCE',
   reverse: false,
 };
@@ -36,9 +38,10 @@ type FiltersAction =
   | { type: 'SET_MIN_PRICE'; payload: number }
   | { type: 'SET_MAX_PRICE'; payload: number }
   | { type: 'SET_PRODUCT_TYPE'; payload: string }
-  | { type: 'TOGGLE_WATCH_COLOR'; payload: string[] }
-  | { type: 'TOGGLE_STRAP_COLOR'; payload: string[] }
-  | { type: 'SET_COUNTRIES'; payload: string[] }
+  | { type: 'TOGGLE_CHECKBOXES'; payload: Record<string, string[]> }
+//   | { type: 'TOGGLE_WATCH_COLOR'; payload: string[] }
+//   | { type: 'TOGGLE_STRAP_COLOR'; payload: string[] }
+//   | { type: 'SET_COUNTRIES'; payload: string[] }
   | { type: 'SET_SORTING'; payload: string }
   | { type: 'SET_REVERSE'; payload: boolean };
 
@@ -55,18 +58,14 @@ const filtersReducer = (
       return { ...state, maxPrice: action.payload };
     case 'SET_PRODUCT_TYPE':
       return { ...state, productType: action.payload };
-    case 'TOGGLE_WATCH_COLOR':
-      return {
-        ...state,
-        watchesColor: action.payload,
-      };
-    case 'TOGGLE_STRAP_COLOR':
-      return {
-        ...state,
-        strapsColor: action.payload,
-      };
-    case 'SET_COUNTRIES':
-      return { ...state, countries: action.payload };
+	 case 'TOGGLE_CHECKBOXES':
+	   return { ...state, checkboxes: action.payload };
+   //  case 'TOGGLE_WATCH_COLOR':
+   //    return { ...state, watchesColor: action.payload };
+   //  case 'TOGGLE_STRAP_COLOR':
+   //    return { ...state, strapsColor: action.payload };
+   //  case 'SET_COUNTRIES':
+   //    return { ...state, countries: action.payload };
     case 'SET_SORTING':
       return { ...state, sortedBy: action.payload };
     case 'SET_REVERSE':
