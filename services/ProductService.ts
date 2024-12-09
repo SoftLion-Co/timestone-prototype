@@ -12,7 +12,7 @@ export const getProducts = async (
 ): Promise<any> => {
   try {
     console.log(
-      "f " + filters,
+      "f " + JSON.stringify(filters),
       "o " + optionsString,
       "l " + limit,
       "p " + pageCursor,

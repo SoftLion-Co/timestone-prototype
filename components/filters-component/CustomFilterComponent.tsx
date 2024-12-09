@@ -167,7 +167,10 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
               {items?.map((btn) => (
                 <button
                   key={btn}
-                  onClick={() => onChangeButton?.(btn)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onChangeButton?.(btn);
+                  }}
                   className={`${
                     activeButton === btn
                       ? "font-bold text-darkBurgundy"
