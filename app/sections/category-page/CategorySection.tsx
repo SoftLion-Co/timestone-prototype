@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { usePagination } from "@mantine/hooks";
 
-import { useFilters } from "@/hooks/useFilters";
+// import { useFilters } from "@/hooks/useFilters";
 import CardComponent from "@/components/CardComponent";
 import CustomSelect from "@/components/SelectComponent";
 import ProductSceleton from "./ProductSceleton";
@@ -15,11 +15,15 @@ import { useCustomPagination } from "@/hooks/useCustomPagination";
 const CategorySection = ({
   totalProducts,
   limit,
+  setSort,
+  setReverse,
 }: {
   totalProducts: number;
   limit: number;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
+  setReverse: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { filters, dispatch } = useFilters();
+  // const { filters, dispatch } = useFilters();
   const { goToPage } = useCustomPagination();
 
   const allProducts = useContext(ProductsContext);
@@ -80,24 +84,25 @@ const CategorySection = ({
     let newValue = value == "HPRICE" || value == "LPRICE" ? "PRICE" : value;
 
     if (value === "HPRICE") {
-      dispatch({ type: "SET_REVERSE", payload: true });
+      setReverse(true);
+      // dispatch({ type: "SET_REVERSE", payload: true });
     }
 
     if (value === "LPRICE") {
-      dispatch({ type: "SET_REVERSE", payload: false });
+      setReverse(false);
+      // dispatch({ type: "SET_REVERSE", payload: false });
     }
 
     if (value === null || value === "") {
-      dispatch({ type: "SET_REVERSE", payload: true });
+      setReverse(true);
+      // dispatch({ type: "SET_REVERSE", payload: true });
       newValue = "RELEVANCE";
     }
 
-    dispatch({ type: "SET_SORTING", payload: newValue });
-  };
+    setSort(newValue);
 
-  //   useEffect(() => {
-  //     console.log(filters.sortedBy);
-  //   }, [filters.sortedBy]);
+    // dispatch({ type: "SET_SORTING", payload: newValue });
+  };
 
   return (
     <section className="pt-[150px] xl:pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">

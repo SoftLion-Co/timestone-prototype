@@ -6,7 +6,7 @@ import TitleComponents from "@/components/TitleComponents";
 import CategoryAsideFilters from "./CategoryAsideFilters";
 import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
-import { FiltersProvider } from "@/hooks/useFilters";
+// import { FiltersProvider } from "@/hooks/useFilters";
 import { PaginationProvider } from "@/hooks/useCustomPagination";
 import { getFilters } from "@/services/ProductService";
 
@@ -42,14 +42,17 @@ const CategoryMain = () => {
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [products, setProducts] = useState<CardProps[]>([]);
 
-  useEffect(() => {
-    const fetchFilters = async () => {
-      const data = await getFilters();
-      setFilters(data);
-    };
+  const [sort, setSort] = useState<string>("RELEVANCE");
+  const [reverse, setReverse] = useState<boolean>(true);
 
-    fetchFilters();
-  }, []);
+  // useEffect(() => {
+  //   const fetchFilters = async () => {
+  //     const data = await getFilters();
+  //     setFilters(data);
+  //   };
+
+  //   fetchFilters();
+  // }, []);
 
   const handleChangeTotalProducts = (num: number) => {
     setTotalProducts(num);
@@ -62,23 +65,30 @@ const CategoryMain = () => {
   return (
     <>
       <PaginationProvider>
-        <FiltersProvider>
-          <ProductsContext.Provider value={products}>
-            <TitleComponents
-              text="Products"
-              additionalText={`${totalProducts} Total Products`}
+        {/* <FiltersProvider> */}
+        <ProductsContext.Provider value={products}>
+          <TitleComponents
+            text="Products"
+            additionalText={`${totalProducts} Total Products`}
+          />
+          <div className="xl:flex xl:px-[75px]">
+            <CategoryAsideFilters
+              handleUpdateProducts={handleUpdateProducts}
+              handleChangeTotalProducts={handleChangeTotalProducts}
+              limit={LIMIT}
+              filtersData={filters}
+              sort={sort}
+              reverse={reverse}
             />
-            <div className="xl:flex xl:px-[75px]">
-              <CategoryAsideFilters
-                handleUpdateProducts={handleUpdateProducts}
-                handleChangeTotalProducts={handleChangeTotalProducts}
-                limit={LIMIT}
-                filtersData={filters}
-              />
-              <CategorySection totalProducts={totalProducts} limit={LIMIT} />
-            </div>
-          </ProductsContext.Provider>
-        </FiltersProvider>
+            <CategorySection
+              totalProducts={totalProducts}
+              limit={LIMIT}
+              setSort={setSort}
+              setReverse={setReverse}
+            />
+          </div>
+        </ProductsContext.Provider>
+        {/* </FiltersProvider> */}
       </PaginationProvider>
     </>
   );

@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from "react";
 import { motion } from "framer-motion";
-import RangeSlider from "react-range-slider-input";
+// import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 
 type FilterComponentProps = {
@@ -99,7 +99,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "price" && (
           <>
             <div className="flex flex-col gap-4">
-              <RangeSlider
+              {/* <RangeSlider
                 value={rangeValue}
                 onChange={onRangeChange}
                 min={rangeValue[0]}
@@ -129,7 +129,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     fontWeight: "bold",
                   },
                 }}
-              />
+              /> */}
               <div className="flex gap-[5px] justify-between items-center">
                 <input
                   type="number"

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 import ArrowUp from "@/images/category-section/arrow-up.svg";
 import Button from "@/components/ButtonComponent";
-import { useFilters } from "@/hooks/useFilters";
+// import { useFilters } from "@/hooks/useFilters";
 import { CardProps } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
@@ -17,13 +17,17 @@ const CategoryAsideFilters = ({
   handleChangeTotalProducts,
   limit,
   filtersData,
+  sort,
+  reverse,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
   handleChangeTotalProducts: (num: number) => void;
   limit: number;
   filtersData: any;
+  sort: string;
+  reverse: boolean;
 }) => {
-  const { filters, dispatch } = useFilters();
+  // const { filters, dispatch } = useFilters();
   const { setPageInfo, setTotalPages, pageInfo, currentPage } =
     useCustomPagination();
 
@@ -37,18 +41,9 @@ const CategoryAsideFilters = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (filtersData.checkboxes) {
-      const initialStates = filtersData.checkboxes.reduce(
-        (acc: Record<string, string[]>, item: any) => {
-          acc[item.title] = [];
-          return acc;
-        }
-      );
-      setCheckboxes(initialStates);
-    }
-  }, [filtersData.checkboxes]);
-
-  useEffect(() => {
+    console.log(currentPage);
+    console.log(checkboxes);
+    console.log(Object.keys(checkboxes).length !== 0);
     const getData = async () => {
       await getProductData(false);
     };
@@ -56,31 +51,45 @@ const CategoryAsideFilters = ({
     getData();
   }, [currentPage]);
 
+  useEffect(() => {
+    const getData = async () => {
+      await getProductData(true);
+    };
+
+    getData();
+  }, [sort, reverse]);
+
   const handleCheckboxChange = (title: string, value: string) => {
-	setCheckboxes((prev) => ({
-	  ...prev,
-	  [title]: prev[title].includes(value)
-		 ? prev[title].filter((item) => item !== value)
-		 : [...prev[title], value],
-	}));
- };
- 
+    setCheckboxes((prev) => ({
+      ...prev,
+      [title]: prev[title].includes(value)
+        ? prev[title].filter((item) => item !== value)
+        : [...prev[title], value],
+    }));
+  };
+
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
 
   const getProductData = async (isForm: boolean) => {
     const selectedFilters = {
-      productType: filters.productType,
-      minPrice: filters.minPrice,
-      maxPrice: filters.maxPrice,
-      searchText: filters.searchText,
+      productType: productType,
+      minPrice: priceRangeFromObject[0],
+      maxPrice: priceRangeFromObject[1],
+      searchText: searchText,
     };
 
-	 const selectedOptions = Object.entries(checkboxes)
-    .flatMap(([key, values]) =>
-      values.map((value) => `${key.toLowerCase()}-${value.toLowerCase()}`))
-    .join(" ");
+    const selectedOptions =
+      Object.keys(checkboxes).length !== 0
+        ? Object.entries(checkboxes)
+            .flatMap(([key, values]) =>
+              values.map(
+                (value) => `${key.toLowerCase()}-${value.toLowerCase()}`
+              )
+            )
+            .join(" ")
+        : "";
 
     let data;
 
@@ -90,8 +99,8 @@ const CategoryAsideFilters = ({
         selectedOptions,
         limit,
         "",
-        filters.sortedBy,
-        filters.reverse,
+        sort,
+        reverse,
         true
       );
     } else if (previousPage < currentPage) {
@@ -100,8 +109,8 @@ const CategoryAsideFilters = ({
         selectedOptions,
         limit,
         pageInfo.endCursor,
-        filters.sortedBy,
-        filters.reverse,
+        sort,
+        reverse,
         true
       );
     } else {
@@ -110,12 +119,12 @@ const CategoryAsideFilters = ({
         selectedOptions,
         limit,
         pageInfo.startCursor,
-        filters.sortedBy,
-        filters.reverse,
+        sort,
+        reverse,
         false
       );
     }
-   //  console.log("d", data);
+    //  console.log("d", data);
 
     setPageInfo(data.pageInfo);
     setPreviousPage(currentPage);
@@ -147,46 +156,50 @@ const CategoryAsideFilters = ({
   };
 
   const handleApplyPrice = () => {
-    dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
+    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
+    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
+    handleSubmitFilters();
   };
 
   const handleApplySearch = () => {
-    dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    //   dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    handleSubmitFilters();
   };
 
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-   //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-   //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-   //  dispatch({ type: "SET_COUNTRIES", payload: countries });
+    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
+    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
+    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
+    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
+    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
+    handleSubmitFilters();
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-   //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-   //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-   //  dispatch({ type: "SET_COUNTRIES", payload: countries });
+    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
+    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
+    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
+    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
+    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
+    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
+    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
+    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
 
+    handleSubmitFilters();
     setIsOpen(false);
   };
 
   return (
     <>
       {/* pc filters */}
-      <aside className="hidden w-1/5 xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+      <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
           className="pb-5 flex flex-col gap-5 font-poppins ">
@@ -231,7 +244,9 @@ const CategoryAsideFilters = ({
                 type="checkboxes"
                 items={item.value}
                 selectedItems={checkboxes[item.title]}
-                onItemChange={(value: string) => handleCheckboxChange(item.title, value)}
+                onItemChange={(value: string) =>
+                  handleCheckboxChange(item.title, value)
+                }
               />
             ))}
 
@@ -247,7 +262,6 @@ const CategoryAsideFilters = ({
       <div className="z-20 top-0 xl:hidden bg-pearl">
         <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
-
             {/* {isOpen && ( */}
             <motion.div
               className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
@@ -298,18 +312,20 @@ const CategoryAsideFilters = ({
                 />
               )}
 
-                {filtersData.checkboxes.length > 0 &&
-                  filtersData.checkboxes.map((item: any) => (
-                    <CustomFilterComponent
-                      key={item.title}
-                      title={item.title}
-                      type="checkboxes"
-                      items={item.value}
-                      selectedItems={checkboxes[item.title]}
-                      onItemChange={(value: string) => handleCheckboxChange(item.title, value)}
-                    />
-                  ))}
-              </motion.div>
+              {filtersData.checkboxes.length > 0 &&
+                filtersData.checkboxes.map((item: any) => (
+                  <CustomFilterComponent
+                    key={item.title}
+                    title={item.title}
+                    type="checkboxes"
+                    items={item.value}
+                    selectedItems={checkboxes[item.title]}
+                    onItemChange={(value: string) =>
+                      handleCheckboxChange(item.title, value)
+                    }
+                  />
+                ))}
+            </motion.div>
 
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
@@ -327,8 +343,7 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}
-              >
+                onClick={handleOpenFilterClick}>
                 <Image
                   src={ArrowUp}
                   alt="arrow up"
