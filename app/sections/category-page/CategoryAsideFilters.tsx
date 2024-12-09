@@ -265,7 +265,7 @@ const CategoryAsideFilters = ({
   return (
     <>
       {/* pc filters */}
-      <aside className="hidden w-1/5 xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+      <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[30px]">
         <form
           onSubmit={handleSubmitFormForPc}
           className="pb-5 flex flex-col gap-5 font-poppins ">
@@ -328,7 +328,7 @@ const CategoryAsideFilters = ({
           <form onSubmit={handleSubmitFormForMobile}>
             {/* {isOpen && ( */}
             <motion.div
-              className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
+              className={`bg-pearl flex flex-col gap-5 font-poppins h-fit ${
                 isOpen ? "pt-5" : ""
               }`}
               initial={{

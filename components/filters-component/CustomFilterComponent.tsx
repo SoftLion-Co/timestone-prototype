@@ -117,7 +117,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
+                className="absolute right-20 top-[56px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
                 ✕
               </button>
             )}
