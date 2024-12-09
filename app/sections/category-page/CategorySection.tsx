@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 
-import { usePagination } from '@mantine/hooks';
+import { usePagination } from "@mantine/hooks";
 
-import { useFilters } from '@/hooks/useFilters';
-import CardComponent from '@/components/CardComponent';
-import CustomSelect from '@/components/SelectComponent';
-import ProductSceleton from './ProductSceleton';
-import { CardProps } from '@/config/types';
-import { ProductsContext } from './CategoryMain';
-import { useCustomPagination } from '@/hooks/useCustomPagination';
+import { useFilters } from "@/hooks/useFilters";
+import CardComponent from "@/components/CardComponent";
+import CustomSelect from "@/components/SelectComponent";
+import ProductSceleton from "./ProductSceleton";
+import { CardProps } from "@/config/types";
+import { ProductsContext } from "./CategoryMain";
+import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const CategorySection = ({
   totalProducts,
@@ -36,7 +36,7 @@ const CategorySection = ({
       range.push(1);
     }
     if (currentPage > 3) {
-      range.push('...');
+      range.push("...");
     }
     if (currentPage > 2) {
       range.push(currentPage - 1);
@@ -49,12 +49,10 @@ const CategorySection = ({
       range.push(totalPages);
     }
     if (currentPage < totalPages - 2) {
-      range.push('...');
+      range.push("...");
     }
     return range;
   };
-  
-  
 
   const pagination = usePagination({
     total: Math.ceil(totalProducts / limit),
@@ -75,43 +73,43 @@ const CategorySection = ({
   const handleChangePage = (range: number) => {
     pagination.setPage(range);
     goToPage(range);
-    window.scrollTo({ top: 100, behavior: 'smooth' });
+    window.scrollTo({ top: 100, behavior: "smooth" });
   };
 
   const handleChangeSorting = (value: string) => {
-    let newValue = value == 'HPRICE' || value == 'LPRICE' ? 'PRICE' : value;
+    let newValue = value == "HPRICE" || value == "LPRICE" ? "PRICE" : value;
 
-    if (value === 'HPRICE') {
-      dispatch({ type: 'SET_REVERSE', payload: true });
+    if (value === "HPRICE") {
+      dispatch({ type: "SET_REVERSE", payload: true });
     }
 
-    if (value === 'LPRICE') {
-      dispatch({ type: 'SET_REVERSE', payload: false });
+    if (value === "LPRICE") {
+      dispatch({ type: "SET_REVERSE", payload: false });
     }
 
-    if (value === null || value === '') {
-      dispatch({ type: 'SET_REVERSE', payload: true });
-      newValue = 'RELEVANCE';
+    if (value === null || value === "") {
+      dispatch({ type: "SET_REVERSE", payload: true });
+      newValue = "RELEVANCE";
     }
 
-    dispatch({ type: 'SET_SORTING', payload: newValue });
+    dispatch({ type: "SET_SORTING", payload: newValue });
   };
 
-//   useEffect(() => {
-//     console.log(filters.sortedBy);
-//   }, [filters.sortedBy]);
+  //   useEffect(() => {
+  //     console.log(filters.sortedBy);
+  //   }, [filters.sortedBy]);
 
   return (
-    <section className="pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">
+    <section className="pt-[150px] xl:pt-[43px] pb-[70px] sm:px-[60px] lg:pr-0 lg:pl-[30px] flex-1">
       <div className="flex flex-row items-center justify-center flex-wrap gap-5 xl:justify-end">
         <CustomSelect
           left
           placeholder="Sort By"
           options={[
-            { value: 'CREATED_AT', label: 'New Products' },
-            { value: 'HPRICE', label: 'Highest Price' },
-            { value: 'LPRICE', label: 'Lowest Price' },
-            { value: 'BEST_SELLING', label: 'Best Sellers' },
+            { value: "CREATED_AT", label: "New Products" },
+            { value: "HPRICE", label: "Highest Price" },
+            { value: "LPRICE", label: "Lowest Price" },
+            { value: "BEST_SELLING", label: "Best Sellers" },
           ]}
           onSelect={handleChangeSorting}
         />
@@ -158,14 +156,14 @@ const CategorySection = ({
             )}
           </div> */}
           <div className="flex justify-center gap-2 mt-10 items-center">
-           <button
+            <button
               disabled={pagination.active === 1}
               onClick={() => handleChangePage(pagination.active - 1)}
               className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold">
               &lt;
-            </button> 
+            </button>
             {generatePaginationRange().map((range, index) =>
-              range === '...' ? (
+              range === "..." ? (
                 <button
                   key={index}
                   className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2">
@@ -176,8 +174,8 @@ const CategorySection = ({
                   key={index}
                   className={`h-7 w-7 rounded-sm ${
                     pagination.active === range
-                      ? 'bg-darkBurgundy text-white'
-                      : 'bg-pearl text-silver hover:font-bold'
+                      ? "bg-darkBurgundy text-white"
+                      : "bg-pearl text-silver hover:font-bold"
                   }`}
                   onClick={() => handleChangePage(range as number)}>
                   {range}

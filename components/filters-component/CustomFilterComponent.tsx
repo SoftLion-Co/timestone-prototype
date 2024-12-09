@@ -108,7 +108,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "search" && (
           <div className="flex gap-3">
             <input
-              className="rounded-sm bg-white py-[14px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+              className="rounded-sm bg-white py-[10px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
               placeholder="Type Here"
               value={searchQuery}
