@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,9 +16,9 @@ import Burger from "@/images/vectors/burger.svg";
 import { useCart } from "@/hooks/useCart";
 
 const navData = [
-  { link: '/#about-us', text: 'About Us' },
-  { link: '/contact-us', text: 'Contact us' },
-  { link: '/legal', text: 'FAQ' },
+  { link: "/#about-us", text: "About Us" },
+  { link: "/contact-us", text: "Contact us" },
+  { link: "/legal", text: "FAQ" },
 ];
 
 const Header = () => {
@@ -29,14 +29,14 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    router.push('/auth');
+    router.push("/auth");
     setIsLoggedIn(false);
   };
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}>
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}>
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
             {navData.map((item, index) => (
@@ -72,17 +72,15 @@ const Header = () => {
           {!isLoggedIn ? (
             <button
               onClick={handleLogin}
-              className="text-onyx font-semibold transition-all duration-300"
-            >
+              className="text-onyx font-semibold transition-all duration-300">
               Login
             </button>
           ) : (
-              <Link
-                href="/account"
-                className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
-              >
-                <Image src={Profile} alt="profile" />
-              </Link>
+            <Link
+              href="/account"
+              className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
+              <Image src={Profile} alt="profile" />
+            </Link>
           )}
         </div>
       </div>
@@ -98,7 +96,7 @@ const Header = () => {
   };
 
   return (
-    <header className="mx-[20px] lg:mx-[60px]">
+    <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
       <div className="flex justify-between items-center py-[20px]">
         <HeaderLogo />
 
@@ -115,23 +113,23 @@ const Header = () => {
           fullScreen
           withCloseButton={false}
           radius={0}
-          transitionProps={{ transition: 'scale-x', duration: 200 }}
+          transitionProps={{ transition: "scale-x", duration: 200 }}
           className="xl:hidden"
           styles={{
             body: {
-              padding: '0',
+              padding: "0",
             },
             content: {
-              backgroundColor: '#ffffff',
+              backgroundColor: "#ffffff",
               zIndex: 9999,
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
             },
             header: {
-              backgroundColor: '#ffffff',
+              backgroundColor: "#ffffff",
             },
           }}>
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">

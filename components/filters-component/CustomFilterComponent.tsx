@@ -79,7 +79,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   activeButton,
   onChangeButton,
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -100,7 +100,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
               initial={{ rotate: 0 }}
               animate={{ rotate: isOpen ? 45 : 0 }}
               transition={{ duration: 0.3 }}>
-              <span className="text-3xl">+</span>
+              <span className="text-4xl text-darkBurgundy">+</span>
             </motion.div>
           )}
         </div>
@@ -163,7 +163,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   },
                 }}
               />
-              <div className="flex gap-[5px] items-center justify-between">
+              <div className="flex gap-[5px] justify-between items-center">
                 <input
                   type="number"
                   value={rangeValue[0]}

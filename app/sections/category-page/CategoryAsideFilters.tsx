@@ -265,10 +265,10 @@ const CategoryAsideFilters = ({
   return (
     <>
       {/* pc filters */}
-      <aside className="hidden xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+      <aside className="hidden w-1/5 xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
-          className="pb-5 flex flex-col gap-5 font-poppins">
+          className="pb-5 flex flex-col gap-5 font-poppins ">
           {filtersData.search.title && (
             <CustomFilterComponent
               title={filtersData.search.title}
@@ -323,61 +323,73 @@ const CategoryAsideFilters = ({
       </aside>
 
       {/* mobile filters */}
-      <div className="z-50 top-0 xl:hidden bg-pearl">
-        <div className="container">
+      <div className="z-20 top-0 xl:hidden bg-pearl">
+        <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
-            {isOpen && (
-              <motion.div
-                className="bg-pearl pt-9 pb-5  text-[10px] font-poppins md:text-[12px]"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}>
-                {filtersData.search.title && (
-                  <CustomFilterComponent
-                    title={filtersData.search.title}
-                    type="search"
-                    searchQuery={searchText}
-                    onSearchChange={newHandleSearchText}
-                    clearSearchQuery={() => setSearchText("")}
-                    onApplyClick={handleApplySearch}
-                  />
-                )}
+            {/* {isOpen && ( */}
+            <motion.div
+              className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
+                isOpen ? "pt-5" : ""
+              }`}
+              initial={{
+                opacity: 0,
+                height: 0,
+                visibility: "hidden",
+                translateY: "-500px",
+              }}
+              animate={{
+                opacity: isOpen ? 1 : 0,
+                height: isOpen ? "fit-content" : 0,
+                visibility: isOpen ? "visible" : "hidden",
+                translateY: isOpen ? "0" : "-500px",
+              }}
+              transition={{ duration: 0.5 }}>
+              {filtersData.search.title && (
+                <CustomFilterComponent
+                  title={filtersData.search.title}
+                  type="search"
+                  searchQuery={searchText}
+                  onSearchChange={newHandleSearchText}
+                  clearSearchQuery={() => setSearchText("")}
+                  onApplyClick={handleApplySearch}
+                />
+              )}
 
-                {filtersData.buttons.title && (
-                  <CustomFilterComponent
-                    title={filtersData.buttons.title}
-                    type="buttons"
-                    items={filtersData.buttons.value}
-                    activeButton={productType}
-                    onChangeButton={changeProductType}
-                  />
-                )}
+              {filtersData.buttons.title && (
+                <CustomFilterComponent
+                  title={filtersData.buttons.title}
+                  type="buttons"
+                  items={filtersData.buttons.value}
+                  activeButton={productType}
+                  onChangeButton={changeProductType}
+                />
+              )}
 
-                {filtersData.priceRange.title && (
-                  <CustomFilterComponent
-                    title={filtersData.priceRange.title}
-                    type="price"
-                    rangeValue={priceRangeFromObject}
-                    step={1}
-                    onRangeChange={handlePriceChange}
-                    onApplyClick={handleApplyPrice}
-                  />
-                )}
+              {filtersData.priceRange.title && (
+                <CustomFilterComponent
+                  title={filtersData.priceRange.title}
+                  type="price"
+                  rangeValue={priceRangeFromObject}
+                  step={1}
+                  onRangeChange={handlePriceChange}
+                  onApplyClick={handleApplyPrice}
+                />
+              )}
 
-                {/* TODO для кожного блоку useState */}
-                {filtersData.checkboxes.length > 0 &&
-                  filtersData.checkboxes.map((item: any) => (
-                    <CustomFilterComponent
-                      key={item.title}
-                      title={item.title}
-                      type="checkboxes"
-                      items={item.value}
-                      selectedItems={countries}
-                      onItemChange={handleSetCountries1}
-                    />
-                  ))}
-              </motion.div>
-            )}
+              {/* TODO для кожного блоку useState */}
+              {filtersData.checkboxes.length > 0 &&
+                filtersData.checkboxes.map((item: any) => (
+                  <CustomFilterComponent
+                    key={item.title}
+                    title={item.title}
+                    type="checkboxes"
+                    items={item.value}
+                    selectedItems={countries}
+                    onItemChange={handleSetCountries1}
+                  />
+                ))}
+            </motion.div>
+            {/* )} */}
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
                 <Button
@@ -388,7 +400,7 @@ const CategoryAsideFilters = ({
                 />
               ) : (
                 <h2 className="font-spaceage text-[28px] leading-[25px]">
-                  Fillters
+                  Filters
                 </h2>
               )}
 

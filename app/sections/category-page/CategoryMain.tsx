@@ -8,7 +8,6 @@ import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
 import { FiltersProvider } from "@/hooks/useFilters";
 import { PaginationProvider } from "@/hooks/useCustomPagination";
-import FilterComponent from "@/components/filters-component/FilterComponent";
 
 export const ProductsContext = createContext<CardProps[]>([]);
 const LIMIT = 2;

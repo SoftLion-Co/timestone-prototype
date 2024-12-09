@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 type TitleProps = {
   text: string;
   additionalText?: string;
 };
 
-const TitleComponents = ({ text, additionalText = '' }: TitleProps) => {
+const TitleComponents = ({ text, additionalText = "" }: TitleProps) => {
   return (
-    <div className="bg-darkBurgundy z-40 py-10 md:py-[40px] lg:py-[85px] lg:px-[125px] md:px-[75px] px-5">
+    <div className="bg-darkBurgundy relative z-30 py-10 md:py-[40px] lg:py-[85px] lg:px-[125px] md:px-[75px] px-5 ">
       {additionalText ? (
         <>
           <h1
