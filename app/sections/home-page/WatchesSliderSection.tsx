@@ -35,7 +35,6 @@ const SliderSection = () => {
           "BEST_SELLING",
           true
         );
-        console.log(response.products);
         setSliderProducts(response.products);
         setLoading(true);
       } catch (error) {

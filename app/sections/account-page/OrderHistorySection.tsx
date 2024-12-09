@@ -18,7 +18,6 @@ const OrderHistorySection = () => {
     const fetchOrders = async () => {
       try {
         const ordersData = await getUserOrders();
-        // console.log(ordersData);
         setOrders(ordersData);
         setLoading(true);
       } catch (error) {

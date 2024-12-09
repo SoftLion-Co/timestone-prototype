@@ -160,7 +160,6 @@ const MyAccountSection = () => {
     const values1 = form.values;
 
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
 
@@ -188,11 +187,9 @@ const MyAccountSection = () => {
     event.preventDefault();
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
-    console.log(5, values2.password, values2.verify);
     const response = await updatePassword(values2.password);
 
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
     //! обробка помилки

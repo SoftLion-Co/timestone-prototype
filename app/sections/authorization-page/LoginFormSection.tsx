@@ -67,13 +67,13 @@ const LoginFormSection = () => {
     }
   };
 
-  const handleSignUpFacebook = () => {
-    console.log("facebook");
-  };
+//   const handleSignUpFacebook = () => {
+//     console.log("facebook");
+//   };
 
-  const handleSignUpGoogle = () => {
-    console.log("google");
-  };
+//   const handleSignUpGoogle = () => {
+//     console.log("google");
+//   };
 
   return (
     <>

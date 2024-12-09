@@ -69,7 +69,8 @@ const CategorySection = ({
   };
 
   useEffect(() => {
-    console.log(filters.sortedBy);
+   //  console.log(filters.sortedBy);
+	
   }, [filters.sortedBy]);
 
   return (

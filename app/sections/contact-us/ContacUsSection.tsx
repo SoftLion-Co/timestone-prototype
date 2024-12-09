@@ -47,7 +47,6 @@ const ContactUsSection = () => {
     event.preventDefault();
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
     const values = form.values;

@@ -41,7 +41,6 @@ const BasicInfoSection: FC<{
       onContinue(true);
       setBasicInfo(form.values);
     } else {
-      console.log("Validation errors:", errors.errors);
       onContinue(false);
     }
   };

@@ -42,7 +42,6 @@ const NewsSection = () => {
 
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
 

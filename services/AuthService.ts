@@ -21,10 +21,8 @@ export const registrateNewUser = async (
       password,
       address,
     });
-    console.log(result.data);
     return "created";
   } catch (error) {
-    console.log(error);
     if (axios.isAxiosError(error)) {
       if (error.status === 400 || error.status === 409) {
         return error.response?.data;
@@ -40,7 +38,6 @@ export const loginUser = async (
   password: string
 ): Promise<any> => {
   try {
-    // console.log("login333");
     const response = await axios.post(`${BASE_URL}/auth/login`, {
       email,
       password,
@@ -52,9 +49,8 @@ export const loginUser = async (
       return "logged";
     }
   } catch (error) {
-    console.log(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 406) {
+      if (error.status === 400 || error.status === 409) {
         return error.response?.data;
       } else {
         return "server error";
@@ -66,7 +62,6 @@ export const loginUser = async (
 export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
-    console.log(res.data);
     return res.data;
   } catch (error) {
     console.error("Error during account activation:", error);

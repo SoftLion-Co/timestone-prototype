@@ -55,7 +55,6 @@ const PaymentSection: FC<{
   const handlePay = () => {
     const { errors } = form.validate();
     if (Object.keys(errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
   };
