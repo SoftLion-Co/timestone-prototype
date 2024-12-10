@@ -1,14 +1,14 @@
-import './globals.css';
+import "./globals.css";
 
-import { Inter } from 'next/font/google';
+import { Inter } from "next/font/google";
 
-import Header from '@/components/HeaderComponent';
-import Footer from '@/components/FooterComponent';
-import { MantineProvider } from '@mantine/core';
-import CartComponent from '@/components/cart-component/CartComponent';
-import { CartProvider } from '@/hooks/useCart';
+import Header from "@/components/HeaderComponent";
+import Footer from "@/components/FooterComponent";
+import { MantineProvider } from "@mantine/core";
+import CartComponent from "@/components/cart-component/CartComponent";
+import { CartProvider } from "@/hooks/useCart";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,

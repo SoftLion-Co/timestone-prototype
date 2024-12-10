@@ -69,7 +69,7 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
             bordered
             onClick={handleLogout}
             className="text-[12px] py-[8px] px-[10px]"
-            text="Logout"
+            text="Log out"
             background="transparent"
             icon="logout"
             type="button"

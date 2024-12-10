@@ -1,13 +1,16 @@
 "use client";
-import React, { FC} from "react";
+import React, { FC } from "react";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
-const BasicInfoSection: FC<{ onContinue: (isValid: boolean) => void }> = ({
-  onContinue,
-}) => {
+const BasicInfoSection: FC<{
+  isOpen: boolean;
+  toggleOpen: () => void;
+  onContinue: (isValid: boolean) => void;
+  setBasicInfo: any;
+}> = ({ onContinue, setBasicInfo, toggleOpen, isOpen }) => {
   const form = useForm({
     initialValues: {
       email: "",
@@ -36,15 +39,20 @@ const BasicInfoSection: FC<{ onContinue: (isValid: boolean) => void }> = ({
     const errors = form.validate();
     if (!errors.hasErrors) {
       onContinue(true);
+      setBasicInfo(form.values);
     } else {
-      console.log("Validation errors:", errors.errors);
       onContinue(false);
     }
   };
 
   return (
     <section>
-      <FormComponent title="Basic Info" className="items-center">
+      <FormComponent
+        title="Basic Info"
+        className="items-center"
+        isOpen={isOpen}
+        toggleOpen={toggleOpen}
+      >
         <Input
           inputType="input"
           placeholder="Email"

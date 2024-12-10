@@ -11,16 +11,16 @@ const TitleComponents = ({ text, additionalText = "" }: TitleProps) => {
       {additionalText ? (
         <>
           <h1
-            className={`font-spaceage text-snow text-[28px] leading-[25px] mb-4 md:text-[32px] md:mb-[20px] lg:text-[42px] lg:mb-[25px] text-left`}>
+            className={`font-spaceage text-snow text-[24px] leading-[25px] mb-4 md:text-[30px] md:mb-[20px] lg:text-[35px] lg:mb-[25px] text-left`}>
             {text}
           </h1>
-          <p className="text-pearl font-[10px] leading-3 md:text-[12px] lg:text-[14px]">
+          <p className="text-pearl font-[8px] leading-3 md:text-[12px] lg:text-[14px]">
             {additionalText}
           </p>
         </>
       ) : (
         <h1
-          className={`font-spaceage text-snow text-[28px] leading-[25px] md:text-[32px] lg:text-[42px] text-center`}>
+          className={`font-spaceage text-snow text-[24px] leading-[25px] md:text-[30px] lg:text-[35px] text-center`}>
           {text}
         </h1>
       )}

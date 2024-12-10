@@ -26,7 +26,7 @@ const config: Config = {
       colors: {
         amethyst: '#7B51A6',
         darkerAmethyst: '#6C399E',
-        silver: '#939393',
+        silver: '#595959',
         pearl: '#F9FAFE',
         coral: '#FF8585',
         onyx: '#000000',
@@ -41,10 +41,6 @@ const config: Config = {
         darkMaroon: '#420808',
         vividRed: '#EF2A2A',
         cream: '#F2DEBA',
-        // silver: "#939393",
-        // onyx: "#000000",
-        // snow: "#ffffff",
-        // charcoal: "#202020",
       },
       keyframes: {
         pulse: {},

@@ -5,17 +5,16 @@ import Checkbox from "@/components/CheckboxComponent";
 import Button from "@/components/ButtonComponent";
 
 const ShippingSection: FC<{
-  isDisabled: boolean;
-  isOpen: boolean;
   onContinue: (isValid: boolean) => void;
-}> = ({ isDisabled, isOpen, onContinue }) => {
-
+  setShippingValue: any;
+  isOpen: boolean;
+  toggleOpen: () => void;
+}> = ({ onContinue, setShippingValue, isOpen, toggleOpen }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [shippingValue, setShippingValue] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleContinue = () => {
-     if (!selectedOption) {
+    if (!selectedOption) {
       setError("Please select a shipping method");
       onContinue(false);
       return;
@@ -61,11 +60,12 @@ const ShippingSection: FC<{
 
   return (
     <section>
-      <FormComponent title="Shipping"className={`items-center ${isDisabled ? "opacity-50 pointer-events-none" : ""}`}
-  >
-    {isOpen && (
-        <>
-
+      <FormComponent
+        title="Shipping"
+        isOpen={isOpen}
+        toggleOpen={toggleOpen}
+        className="items-center"
+      >
         <Checkbox
           label="UPS Express"
           description="UPS Express 2-3 working days"
@@ -91,9 +91,6 @@ const ShippingSection: FC<{
           type="button"
           onClick={handleContinue}
         />
-       </>
-    )}
-
       </FormComponent>
     </section>
   );

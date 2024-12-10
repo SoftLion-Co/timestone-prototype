@@ -46,7 +46,7 @@ const Links: FC<HeroProps> = ({ className }) => {
           </Link>
         ))}
       </div>
-
+      {/* за=брати картинку, зробити текст вертикально */}
       <Image src={FollowUs} alt="Follow Us" className="hidden lg:block" />
 
       <p className="lg:hidden">FOLLOW US</p>
@@ -62,7 +62,6 @@ const HeroSection: FC = () => {
         <Links className="hidden lg:grid" />
 
         <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">
-
           <h1 className="font-spaceage text-black leading-[50px] mb-4 md:mb-[20px] text-[40px] lg:text-[45px] lg:mb-[25px] xl:text-[60px] ">
             FIND YOUR DREAM WATCH
           </h1>
@@ -79,7 +78,13 @@ const HeroSection: FC = () => {
       </div>
 
       <div className="flex justify-end lg:hidden">
-        <Image className="object-contain" src={Watch} alt="Watch" width={800}/>
+        <Image
+          className="object-contain"
+          src={Watch}
+          alt="Watch"
+          width={800}
+          loading="lazy"
+        />
       </div>
       <Image
         className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[620px] xl:w-auto"
