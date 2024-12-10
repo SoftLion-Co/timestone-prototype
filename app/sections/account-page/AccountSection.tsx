@@ -16,12 +16,13 @@ const AccountSection = () => {
     const tokenAccess = localStorage.getItem("accessToken");
     const tokenRefresh = localStorage.getItem("refreshToken");
 
-    if (!tokenAccess || !tokenRefresh) {
+    if (tokenAccess || tokenRefresh) {
       setIsToken(true);
     }
   }, []);
 
   if (isToken !== true) {
+
     return (
       <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px] min-h-screen">
         <h1 className="text-black text-[24px] md:text-[32px] font-medium">

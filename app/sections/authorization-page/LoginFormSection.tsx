@@ -1,17 +1,16 @@
 "use client";
+import { useForm } from "@mantine/form";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { loginUser } from "@/services/AuthService";
-import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
-  const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
-  const [attempts, setAttempts] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const router = useRouter();
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginForm = useForm({
@@ -26,54 +25,45 @@ const LoginFormSection = () => {
   });
 
   useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputLoginAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
-      }
+ const tokenAccess = localStorage.getItem("accessToken");
+    const tokenRefresh = localStorage.getItem("refreshToken");
+
+    if (tokenAccess || tokenRefresh) {
+      router.push("/account");
     }
   }, []);
 
   const handleSignIn = async () => {
     const errors = loginForm.validate();
     if (!errors.hasErrors) {
-      if (attempts < MAX_ATTEMPTS) {
-        const newAttempts = attempts + 1;
-        setAttempts(newAttempts);
-        localStorage.setItem("inputLoginAttempts", newAttempts.toString());
-        setIsLoading(true);
-        const { email, password } = loginForm.values;
-        const response = await loginUser(email, password);
+      setIsLoading(true);
+      const { email, password } = loginForm.values;
+      const response = await loginUser(email, password);
 
-        setIsLoading(false);
-        if (response === "logged") {
-          loginForm.reset();
-          setLoginMessage(null);
-        } else if (response == "A user with this email address already exists") {
-          setLoginMessage("This email does not exist. Try again.");
-        } else if (response == "The password is incorrect") {
-          setLoginMessage("Іncorrect password. Try again.");
-        } else if (response == "User not activated") {
-          setLoginMessage("Your acc not activated. Check email box.");
-        } else {
-          setLoginMessage("Unexpected server error");
-        }
-        if (newAttempts >= MAX_ATTEMPTS) {
-          setIsDisabled(true);
-        }
+      setIsLoading(false);
+      if (response === 200) {
+        loginForm.reset();
+        router.push("/account");
+        setLoginMessage(null);
+      } else if (response == "A user with this email address already exists") {
+        setLoginMessage("This email does not exist. Try again.");
+      } else if (response == "The password is incorrect") {
+        setLoginMessage("Іncorrect password. Try again.");
+      } else if (response == "User not activated") {
+        setLoginMessage("Your acc not activated. Check email box.");
+      } else {
+        setLoginMessage("Unexpected server error");
       }
     }
   };
 
-//   const handleSignUpFacebook = () => {
-//     console.log("facebook");
-//   };
+  //   const handleSignUpFacebook = () => {
+  //     console.log("facebook");
+  //   };
 
-//   const handleSignUpGoogle = () => {
-//     console.log("google");
-//   };
+  //   const handleSignUpGoogle = () => {
+  //     console.log("google");
+  //   };
 
   return (
     <>
@@ -122,14 +112,6 @@ const LoginFormSection = () => {
           <label htmlFor="rememberMe">Remember me</label>
         </div>
       </div>
-
-      <div className=" mt-[16px]">
-        {isDisabled ? (
-          <p className="text-red-500">Ви вичерпали всі спроби!</p>
-        ) : (
-          <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
-        )}
-      </div>
       <div className=" mt-[16px]">
         <div>
           {loginMessage && (
@@ -144,7 +126,6 @@ const LoginFormSection = () => {
           type="button"
           className="!w-[208px] mx-auto mt-[2px] mb-[46px]"
           onClick={handleSignIn}
-          disabled={isDisabled}
         />
       </div>
 
