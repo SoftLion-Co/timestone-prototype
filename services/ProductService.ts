@@ -34,6 +34,9 @@ export const getProducts = async (
         "Content-Type": "application/json",
       },
     });
+   if (response.status === 500){
+
+   }
 
     return response.data;
   } catch (error) {

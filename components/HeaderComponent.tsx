@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC, useState, useEffect } from "react";
@@ -22,6 +23,7 @@ const navData = [
 ];
 
 const Header = () => {
+  const pathname = usePathname(); 
   const [opened, { open, close }] = useDisclosure(false);
 
   const { products, changeOpenState } = useCart();
@@ -32,6 +34,7 @@ const Header = () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
+
         if (refreshToken) {
           if (accessToken) {
             setIsLoggedIn(true);
@@ -41,6 +44,8 @@ const Header = () => {
             localStorage.setItem("refreshToken", tokens.refreshToken);
             setIsLoggedIn(true);
           }
+        } else{
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.error("Failed to fetch orders", error);
@@ -48,7 +53,7 @@ const Header = () => {
     };
 
     fetchTokens();
-  }, []);
+  }, [pathname]);
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
