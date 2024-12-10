@@ -63,7 +63,9 @@ export const loginUser = async (
 export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
-    return res.data;
+    const { accessToken, refreshToken } = res.data;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
   } catch (error) {
     console.error("Error during account activation:", error);
   }
