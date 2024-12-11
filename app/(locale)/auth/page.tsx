@@ -1,4 +1,4 @@
-import Auth from "@/app/sections/authorization-page/AuthorizationSection2";
+import Auth from "@/app/sections/authorization-page/AuthorizationSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

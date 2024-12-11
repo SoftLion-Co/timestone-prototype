@@ -45,14 +45,14 @@ const CategoryMain = () => {
   const [sort, setSort] = useState<string>("RELEVANCE");
   const [reverse, setReverse] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   const fetchFilters = async () => {
-  //     const data = await getFilters();
-  //     setFilters(data);
-  //   };
+  useEffect(() => {
+    const fetchFilters = async () => {
+      const data = await getFilters();
+      setFilters(data);
+    };
 
-  //   fetchFilters();
-  // }, []);
+    fetchFilters();
+  }, []);
 
   const handleChangeTotalProducts = (num: number) => {
     setTotalProducts(num);

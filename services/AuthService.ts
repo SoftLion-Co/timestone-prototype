@@ -42,11 +42,12 @@ export const loginUser = async (
       email,
       password,
     });
+    console.log(response)
     if (response?.data?.accessToken && response?.data?.refreshToken) {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      return "logged";
+      return response.status;
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -62,7 +63,9 @@ export const loginUser = async (
 export const activateAccount = async (token: string): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
-    return res.data;
+    const { accessToken, refreshToken } = res.data;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
   } catch (error) {
     console.error("Error during account activation:", error);
   }
@@ -72,6 +75,7 @@ export const updateUser = async (
   userData: any
 ): Promise<any> => {
   try {
+    console.log(userData)
     const res = await api.post(`/auth/update`, userData);
     return res.data;
   } catch (error) {
@@ -106,10 +110,18 @@ export const updateRefreshToken = async (): Promise<any> => {
 
 export const getUser = async (): Promise<any> => {
   try {
-    const res = await api.get(`/auth/user`);
+    const accessToken = localStorage.getItem("accessToken");
+    
+    const res = await api.get(`/auth/user`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`, 
+      },
+    });
+
     return res.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
+    throw error;
   }
 };
 
