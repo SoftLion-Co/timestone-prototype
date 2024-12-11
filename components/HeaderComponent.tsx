@@ -25,7 +25,6 @@ const navData = [
 const Header = () => {
   const pathname = usePathname(); 
   const [opened, { open, close }] = useDisclosure(false);
-
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -104,8 +103,7 @@ const Header = () => {
           ) : (
             <Link
               href="/account"
-              className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
-            >
+              className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
               <Image src={Profile} alt="profile" />
             </Link>
           )}

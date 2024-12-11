@@ -100,7 +100,6 @@ const CategorySection = ({
     }
 
     setSort(newValue);
-
     // dispatch({ type: "SET_SORTING", payload: newValue });
   };
 

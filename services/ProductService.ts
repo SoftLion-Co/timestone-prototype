@@ -34,7 +34,9 @@ export const getProducts = async (
         "Content-Type": "application/json",
       },
     });
+
     if (response.status === 500) {
+      //! обробка
     }
 
     return response.data;
@@ -55,9 +57,11 @@ export const getProductByHandle = async (handle: string): Promise<any> => {
 export const getFilters = async (): Promise<any> => {
   try {
     const response = await axios.get(`${BASE_URL}/filter`);
+
     if (response.status === 200) {
       return response.data;
     }
+    
   } catch (error) {
     console.error("Failed to fetch product by handle:", error);
   }

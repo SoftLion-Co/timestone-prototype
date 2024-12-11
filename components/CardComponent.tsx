@@ -50,7 +50,6 @@ const CardComponent: FC<CardProps> = ({
             className="object-cover w-[255px] h-[300px]"
           />
         </Link>
-
         <button
           onClick={(e) => handleAddToBasket(e, id)}
           className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300"
