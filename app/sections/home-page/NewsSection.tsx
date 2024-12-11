@@ -42,7 +42,6 @@ const NewsSection = () => {
 
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
 
@@ -120,7 +119,7 @@ const NewsSection = () => {
         <p>
           You agree to our
           <span> </span>
-          <a href="/ua/legal" className="font-medium underline">
+          <a href="/legal" className="font-medium underline">
             Terms and Conditions
           </a>
         </p>
@@ -130,6 +129,7 @@ const NewsSection = () => {
         src={Background}
         alt="Background"
         className="top-0 bg-darkBurgundyOpacity object-cover absolute -z-10 h-[100%] w-[100%]"
+        loading="lazy"
       />
     </section>
   );

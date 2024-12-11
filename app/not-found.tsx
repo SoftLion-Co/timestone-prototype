@@ -20,7 +20,7 @@ export default function NotFound() {
           href="/"
           tag="a"
           text="Return to Homepage"
-          className=" mb-[10px] focus:outline-none focus:ring-0"
+          className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"
         />
       </section>
     </>

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { FC } from 'react';
-import Basket from '@/images/vectors/basket.svg';
-import { CardProps } from '@/config/types';
-import { useCart } from '@/hooks/useCart';
+import Image from "next/image";
+import Link from "next/link";
+import React, { FC } from "react";
+import Basket from "@/images/vectors/basket.svg";
+import { CardProps } from "@/config/types";
+import { useCart } from "@/hooks/useCart";
 
 const CardComponent: FC<CardProps> = ({
   id,
@@ -33,8 +33,8 @@ const CardComponent: FC<CardProps> = ({
       image: image,
       quantity: 1,
       maxQuantity: quantity,
-      caseColor: 'red',
-      strapColor: 'red',
+      caseColor: "red",
+      strapColor: "red",
     });
   };
 
@@ -50,10 +50,10 @@ const CardComponent: FC<CardProps> = ({
             className="object-cover w-[255px] h-[300px]"
           />
         </Link>
-
         <button
           onClick={(e) => handleAddToBasket(e, id)}
-          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300">
+          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300"
+        >
           <Image
             src={Basket}
             width={33}

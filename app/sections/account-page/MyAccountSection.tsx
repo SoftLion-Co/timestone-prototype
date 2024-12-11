@@ -40,28 +40,58 @@ const MyAccountSection = () => {
   ];
 
   const months = [
-    { value: "january", label: "January" },
-    { value: "february", label: "February" },
-    { value: "march", label: "March" },
-    { value: "april", label: "April" },
-    { value: "may", label: "May" },
-    { value: "june", label: "June" },
-    { value: "july", label: "July" },
-    { value: "august", label: "August" },
-    { value: "september", label: "September" },
-    { value: "october", label: "October" },
-    { value: "november", label: "November" },
-    { value: "december", label: "December" },
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
   ];
+
+  const getDaysInMonth = (month: string) => {
+    if (month === "02") {
+      return Array.from({ length: 29 }, (_, i) => ({
+        value: (i + 1).toString(),
+        label: (i + 1).toString(),
+      }));
+    }
+
+    if (["04", "06", "09", "11"].includes(month)) {
+      return Array.from({ length: 30 }, (_, i) => ({
+        value: (i + 1).toString(),
+        label: (i + 1).toString(),
+      }));
+    }
+
+    return Array.from({ length: 31 }, (_, i) => ({
+      value: (i + 1).toString(),
+      label: (i + 1).toString(),
+    }));
+  };
 
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false); //true
   const [subscribe, setSubscribe] = useState(false);
+  const [selectedMonth, setSelectedMonth] = React.useState<string>("");
+  const [days, setDays] = React.useState<{ value: string; label: string }[]>(
+    []
+  );
+
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value);
+    setDays(getDaysInMonth(value));
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const { user, subscribe } = await getUser("673c567340ace23b1904132c"); // треба буде замінити на tokens
+        const { user, subscribe } = await getUser();
         setUserName(`${user.firstName} ${user.lastName}` || "");
         form.setValues({
           name: user.firstName || "",
@@ -87,7 +117,7 @@ const MyAccountSection = () => {
 
   const form = useForm({
     initialValues: {
-      name: "настя",
+      name: "",
       fullname: "",
       email: "",
       phone: "",
@@ -106,9 +136,7 @@ const MyAccountSection = () => {
         value.length < 3 ? "Name must be at least 3 characters" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       phone: (value) =>
-        value && /^\+?\d{12}$/.test(value)
-          ? null
-          : "Invalid phone number. It should start with + and contain 12 digits.",
+        /^\+38\d{10}$/.test(value) ? null : "Invalid phone number",
     },
   });
 
@@ -132,11 +160,10 @@ const MyAccountSection = () => {
     const values1 = form.values;
 
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
 
-    const response = await updateUser("", {
+    const response = await updateUser({
       lastname: values1.fullname,
       firstname: values1.name,
       email: values1.email,
@@ -160,16 +187,23 @@ const MyAccountSection = () => {
     event.preventDefault();
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
-    console.log(5, values2.password, values2.verify);
-    const response = await updatePassword("", values2.password);
+    const response = await updatePassword(values2.password);
 
     if (Object.keys(errors.errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
     //! обробка помилки
     form.reset();
   };
+
+  useEffect(() => {
+    if (form.values.phone && !form.values.phone.startsWith("+38")) {
+      form.setFieldValue("phone", `+38${form.values.phone}`);
+    }
+    if (form.values.phone.length === 2) {
+      form.setFieldValue("phone", "");
+    }
+  }, [form.values.phone]);
 
   return (
     <>
@@ -183,7 +217,7 @@ const MyAccountSection = () => {
             <h1 className="text-black text-[32px] md:text-[46px] font-medium">
               Hey, {userName}
             </h1>
-            <p className="text-[12px] text-[#939393] md:text-[14px] text-center">
+            <p className="text-[12px] text-silver md:text-[14px] text-center">
               Welcome to your dashboard, your one-stop-shop for all your recent
               Timestone account activity.
             </p>
@@ -194,7 +228,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmit}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">My Info</h2>
+              <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
                 <div className="w-full lg:w-[45%] flex flex-col">
                   <Input
@@ -253,6 +287,8 @@ const MyAccountSection = () => {
                 <Input
                   placeholder="Month"
                   inputType="select"
+                  value={selectedMonth}
+                  onSelect={handleMonthChange}
                   options={months}
                   bordered={true}
                   scrollable={true}
@@ -264,6 +300,7 @@ const MyAccountSection = () => {
                   placeholder="Date"
                   inputType="select"
                   bordered={true}
+                  options={days}
                   scrollable={true}
                   className="mini:w-full lg:w-[45%]"
                   {...form.getInputProps("date")}
@@ -271,7 +308,7 @@ const MyAccountSection = () => {
               </div>
             </div>
             <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 Address Book
               </h2>
 
@@ -319,9 +356,10 @@ const MyAccountSection = () => {
                 <input
                   {...form.getInputProps("subscribe")}
                   type="checkbox"
+                  id="sign-up-update"
                   className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
                 />
-                <label className="ml-2 text-gray-700">
+                <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
                   Sign-up to receive the latest updates and promotions
                 </label>
               </div>
@@ -334,7 +372,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmitPassword}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 New password
               </h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">

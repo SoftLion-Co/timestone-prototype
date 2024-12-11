@@ -1,19 +1,19 @@
 "use client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import React, { FC, useState } from "react";
-import Logo from "@/images/vectors/logo.svg";
-import Basket from "@/images/vectors/basket.svg";
-import Profile from "@/images/vectors/profile.svg";
+import { useCart } from "@/hooks/useCart";
+import { useDisclosure } from "@mantine/hooks";
+import React, { FC, useState, useEffect } from "react";
+import { Modal, Button, ActionIcon } from "@mantine/core";
 
 import MainButton from "@/components/ButtonComponent";
+import { updateRefreshToken } from "@/services/AuthService";
 
-import { Modal, Button, ActionIcon, Menu } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
 import Burger from "@/images/vectors/burger.svg";
-import { useCart } from "@/hooks/useCart";
+import Basket from "@/images/vectors/basket.svg";
+import Profile from "@/images/vectors/profile.svg";
 
 const navData = [
   { link: "/#about-us", text: "About Us" },
@@ -22,16 +22,32 @@ const navData = [
 ];
 
 const Header = () => {
-  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = () => {
-    router.push("/auth");
-    setIsLoggedIn(false);
-  };
+  useEffect(() => {
+    const fetchTokens = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          if (accessToken) {
+            setIsLoggedIn(true);
+          } else {
+            const tokens = await updateRefreshToken();
+            localStorage.setItem("accessToken", tokens.accessToken);
+            localStorage.setItem("refreshToken", tokens.refreshToken);
+            setIsLoggedIn(true);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      }
+    };
+
+    fetchTokens();
+  }, []);
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
@@ -43,7 +59,8 @@ const Header = () => {
               <Link
                 key={index}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
+              >
                 {item.text}
               </Link>
             ))}
@@ -61,7 +78,8 @@ const Header = () => {
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
-            }}>
+            }}
+          >
             {products.length > 0 && (
               <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-3.5">
                 {products.length}
@@ -70,11 +88,13 @@ const Header = () => {
             <Image src={Basket} alt="Basket" />
           </button>
           {!isLoggedIn ? (
-            <button
-              onClick={handleLogin}
-              className="text-onyx font-semibold transition-all duration-300">
-              Login
-            </button>
+            <MainButton
+              text="Log in"
+              tag="a"
+              href="/auth"
+              background="transparent"
+              className="!px-[5px] text-onyx font-semibold transition-all duration-300"
+            />
           ) : (
             <Link
               href="/account"
@@ -90,14 +110,14 @@ const Header = () => {
   const HeaderLogo = () => {
     return (
       <Link href="/">
-        <Image src={Logo} alt="Logo" />
+        <Image src={Logo} alt="Logo" loading="lazy" />
       </Link>
     );
   };
 
   return (
     <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
-      <div className="flex justify-between items-center py-[20px]">
+      <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 
         <Button onClick={open} className="xl:hidden px-0 hover:bg-transparent">
@@ -131,14 +151,16 @@ const Header = () => {
             header: {
               backgroundColor: "#ffffff",
             },
-          }}>
+          }}
+        >
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]">
+              className="w-[24px] h-[24px]"
+            >
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>

@@ -1,5 +1,5 @@
 import ProductSection from "@/app/sections/product-page/ProductSection";
-// import type { Metadata } from "next";
+// import { Metadata } from "next";
 
 // export async function generateMetadata({ params }: { params: { productName: string } }): Promise<Metadata> {
 //   const productName = params.productName;
@@ -33,7 +33,9 @@ import ProductSection from "@/app/sections/product-page/ProductSection";
 //     },
 //   };
 // }
+
 const Page = ({ params }: { params: any }) => {
+
   const productName = params.productName;
 
   return (

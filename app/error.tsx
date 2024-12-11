@@ -6,7 +6,6 @@ import Button from "@/components/ButtonComponent";
 
 import ServerError from "@/images/error-pages/500.svg";
 
-
 export default function ErrorPage({
   error,
   reset,
@@ -17,6 +16,10 @@ export default function ErrorPage({
   useEffect(() => {
     console.error(error);
   }, [error]);
+
+  const reloadPage = () => {
+    window.location.reload();
+  };
 
   return (
     <section className="container flex flex-col items-center bg-white rounded-[32px] pt-[40px] gap-[50px] md:gap-[20px] ">
@@ -29,13 +32,10 @@ export default function ErrorPage({
         className="object-cover rounded-[32px] w-[380px] lg:w-[580px]"
       />
       <Button
-        href="/"
         tag="a"
-        text="Try again "
-        className=" mb-[10px] focus:outline-none focus:ring-0"
-        onClick={
-          () => reset()
-        }
+        text="Try again"
+        className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"
+        onClick={reloadPage}
       />
     </section>
   );
