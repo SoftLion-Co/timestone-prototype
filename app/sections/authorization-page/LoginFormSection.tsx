@@ -21,7 +21,11 @@ const LoginFormSection = () => {
     },
     validate: {
       email: isEmail("Invalid email"),
-      password: hasLength({ min: 6 }, "Password must be at least 6 characters"),
+      password: (value) => {
+        if (value.length < 6) return "Password must be at least 6 characters";
+        if (value.length > 20) return "Password must not be more than 20 characters";
+      },
+      
     },
   });
 

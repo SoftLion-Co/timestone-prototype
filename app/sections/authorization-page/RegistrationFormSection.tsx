@@ -80,7 +80,10 @@ const RegistrationFormSection = () => {
       email: isEmail("Invalid email"),
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
-      password: hasLength({ min: 6 }, "Must be at least 6 characters"),
+      password: (value) => {
+        if (value.length < 6) return "Password must be at least 6 characters";
+        if (value.length > 20) return "Password must not be more than 20 characters";
+      },
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
       phone: (value) =>
