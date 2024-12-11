@@ -1,7 +1,6 @@
 import "./globals.css";
 
-// import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter } from 'next/font/google';
 
 import Header from "@/components/HeaderComponent";
 import Footer from "@/components/FooterComponent";
@@ -20,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <CartProvider>
-          <MantineProvider>
+          <MantineProvider >
             <Header />
             <CartComponent />
             <main>{children}</main>

@@ -23,7 +23,6 @@ const navData = [
 
 const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
-
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -53,8 +52,7 @@ const Header = () => {
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}
-      >
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}>
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
             {navData.map((item, index) => (
@@ -100,8 +98,7 @@ const Header = () => {
           ) : (
             <Link
               href="/account"
-              className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
-            >
+              className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
               <Image src={Profile} alt="profile" />
             </Link>
           )}
@@ -119,7 +116,7 @@ const Header = () => {
   };
 
   return (
-    <header className="mx-[20px] lg:mx-[60px]">
+    <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 
