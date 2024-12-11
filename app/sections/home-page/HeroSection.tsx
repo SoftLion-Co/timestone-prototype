@@ -58,7 +58,7 @@ const Links: FC<HeroProps> = ({ className }) => {
 const HeroSection: FC = () => {
   return (
     <section className="flex flex-col relative py-[40px] lg:py-[60px]">
-      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[90px] lg:items-start xl:items-center">
+      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[60px] lg:items-start xl:items-center">
         <Links className="hidden lg:grid" />
 
         <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">
