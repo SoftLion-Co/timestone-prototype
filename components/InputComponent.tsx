@@ -58,7 +58,7 @@ const InputComponent: FC<InputProps> = ({
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(value || null);
   const selectRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -76,11 +76,18 @@ const InputComponent: FC<InputProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (typeof value === "string") {
+      setSelected(value);
+    }
+  }, [value]);
+
   const handleSelect = (value: string) => {
     setSelected(value);
     onSelect?.(value);
     setIsOpen(false);
   };
+
   const inputContent = () => {
     if (inputType === "select") {
       return (

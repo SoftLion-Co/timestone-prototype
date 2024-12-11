@@ -75,6 +75,7 @@ export const updateUser = async (
   userData: any
 ): Promise<any> => {
   try {
+    console.log(userData)
     const res = await api.post(`/auth/update`, userData);
     return res.data;
   } catch (error) {
