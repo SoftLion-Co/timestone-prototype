@@ -147,8 +147,15 @@ const MyAccountSection = () => {
       remember: false,
     },
     validate: {
-      password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
+      password: (value) => {
+        if (value.length < 6) return "Password must have at least 6 characters";
+        if (value.length > 20) return "Password must not exceed 20 characters";
+        if (!/[a-z]/.test(value)) return "Password must contain at least one lowercase letter";
+        if (!/[A-Z]/.test(value)) return "Password must contain at least one uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain at least one digit";
+        if (/\s/.test(value)) return "Password cannot contain spaces";
+        return null;
+      },
       verify: (value, values) =>
         value !== values.password ? "Passwords did not match" : null,
     },

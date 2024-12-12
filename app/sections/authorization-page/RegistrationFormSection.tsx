@@ -83,7 +83,14 @@ const RegistrationFormSection = () => {
       password: (value) => {
         if (/\s/.test(value)) return "Password can not contain spaces";
         if (value.length < 6) return "Password must be at least 6 characters";
-        if (value.length > 20) return "Password must not be more than 20 characters";
+        if (value.length > 20)
+          return "Password must not be more than 20 characters";
+        if (!/[a-z]/.test(value))
+          return "Password must contain lowercase letter";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain digit";
+        return null;
       },
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
@@ -124,15 +131,16 @@ const RegistrationFormSection = () => {
         if (response === "created") {
           setIsModalVisible(true);
           registrationForm.reset();
-        } else if (response == "A user with this phone number already exists" ) {
+        } else if (response == "A user with this phone number already exists") {
           setRegistrationMessage("This phone already exist. Try another.");
-        } else if (response == "A user with this email address already exists") {
+        } else if (
+          response == "A user with this email address already exists"
+        ) {
           setRegistrationMessage("This email already exist. Try another.");
         } else if (response == "User not activated") {
           setRegistrationMessage("Your acc not activated. Check email box.");
         } else {
           setRegistrationMessage("Problems wih server");
-          
         }
       }
     }
@@ -335,8 +343,8 @@ const RegistrationFormSection = () => {
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({
-                top: 0, 
-                behavior: "smooth", 
+                top: 0,
+                behavior: "smooth",
               });
             }}
             disabled={isDisabled}

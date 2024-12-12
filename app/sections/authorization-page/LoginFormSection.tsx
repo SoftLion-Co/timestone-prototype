@@ -44,15 +44,17 @@ const LoginFormSection = () => {
   
       setIsLoading(true);
       const { email, password } = loginForm.values;
+      
+      if (!rememberMe) {
+        localStorage.removeItem("rememberedEmail");
+      } 
       const response = await loginUser(email, password);
-
+      
       setIsLoading(false);
       if (response === "logged") {
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-        }
+        } 
         loginForm.reset();
         setLoginMessage(null);
       } else if (response == "A user with this email address already exists") {
