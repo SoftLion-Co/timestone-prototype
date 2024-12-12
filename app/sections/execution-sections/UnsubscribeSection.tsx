@@ -5,7 +5,6 @@ import { removeReceiver } from "@/services/SubscribeService";
 
 import Button from "@/components/ButtonComponent";
 
-//!добавити обробку помилки, router on home,
 const UnsubscribeSection = ({ email }: { email: string }) => {
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +31,11 @@ const UnsubscribeSection = ({ email }: { email: string }) => {
         </div>
       ) : (
         <Button
-        href="/"
-        tag="a"
-        text="Return to Homepage"
-        className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"
-      />
+          href="/"
+          tag="a"
+          text="Return to Homepage"
+          className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"
+        />
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import ActivatingSection from "@/app/sections/execution-sections/ActivatedSection";
 
 const Page = ({ params }: { params: any }) => {
-	const activatedToken = params.activatedToken;
+  const activatedToken = params.activatedToken;
   return (
     <>
-	<ActivatingSection activatedToken={activatedToken} />
+      <ActivatingSection activatedToken={activatedToken} />
     </>
   );
 };

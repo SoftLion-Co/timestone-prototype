@@ -14,8 +14,6 @@ import { Metadata } from "next";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
 
-//! потрібно зробити динамічно для кожного продукту
-
 export const metadata: Metadata = {
   title: "Timestone - продукт",
   description: "Пропонуємо найбільший вибір годиннників",
@@ -133,17 +131,20 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     !isOpen && changeOpenState(true);
 
     if (product) {
-      addToCart({
-        id: product.id,
-        handle: product.handle,
-        title: product.title,
-        price: +product.price,
-        image: product.images[0],
-        quantity: quantity,
-        maxQuantity: maxQuantity,
-        caseColor: "red",
-        strapColor: "red",
-      });
+      addToCart(
+        {
+          id: product.id,
+          handle: product.handle,
+          title: product.title,
+          price: +product.price,
+          image: product.images[0],
+          quantity: quantity,
+          maxQuantity: maxQuantity,
+          caseColor: "red",
+          strapColor: "red",
+        },
+        quantity
+      );
     }
   };
 
@@ -222,8 +223,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 width={80}
                 className="my-[30px] mr-[50px] md:mr-[20px]"
               />
-            }
-          >
+            }>
             {slides}
           </Carousel>
         </div>
@@ -264,8 +264,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity > 1 || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 -
               </button>
               <span className="w-10 h-10 rounded-sm flex items-center justify-center">
@@ -277,8 +276,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity < maxQuantity || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 +
               </button>
               {isOutOfStock && (

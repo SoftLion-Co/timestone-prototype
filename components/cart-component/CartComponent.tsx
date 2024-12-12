@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
+import Image from "next/image";
 
-import Close from '@/images/cart-component/close.svg';
-import CartProduct from './CartProduct';
-import Link from 'next/link';
+import Close from "@/images/cart-component/close.svg";
+import CartProduct from "./CartProduct";
+import Link from "next/link";
 
-import { useCart } from '@/hooks/useCart';
+import { useCart } from "@/hooks/useCart";
 
 const CartComponent = () => {
   const { products, totalAmount, isOpen, changeOpenState } = useCart();
@@ -14,7 +14,7 @@ const CartComponent = () => {
   return (
     <div
       className={`bg-white text-white top-0 right-0 h-screen w-full md:w-[366px] shadow-lg z-[200] flex flex-col ${
-        isOpen ? 'fixed' : 'hidden'
+        isOpen ? "fixed" : "hidden"
       }`}>
       <div className="bg-pearl flex items-center text-[20px] p-5">
         <h3 className="text-black font-spaceage flex-1 text-center">
@@ -29,7 +29,7 @@ const CartComponent = () => {
           <Image
             src={Close}
             alt="close button"
-            className="object-fit w-3 h-3"
+            className="object-fit w-5 h-5"
           />
         </button>
       </div>
@@ -53,12 +53,12 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href="/checkout"
+          href={products.length > 0 ? "/checkout" : "/catalog"}
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300"
           onClick={() => {
             changeOpenState(false);
           }}>
-          Go To Checkout
+          {products.length > 0 ? " Go To Checkout" : " Go To Catalog"}
         </Link>
       </div>
     </div>

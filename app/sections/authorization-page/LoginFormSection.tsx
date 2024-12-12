@@ -25,7 +25,7 @@ const LoginFormSection = () => {
   });
 
   useEffect(() => {
- const tokenAccess = localStorage.getItem("accessToken");
+    const tokenAccess = localStorage.getItem("accessToken");
     const tokenRefresh = localStorage.getItem("refreshToken");
 
     if (tokenAccess || tokenRefresh) {
@@ -56,14 +56,6 @@ const LoginFormSection = () => {
       }
     }
   };
-
-  //   const handleSignUpFacebook = () => {
-  //     console.log("facebook");
-  //   };
-
-  //   const handleSignUpGoogle = () => {
-  //     console.log("google");
-  //   };
 
   return (
     <>
@@ -128,25 +120,6 @@ const LoginFormSection = () => {
           onClick={handleSignIn}
         />
       </div>
-
-      {/* <p className="mt-[38px] font-bold text-[20px]">Express sing in</p> */}
-
-      {/* <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
-              <Button
-                text="Sign in"
-                type="button"
-                className="!w-[312px] h-[56px] mx-auto"
-                icon="facebook"
-                onClick={handleSignUpFacebook}
-              />
-              <Button
-                text="Sign In"
-                type="button"
-                className="!w-[312px] h-[56px] mx-auto"
-                icon="google"
-                onClick={handleSignUpGoogle}
-              />
-            </div> */}
     </>
   );
 };

@@ -11,15 +11,6 @@ export const getProducts = async (
   pagination?: boolean
 ): Promise<any> => {
   try {
-    console.log(
-      "f " + JSON.stringify(filters),
-      "o " + optionsString,
-      "l " + limit,
-      "p " + pageCursor,
-      "s " + sortKey,
-      "r " + reverse,
-      "pg " + pagination
-    );
     const response = await axios.get(`${BASE_URL}/product`, {
       params: {
         filters,
@@ -36,7 +27,6 @@ export const getProducts = async (
     });
 
     if (response.status === 500) {
-      //! обробка
     }
 
     return response.data;
@@ -61,7 +51,6 @@ export const getFilters = async (): Promise<any> => {
     if (response.status === 200) {
       return response.data;
     }
-    
   } catch (error) {
     console.error("Failed to fetch product by handle:", error);
   }

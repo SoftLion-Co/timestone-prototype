@@ -6,11 +6,8 @@ import React, { useState, useEffect } from "react";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
-// import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
-
-//! кнопки для підєднання facebook or google
 
 const MyAccountSection = () => {
   const countries = [{ value: "Ukraine", label: "Україна" }];
@@ -80,7 +77,7 @@ const MyAccountSection = () => {
     }));
   };
   const [userName, setUserName] = useState("");
-  const [loading, setLoading] = useState(false); //true
+  const [loading, setLoading] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("may");
   const [day, setDay] = useState("16");
@@ -96,9 +93,10 @@ const MyAccountSection = () => {
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
         const userCountry = user.address?.split("&")[0] || "";
-        const userCity:string = (user.address?.split("&")[1]?.trim() || "").toLowerCase();
+        const userCity: string = (
+          user.address?.split("&")[1]?.trim() || ""
+        ).toLowerCase();
 
-        
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
@@ -118,7 +116,7 @@ const MyAccountSection = () => {
 
         if (userCountry && userCity) {
           setCountry(userCountry);
-          setCity(userCity); 
+          setCity(userCity);
         }
 
         setSubscribe(subscribe);
@@ -196,7 +194,6 @@ const MyAccountSection = () => {
         response1 = await removeReceiver(values1.email);
       }
     }
-    //! обробка помилки
   };
 
   const handleSubmitPassword = async (event: any) => {
@@ -208,7 +205,6 @@ const MyAccountSection = () => {
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
-    //! обробка помилки
     form.reset();
   };
 
@@ -241,8 +237,7 @@ const MyAccountSection = () => {
 
           <form
             className="flex flex-col items-center gap-[46px] lg:items-end"
-            onSubmit={handleSubmit}
-          >
+            onSubmit={handleSubmit}>
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
               <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
@@ -392,8 +387,7 @@ const MyAccountSection = () => {
 
           <form
             className="flex flex-col items-center gap-[46px] mt-[46px] lg:items-end"
-            onSubmit={handleSubmitPassword}
-          >
+            onSubmit={handleSubmitPassword}>
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
               <h2 className="mb-[20px] text-[24px] text-silver">
                 New password

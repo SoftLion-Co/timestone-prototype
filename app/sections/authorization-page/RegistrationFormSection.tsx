@@ -50,7 +50,6 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
@@ -120,15 +119,16 @@ const RegistrationFormSection = () => {
         if (response === "created") {
           setIsModalVisible(true);
           registrationForm.reset();
-        } else if (response == "A user with this phone number already exists" ) {
+        } else if (response == "A user with this phone number already exists") {
           setRegistrationMessage("This phone already exist. Try another.");
-        } else if (response == "A user with this email address already exists") {
+        } else if (
+          response == "A user with this email address already exists"
+        ) {
           setRegistrationMessage("This email already exist. Try another.");
         } else if (response == "User not activated") {
           setRegistrationMessage("Your acc not activated. Check email box.");
         } else {
           setRegistrationMessage("Problems wih server");
-          
         }
       }
     }
@@ -331,8 +331,8 @@ const RegistrationFormSection = () => {
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({
-                top: 0, 
-                behavior: "smooth", 
+                top: 0,
+                behavior: "smooth",
               });
             }}
             disabled={isDisabled}

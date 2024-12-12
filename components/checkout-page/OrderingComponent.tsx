@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { MantineProvider, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -13,7 +13,10 @@ interface OrderingComponentProps {
   message: string;
 }
 
-const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title}) =>{
+const OrderingComponent: React.FC<OrderingComponentProps> = ({
+  message,
+  title,
+}) => {
   const [opened, { open, close }] = useDisclosure(true);
 
   return (
@@ -32,8 +35,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
         classNames={{
           root: "top-[25%] md:top-[15%] z-[1000] absolute left-0 right-0 bottom-0 md:w-[80%] lg:w-[70%] xl:w-[51%]",
           body: "p-0",
-        }}
-      >
+        }}>
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">
           <h1 className="font-spaceage text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
             {title}
@@ -47,7 +49,11 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
             text="Return to Homepage"
             className="mt-[20px] md:mt-[40px] mb-[10px] focus:outline-none focus:ring-0"
           />
-          <Image src={Thanks} alt="thanks" className="object-cover rounded-[32px]" />
+          <Image
+            src={Thanks}
+            alt="thanks"
+            className="object-cover rounded-[32px]"
+          />
         </div>
       </Modal>
     </MantineProvider>

@@ -1,12 +1,18 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
-import { CartProductProps } from '@/config/types';
+import { CartProductProps } from "@/config/types";
 
 interface CartContextType {
   products: CartProductProps[];
-  addToCart: (product: CartProductProps) => void;
+  addToCart: (product: CartProductProps, amount: number) => void;
   addQuantity: (productId: string) => void;
   removeQuantity: (productId: string) => void;
   removeFromCart: (id: string) => void;
@@ -19,16 +25,28 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProductProps[]>([]);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const addToCart = (product: CartProductProps) => {
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("cartProducts");
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cartProducts", JSON.stringify(products));
+  }, [products]);
+
+  const addToCart = (product: CartProductProps, amount: number) => {
     const existingProduct = products.find((item) => item.id === product.id);
 
     let newArr = [];
 
     if (existingProduct) {
       if (existingProduct.quantity < existingProduct.maxQuantity) {
-        existingProduct.quantity += 1;
+        existingProduct.quantity += amount;
       }
 
       newArr = [...products];
@@ -99,7 +117,7 @@ export const useCart = () => {
   const context = useContext(CartContext);
 
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
 
   return context;
