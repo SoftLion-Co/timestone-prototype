@@ -44,7 +44,7 @@ const LoginFormSection = () => {
   
       setIsLoading(true);
       const { email, password } = loginForm.values;
-      
+
       if (!rememberMe) {
         localStorage.removeItem("rememberedEmail");
       } 
@@ -64,7 +64,7 @@ const LoginFormSection = () => {
       } else if (response == "User not activated") {
         setLoginMessage("Your acc not activated. Check email box.");
       } else {
-        setLoginMessage("Unexpected server error");
+        setLoginMessage("Account does not exist");
       }
     }
   };
@@ -81,8 +81,8 @@ const LoginFormSection = () => {
     <>
       {isLoading && <LoaderComponent />}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           WELCOME BACK
         </h2>
         <p className="leading-[2] text-silver">
@@ -130,7 +130,7 @@ const LoginFormSection = () => {
       <div className=" mt-[16px]">
         <div>
           {loginMessage && (
-            <span className={`block text-center text-darkBurgundy`}>
+            <span className={`block text-center text-[16px] text-darkBurgundy`}>
               {loginMessage}
             </span>
           )}
@@ -139,7 +139,7 @@ const LoginFormSection = () => {
         <Button
           text="Sign In"
           type="button"
-          className="!w-[208px] mx-auto mt-[2px] mb-[46px]"
+          className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
           onClick={handleSignIn}
         />
       </div>

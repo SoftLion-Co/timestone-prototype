@@ -179,8 +179,8 @@ const RegistrationFormSection = () => {
         />
       )}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?
         </h2>
         <p className="text-silver">Create a new account</p>
@@ -327,10 +327,10 @@ const RegistrationFormSection = () => {
           )}
         </div>
 
-        <div className=" mt-[16px]">
+        <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center text-darkBurgundy`}>
+              <span className={`block text-center  text-[16px] text-darkBurgundy`}>
                 {registrationMessage}
               </span>
             )}
@@ -339,7 +339,7 @@ const RegistrationFormSection = () => {
           <Button
             text="Create Account"
             type="button"
-            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            className="!w-[208px] mx-auto mt-[8px] mb-[24px] lg:mb-[56px]"
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({
