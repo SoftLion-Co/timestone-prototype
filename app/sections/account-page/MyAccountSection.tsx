@@ -1,7 +1,9 @@
 "use client";
 import { Loader } from "@mantine/core";
+import { Alert } from "flowbite-react";
 import { useForm } from "@mantine/form";
 import React, { useState, useEffect } from "react";
+import { HiInformationCircle } from "react-icons/hi";
 
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
@@ -9,6 +11,7 @@ import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 // import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
+import LoaderComponent from "@/components/LoaderComponent";
 
 //! кнопки для підєднання facebook or google
 
@@ -82,11 +85,15 @@ const MyAccountSection = () => {
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false); //true
   const [subscribe, setSubscribe] = useState(false);
-  const [month, setMonth] = useState("may");
-  const [day, setDay] = useState("16");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
   const [country, setCountry] = useState("Ukraine");
-  const [city, setCity] = useState("lviv");
+  const [city, setCity] = useState("");
   const dayOptions = getDaysInMonth(month);
+  const [infoMessage, setInfoMessage] = useState<{
+    type: string;
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -96,9 +103,10 @@ const MyAccountSection = () => {
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
         const userCountry = user.address?.split("&")[0] || "";
-        const userCity:string = (user.address?.split("&")[1]?.trim() || "").toLowerCase();
+        const userCity: string = (
+          user.address?.split("&")[1]?.trim() || ""
+        ).toLowerCase();
 
-        
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
@@ -118,7 +126,7 @@ const MyAccountSection = () => {
 
         if (userCountry && userCity) {
           setCountry(userCountry);
-          setCity(userCity); 
+          setCity(userCity);
         }
 
         setSubscribe(subscribe);
@@ -163,8 +171,21 @@ const MyAccountSection = () => {
       remember: false,
     },
     validate: {
-      password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
+      password: (value) => {
+        if (value.length < 6) {
+          return "Password must have at least 6 characters";
+        }
+        if (!/[a-z]/.test(value)) {
+          return "Password must contain at least one lowercase letter";
+        }
+        if (!/[A-Z]/.test(value)) {
+          return "Password must contain at least one uppercase letter";
+        }
+        if (!/\d/.test(value)) {
+          return "Password must contain at least one digit";
+        }
+        return null;
+      },
       verify: (value, values) =>
         value !== values.password ? "Passwords did not match" : null,
     },
@@ -172,13 +193,12 @@ const MyAccountSection = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
     const errors = form.validate();
     const values1 = form.values;
-
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
-
     const response = await updateUser({
       lastname: values1.fullname,
       firstname: values1.name,
@@ -192,11 +212,26 @@ const MyAccountSection = () => {
     if (subscribe !== values1.subscribe) {
       if (values1.subscribe) {
         response1 = await addNewReceiver(values1.name, values1.email);
+        if (response1 === 201) {
+          setSubscribe(true);
+          form.setFieldValue("subscribe", true);
+        }
       } else {
         response1 = await removeReceiver(values1.email);
+        if (response1 === 204) {
+          setSubscribe(false);
+          form.setFieldValue("subscribe", false);
+        }
       }
     }
-    //! обробка помилки
+    setLoading(false);
+    setInfoMessage({
+      type: "success",
+      text: "Your details have been successfully updated!",
+    });
+    setTimeout(() => {
+      setInfoMessage(null);
+    }, 5000);
   };
 
   const handleSubmitPassword = async (event: any) => {
@@ -208,8 +243,14 @@ const MyAccountSection = () => {
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
-    //! обробка помилки
-    form.reset();
+    setInfoMessage({
+      type: "success",
+      text: "Your password has been successfully updated!",
+    });
+    setTimeout(() => {
+      setInfoMessage(null);
+    }, 5000);
+    formWithPass.reset();
   };
 
   useEffect(() => {
@@ -223,8 +264,18 @@ const MyAccountSection = () => {
 
   return (
     <>
+      {infoMessage && (
+        <Alert
+          color="green"
+          icon={HiInformationCircle}
+          className="fixed bottom-0 right-0 m-4 text-[green]"
+        >
+          {infoMessage.text}
+        </Alert>
+      )}
+      {loading && <LoaderComponent />}
       {loading ? (
-        <div className="container flex justify-center items-center">
+        <div className="container  flex justify-center items-center">
           <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
         </div>
       ) : (
@@ -240,7 +291,7 @@ const MyAccountSection = () => {
           </div>
 
           <form
-            className="flex flex-col items-center gap-[46px] lg:items-end"
+            className="flex flex-col  items-center gap-[46px] lg:items-end"
             onSubmit={handleSubmit}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
@@ -323,6 +374,7 @@ const MyAccountSection = () => {
                 />
               </div>
             </div>
+
             <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
               <h2 className="mb-[20px] text-[24px] text-silver">
                 Address Book
@@ -374,7 +426,7 @@ const MyAccountSection = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex text-[14px] items-center flex-row text-silver gap-[10px] mt-[-20px] text-left">
+            <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
               <div className="flex items-center">
                 <input
                   {...form.getInputProps("subscribe")}

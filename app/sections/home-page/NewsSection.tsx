@@ -1,10 +1,13 @@
 "use client";
 import Image from "next/image";
+import { Alert } from "flowbite-react";
 import React, { useState, useEffect } from "react";
+import { HiInformationCircle } from "react-icons/hi";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
+import LoaderComponent from "@/components/LoaderComponent";
 import { addNewReceiver } from "@/services/SubscribeService";
 
 import Background from "@/images/news-section/subscribe.svg";
@@ -14,6 +17,11 @@ const NewsSection = () => {
   const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<{
+    type: "success" | "failure";
+    text: string;
+  } | null>(null);
 
   const form = useForm({
     initialValues: {
@@ -39,7 +47,7 @@ const NewsSection = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoading(true);
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
       return;
@@ -57,81 +65,102 @@ const NewsSection = () => {
         setIsDisabled(true);
       }
     }
+    setIsLoading(false);
+    setMessage({
+      type: "success",
+      text: "You have successfully subscribed to our newsletter!",
+    });
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
     form.reset();
     setValue("");
   };
 
   return (
-    <section className="relative">
-      <div className="container relative text-snow flex flex-col gap-[30px] items-center py-[60px] text-center">
-        <h3 className="font-bold text-[28px] xl:text-[36px] xl:w-[80%]">
-          Don't Miss Your Chance To Get Free Giveaway Sing Up To Our Newsletter
-        </h3>
-
-        <p className="text-[10px] xl:text-default">
-          We will inform you about coming Giveaways, Offers, Online Store
-          preparation progress and start of sales
-        </p>
-
-        <form
-          className="flex flex-col gap-[30px] items-center"
-          onSubmit={handleSubmit}
+    <>
+      {message && (
+        <Alert
+          color="green"
+          icon={HiInformationCircle}
+          className="fixed bottom-0 right-0 m-4 z-10 text-[green]"
         >
-          {isDisabled ? (
-            <p className="text-red-500">Ви вичерпали всі спроби!</p>
-          ) : (
-            <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
-          )}
-          <div className="flex flex-col gap-[30px] xl:flex-row xl:gap-[20px]">
-            <div className="flex flex-col">
-              <Input
-                inputType="input"
-                required
-                placeholder="Name"
-                type="text"
-                errorType="warning"
-                {...form.getInputProps("name")}
-                disabled={isDisabled}
-              />
-            </div>
-            <div className="flex flex-col">
-              <Input
-                inputType="input"
-                required
-                placeholder="Email"
-                type="email"
-                errorType="warning"
-                {...form.getInputProps("email")}
-                disabled={isDisabled}
-              />
-            </div>
-          </div>
-          <Button
-            text="Sing Up"
-            type="submit"
-            tag="button"
-            background="onyx"
-            className="w-[160px]"
-            disabled={isDisabled}
-          />
-        </form>
+          {message.text}
+        </Alert>
+      )}
+      {isLoading && <LoaderComponent />}
+      <section className="relative">
+        <div className="container relative text-snow flex flex-col gap-[30px] items-center py-[60px] text-center">
+          <h3 className="font-bold text-[28px] xl:text-[36px] xl:w-[80%]">
+            Don't Miss Your Chance To Get Free Giveaway Sing Up To Our
+            Newsletter
+          </h3>
 
-        <p>
-          You agree to our
-          <span> </span>
-          <a href="/legal" className="font-medium underline">
-            Terms and Conditions
-          </a>
-        </p>
-      </div>
+          <p className="text-[10px] xl:text-default">
+            We will inform you about coming Giveaways, Offers, Online Store
+            preparation progress and start of sales
+          </p>
 
-      <Image
-        src={Background}
-        alt="Background"
-        className="top-0 bg-darkBurgundyOpacity object-cover absolute -z-10 h-[100%] w-[100%]"
-        loading="lazy"
-      />
-    </section>
+          <form
+            className="flex flex-col gap-[30px] items-center"
+            onSubmit={handleSubmit}
+          >
+            {isDisabled ? (
+              <p className="text-red-500">Ви вичерпали всі спроби!</p>
+            ) : (
+              <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+            )}
+            <div className="flex flex-col gap-[30px] xl:flex-row xl:gap-[20px]">
+              <div className="flex flex-col">
+                <Input
+                  inputType="input"
+                  required
+                  placeholder="Name"
+                  type="text"
+                  errorType="warning"
+                  {...form.getInputProps("name")}
+                  disabled={isDisabled}
+                />
+              </div>
+              <div className="flex flex-col">
+                <Input
+                  inputType="input"
+                  required
+                  placeholder="Email"
+                  type="email"
+                  errorType="warning"
+                  {...form.getInputProps("email")}
+                  disabled={isDisabled}
+                />
+              </div>
+            </div>
+            <Button
+              text="Sing Up"
+              type="submit"
+              tag="button"
+              background="onyx"
+              className="w-[160px]"
+              disabled={isDisabled}
+            />
+          </form>
+
+          <p>
+            You agree to our
+            <span> </span>
+            <a href="/legal" className="font-medium underline">
+              Terms and Conditions
+            </a>
+          </p>
+        </div>
+
+        <Image
+          src={Background}
+          alt="Background"
+          className="top-0 bg-darkBurgundyOpacity object-cover absolute -z-10 h-[100%] w-[100%]"
+          loading="lazy"
+        />
+      </section>
+    </>
   );
 };
 

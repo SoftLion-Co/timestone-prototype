@@ -15,7 +15,15 @@ interface OrderingComponentProps {
 
 const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title}) =>{
   const [opened, { open, close }] = useDisclosure(true);
-
+  useEffect(() => {
+    if (opened) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      
+    }
+  }, [opened]);
   return (
     <MantineProvider>
       {opened && (
@@ -31,7 +39,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
         withCloseButton={false}
         classNames={{
           root: "top-[25%] md:top-[15%] z-[1000] absolute left-0 right-0 bottom-0 md:w-[80%] lg:w-[70%] xl:w-[51%]",
-          body: "p-0",
+          body: "p-0 ",
         }}
       >
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">

@@ -42,7 +42,7 @@ export const loginUser = async (
       email,
       password,
     });
-    console.log(response)
+    console.log(response);
     if (response?.data?.accessToken && response?.data?.refreshToken) {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
@@ -71,22 +71,16 @@ export const activateAccount = async (token: string): Promise<any> => {
   }
 };
 
-export const updateUser = async (
-  userData: any
-): Promise<any> => {
+export const updateUser = async (userData: any): Promise<any> => {
   try {
-    console.log(userData)
     const res = await api.post(`/auth/update`, userData);
-    return res.data;
+    return res.status;
   } catch (error) {
     console.error("Error updating user:", error);
   }
 };
 
-
-export const updatePassword = async (
-  newPassword: string
-): Promise<any> => {
+export const updatePassword = async (newPassword: string): Promise<any> => {
   try {
     const res = await api.post(`/auth/update-password`, {
       password: newPassword,
@@ -97,11 +91,10 @@ export const updatePassword = async (
   }
 };
 
-
 export const updateRefreshToken = async (): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    const res = await axios.post(`${BASE_URL}/auth/refresh`,  refreshToken);
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, refreshToken);
     return res.data;
   } catch (error) {
     console.error("Error refreshing token:", error);
@@ -111,10 +104,10 @@ export const updateRefreshToken = async (): Promise<any> => {
 export const getUser = async (): Promise<any> => {
   try {
     const accessToken = localStorage.getItem("accessToken");
-    
+
     const res = await api.get(`/auth/user`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`, 
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -124,7 +117,6 @@ export const getUser = async (): Promise<any> => {
     throw error;
   }
 };
-
 
 // export const googleLogin = async (googleToken: string): Promise<any> => {
 //   try {

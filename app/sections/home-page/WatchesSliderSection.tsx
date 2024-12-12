@@ -36,8 +36,10 @@ const SliderSection = () => {
           true,
           true
         );
-        setSliderProducts(response.products);
-        setLoading(true);
+        if (response.products) {
+          setSliderProducts(response.products);
+          setLoading(true);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
