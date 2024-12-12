@@ -81,6 +81,7 @@ const RegistrationFormSection = () => {
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
       password: (value) => {
+        if (/\s/.test(value)) return "Password can not contain spaces";
         if (value.length < 6) return "Password must be at least 6 characters";
         if (value.length > 20) return "Password must not be more than 20 characters";
       },
