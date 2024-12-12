@@ -304,9 +304,9 @@ const RegistrationFormSection = () => {
             onChange={(e) =>
               registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="sign-up-update">
+          <label htmlFor="sign-up-update" className="cursor-pointer">
             Sign-up to receive the latest updates and promotions
           </label>
         </div>

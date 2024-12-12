@@ -8,12 +8,11 @@ import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
-  const MAX_ATTEMPTS = 5;
   // const [value, setValue] = useState("");
-  const [attempts, setAttempts] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState(false);
+ 
   const loginForm = useForm({
     initialValues: {
       email: "",
@@ -24,61 +23,57 @@ const LoginFormSection = () => {
       password: (value) => {
         if (/\s/.test(value)) return "Password can not contain spaces";
         if (value.length < 6) return "Password must be at least 6 characters";
-        if (value.length > 20) return "Password must not be more than 20 characters";
+        if (value.length > 20)
+          return "Password must not be more than 20 characters";
       },
-      
     },
   });
 
   useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputLoginAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
-      }
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      loginForm.setFieldValue("email", savedEmail);
+      setRememberMe(true);
     }
+
   }, []);
 
   const handleSignIn = async () => {
     const errors = loginForm.validate();
     if (!errors.hasErrors) {
-      if (attempts < MAX_ATTEMPTS) {
-        const newAttempts = attempts + 1;
-        setAttempts(newAttempts);
-        localStorage.setItem("inputLoginAttempts", newAttempts.toString());
-        setIsLoading(true);
-        const { email, password } = loginForm.values;
-        const response = await loginUser(email, password);
+  
+      setIsLoading(true);
+      const { email, password } = loginForm.values;
+      const response = await loginUser(email, password);
 
-        setIsLoading(false);
-        if (response === "logged") {
-          loginForm.reset();
-          setLoginMessage(null);
-        } else if (response == "A user with this email address already exists") {
-          setLoginMessage("This email does not exist. Try again.");
-        } else if (response == "The password is incorrect") {
-          setLoginMessage("Іncorrect password. Try again.");
-        } else if (response == "User not activated") {
-          setLoginMessage("Your acc not activated. Check email box.");
+      setIsLoading(false);
+      if (response === "logged") {
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
         } else {
-          setLoginMessage("Unexpected server error");
+          localStorage.removeItem("rememberedEmail");
         }
-        if (newAttempts >= MAX_ATTEMPTS) {
-          setIsDisabled(true);
-        }
+        loginForm.reset();
+        setLoginMessage(null);
+      } else if (response == "A user with this email address already exists") {
+        setLoginMessage("This email does not exist. Try again.");
+      } else if (response == "The password is incorrect") {
+        setLoginMessage("Іncorrect password. Try again.");
+      } else if (response == "User not activated") {
+        setLoginMessage("Your acc not activated. Check email box.");
+      } else {
+        setLoginMessage("Unexpected server error");
       }
     }
   };
 
-//   const handleSignUpFacebook = () => {
-//     console.log("facebook");
-//   };
+  //   const handleSignUpFacebook = () => {
+  //     console.log("facebook");
+  //   };
 
-//   const handleSignUpGoogle = () => {
-//     console.log("google");
-//   };
+  //   const handleSignUpGoogle = () => {
+  //     console.log("google");
+  //   };
 
   return (
     <>
@@ -122,19 +117,14 @@ const LoginFormSection = () => {
           <input
             type="checkbox"
             id="rememberMe"
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="rememberMe">Remember me</label>
+          <label htmlFor="rememberMe" className="cursor-pointer">Remember me</label>
         </div>
       </div>
 
-      <div className=" mt-[16px]">
-        {isDisabled ? (
-          <p className="text-red-500">Ви вичерпали всі спроби!</p>
-        ) : (
-          <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
-        )}
-      </div>
       <div className=" mt-[16px]">
         <div>
           {loginMessage && (
@@ -149,7 +139,6 @@ const LoginFormSection = () => {
           type="button"
           className="!w-[208px] mx-auto mt-[2px] mb-[46px]"
           onClick={handleSignIn}
-          disabled={isDisabled}
         />
       </div>
 
