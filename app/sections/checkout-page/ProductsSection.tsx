@@ -8,9 +8,11 @@ import { CreateOrder } from "@/services/OrderService";
 const ProductsSection = ({
   basicInfo,
   shippingValue,
+  addressInfo,
 }: {
   basicInfo: any;
   shippingValue: any;
+  addressInfo: any;
 }) => {
   const { products, totalAmount } = useCart();
 
@@ -35,10 +37,10 @@ const ProductsSection = ({
       shippingAddress: {
         firstName: basicInfo.firstName,
         lastName: basicInfo.lastName,
-        address1: basicInfo.address1,
-        address2: basicInfo.address2,
+        address1: addressInfo.street ? addressInfo.street : addressInfo.warehouse,
+        address2: "буд " + addressInfo.house + ",  кв " + addressInfo.flat,
         city: basicInfo.city,
-        zip: basicInfo.zipCode,
+        zip: addressInfo.zipCode,
         countryCode: "UA",
       },
       shippingLines: shippingValue.shippingLines

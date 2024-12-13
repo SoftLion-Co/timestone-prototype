@@ -15,6 +15,10 @@ const CheckoutSection = () => {
 
   const [basicInfo, setBasicInfo] = useState({});
   const [shippingValue, setShippingValue] = useState({});
+  const [addressInfo, setAddressInfo] = useState({});
+  const [settlementRef, setSettlementRef] = useState<string>("");
+  const [cityRef, setCityRef] = useState<string>("");
+  
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
@@ -57,6 +61,7 @@ const CheckoutSection = () => {
           <ProductsSection
             basicInfo={basicInfo}
             shippingValue={shippingValue}
+            addressInfo={addressInfo}
           />
         </div>
 
@@ -66,13 +71,20 @@ const CheckoutSection = () => {
             toggleOpen={() => setBasicInfoOpen(!BasicInfoOpen)}
             onContinue={handleBasicInfoContinue}
             setBasicInfo={setBasicInfo}
+            setSettlementRef={setSettlementRef}
+            setCityRef={setCityRef}
           />
+
           <ShippingSection
             isOpen={ShippingOpen}
             toggleOpen={() => setShippingOpen(!ShippingOpen)}
             onContinue={handleShippingContinue}
             setShippingValue={setShippingValue}
+            setAddressInfo={setAddressInfo}
+            settlementRef={settlementRef}
+            cityRef={cityRef}
           />
+
           <PaymentSection
             isOpen={PaymentOpen}
             toggleOpen={() => setPaymentOpen(!PaymentOpen)}
