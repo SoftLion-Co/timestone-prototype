@@ -1,14 +1,17 @@
 "use client";
+import { useForm } from "@mantine/form";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { loginUser } from "@/services/AuthService";
-import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
   // const [value, setValue] = useState("");
+  const router = useRouter();
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -30,18 +33,24 @@ const LoginFormSection = () => {
   });
 
   useEffect(() => {
+    const tokenAccess = localStorage.getItem("accessToken");
+    const tokenRefresh = localStorage.getItem("refreshToken");
+    
+    if (tokenAccess || tokenRefresh) {
+      router.push("/account");
+    }
+    
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
       loginForm.setFieldValue("email", savedEmail);
       setRememberMe(true);
     }
-
+     
   }, []);
 
   const handleSignIn = async () => {
     const errors = loginForm.validate();
-    if (!errors.hasErrors) {
-  
+    if (!errors.hasErrors) {  
       setIsLoading(true);
       const { email, password } = loginForm.values;
 
@@ -51,11 +60,12 @@ const LoginFormSection = () => {
       const response = await loginUser(email, password);
       
       setIsLoading(false);
-      if (response === "logged") {
+      if (response === "200") {
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
         } 
         loginForm.reset();
+        router.push("/account");
         setLoginMessage(null);
       } else if (response == "A user with this email address already exists") {
         setLoginMessage("This email does not exist. Try again.");

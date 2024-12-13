@@ -6,6 +6,8 @@ export const addNewReceiver = async (
   email: string
 ): Promise<any> => {
   try {
+console.log(name,email)
+
     const response = await axios.post(`${BASE_URL}/newsletter/receiver`, {
       name,
       email,

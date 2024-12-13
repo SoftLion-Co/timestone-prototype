@@ -58,8 +58,8 @@ const RegistrationFormSection = () => {
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [month, setMonth] = useState("january");
-  const [day, setDay] = useState("01");
+  const [month, setMonth] = useState("february");
+  const [day, setDay] = useState("1");
   const dayOptions = getDaysInMonth(month);
 
   const registrationForm = useForm({
