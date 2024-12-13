@@ -1,26 +1,76 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
+
+interface City {
+  Ref: string;
+  Present: string;
+  DeliveryCity: string;
+}
 
 const BasicInfoSection: FC<{
   isOpen: boolean;
   toggleOpen: () => void;
   onContinue: (isValid: boolean) => void;
   setBasicInfo: any;
-}> = ({ onContinue, setBasicInfo, toggleOpen, isOpen }) => {
+  setSettlementRef: any;
+  setCityRef: any;
+}> = ({
+  onContinue,
+  setBasicInfo,
+  toggleOpen,
+  isOpen,
+  setSettlementRef,
+  setCityRef,
+}) => {
+  const [cities, setCities] = useState<City[]>([]);
+
+  const handleInputChange = async ({
+    target: { value },
+  }: {
+    target: { value: string };
+  }) => {
+    form.setFieldValue("city", value);
+
+    if (!value.trim()) {
+      return setCities([]);
+    }
+
+    const { data } = await axios.get(`${BASE_URL}/cities`, {
+      params: { query: value },
+    });
+    setCities(data?.[0]?.Addresses || []);
+  };
+
+  const handleSelectChange = ({
+    target: { value },
+  }: {
+    target: { value: string };
+  }) => {
+    const selectedCity = cities.find(({ Ref }) => Ref === value);
+    if (selectedCity) {
+      form.setFieldValue("city", selectedCity.Present);
+      setSettlementRef(selectedCity.Ref);
+      setCityRef(selectedCity.DeliveryCity);
+      setCities([]);
+    }
+    // console.log(selectedCity?.Present);
+    // console.log(selectedCity?.Ref);
+    // console.log(selectedCity?.DeliveryCity);
+  };
   const form = useForm({
     initialValues: {
       email: "",
       firstName: "",
       lastName: "",
       phone: "",
-      address1: "",
-      address2: "",
       city: "",
-      zipCode: "",
+      // zipCode: "",
     },
     validate: {
       email: isEmail("Invalid email"),
@@ -28,10 +78,8 @@ const BasicInfoSection: FC<{
       lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
       phone: (value) =>
         /^\d{10}$/.test(value) ? null : "Invalid phone number",
-      address1: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      address2: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      city: hasLength({ min: 2 }, "Invalid"),
-      zipCode: (value) => (/^\d{5}$/.test(value) ? null : "Invalid"),
+      city: (value) => (value.trim() ? null : "City is required"),
+      // zipCode: (value) => (/^\d{5}$/.test(value) ? null : "Invalid"),
     },
   });
 
@@ -100,49 +148,25 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Address 1"
+          placeholder="Населений пункт"
           required={true}
           bordered={true}
-          {...form.getInputProps("address1")}
+          {...form.getInputProps("city")}
+          onChange={handleInputChange}
           errorType="critical"
           fullWidth
           className="mini:w-[80%]"
         />
 
-        <Input
-          inputType="input"
-          placeholder="Address 2"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("address2")}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%]"
-        />
-
-        <div className="flex gap-[10px] items-center mini:w-[80%]">
-          <Input
-            inputType="input"
-            placeholder="City"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("city")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[60%]"
-          />
-
-          <Input
-            inputType="input"
-            placeholder="Zip Code"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("zipCode")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[40%]"
-          />
-        </div>
+        {cities.length > 0 && (
+          <select onChange={handleSelectChange}>
+            {cities.map((city) => (
+              <option key={city.Ref} value={city.Ref}>
+                {city.Present}
+              </option>
+            ))}
+          </select>
+        )}
 
         <Button
           text="Continue"
@@ -178,5 +202,19 @@ export default BasicInfoSection;
           {...form.getInputProps("country")}
           onSelect={(value) => form.setFieldValue("country", value)}
           errorType="critical"
-        /> */
+        /> 
+
+          <Input
+            inputType="input"
+            placeholder="Zip Code"
+            required={true}
+            bordered={true}
+            {...form.getInputProps("zipCode")}
+            errorType="critical"
+            fullWidth
+            className="mini:w-[40%]"
+        </div>
+        /> 
+  }
+  */
 }
