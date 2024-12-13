@@ -12,7 +12,6 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(10);
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
@@ -28,20 +27,22 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(1);
     const originalRequest = error.config;
-    console.log(originalRequest);
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const tokens = await updateRefreshToken();
-        if (tokens?.accessToken) {
-          localStorage.setItem("accessToken", tokens.accessToken);
-          localStorage.setItem("refreshToken", tokens.refreshToken);
+        console.log(tokens);
+
+        if (tokens?.newAccessToken) {
+          localStorage.setItem("accessToken", tokens.newAccessToken);
+          localStorage.setItem("refreshToken", tokens.newRefreshToken);
+        console.log( tokens.newAccessToken);
+
           originalRequest.headers[
             "Authorization"
-          ] = `Bearer ${tokens.accessToken}`;
+          ] = `Bearer ${tokens.newAccessToken}`;
           return api(originalRequest);
         } else {
           localStorage.setItem("accessToken", "");

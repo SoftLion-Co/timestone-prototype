@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import { Alert } from "flowbite-react";
+import { TfiAlert } from "react-icons/tfi";
+import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
-import { HiInformationCircle } from "react-icons/hi";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Input from "@/components/InputComponent";
@@ -19,7 +20,7 @@ const NewsSection = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{
-    type: "success" | "failure";
+    type: string;
     text: string;
   } | null>(null);
 
@@ -34,16 +35,16 @@ const NewsSection = () => {
     },
   });
 
-  useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedAttempts = localStorage.getItem("inputAttempts");
+  //   if (savedAttempts) {
+  //     const parsedAttempts = Number(savedAttempts);
+  //     setAttempts(parsedAttempts);
+  //     if (parsedAttempts >= MAX_ATTEMPTS) {
+  //       setIsDisabled(true);
+  //     }
+  //   }
+  // }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,7 +56,7 @@ const NewsSection = () => {
 
     const values = form.values;
 
-    await addNewReceiver(values.name, values.email);
+    const response = await addNewReceiver(values.name, values.email);
 
     if (attempts < MAX_ATTEMPTS) {
       const newAttempts = attempts + 1;
@@ -65,11 +66,22 @@ const NewsSection = () => {
         setIsDisabled(true);
       }
     }
+
+    if (response === 201) {
+      setIsLoading(false);
+      setMessage({
+        type: "success",
+        text: "You have successfully subscribed to our newsletter!",
+      });
+    } else {
+      setIsLoading(false);
+      setMessage({
+        type: "error",
+        text: "Oops! A server error occurred!",
+      });
+    }
+
     setIsLoading(false);
-    setMessage({
-      type: "success",
-      text: "You subscribed successfully to our newsletter!",
-    });
     setTimeout(() => {
       setMessage(null);
     }, 5000);
@@ -81,9 +93,11 @@ const NewsSection = () => {
     <>
       {message && (
         <Alert
-          color="green"
-          icon={HiInformationCircle}
-          className="fixed bottom-0 right-0 m-4 p-4 z-10 text-[green] text-[16px] lg:text-[18px]"
+          color={message.type === "success" ? "green" : "red"}
+          icon={message.type === "success" ? FiCheckCircle : TfiAlert}
+          className={`fixed bottom-0 right-0 m-4 p-4 z-10 text-[16px] lg:text-[18px] ${
+            message.type === "success" ? "text-[green]" : "text-[red]"
+          }`}
         >
           {message.text}
         </Alert>
@@ -141,6 +155,12 @@ const NewsSection = () => {
               background="onyx"
               className="w-[160px]"
               disabled={isDisabled}
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
             />
           </form>
 

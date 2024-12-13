@@ -2,8 +2,9 @@
 import { Loader } from "@mantine/core";
 import { Alert } from "flowbite-react";
 import { useForm } from "@mantine/form";
+import { TfiAlert } from "react-icons/tfi";
+import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
-import { HiInformationCircle } from "react-icons/hi";
 
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
@@ -99,6 +100,7 @@ const MyAccountSection = () => {
     const fetchUserData = async () => {
       try {
         const { user, subscribe } = await getUser();
+        console.log(subscribe);
         setUserName(`${user.firstName} ${user.lastName}` || "");
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
@@ -207,28 +209,60 @@ const MyAccountSection = () => {
       dateOfBirth: `${values1.month},${values1.date}`,
       address: `${values1.country}&${values1.city}&${values1.address}&${values1.zipCode}`,
     });
-
+    console.log(response);
     let response1;
-    if (subscribe !== values1.subscribe) {
-      if (values1.subscribe) {
-        response1 = await addNewReceiver(values1.name, values1.email);
-        if (response1 === 201) {
-          setSubscribe(true);
-          form.setFieldValue("subscribe", true);
+    if (response === 201) {
+      if (subscribe !== values1.subscribe) {
+        if (values1.subscribe) {
+          response1 = await addNewReceiver(values1.name, values1.email);
+          if (response1 === 201) {
+            setSubscribe(true);
+            form.setFieldValue("subscribe", true);
+            setLoading(false);
+            setInfoMessage({
+              type: "success",
+              text: "Your details updated successfully!",
+            });
+          } else {
+            setLoading(false);
+            setInfoMessage({
+              type: "error",
+              text: "Oops! A server error occurred!",
+            });
+          }
+        } else {
+          response1 = await removeReceiver(values1.email);
+          if (response1 === 204) {
+            setSubscribe(false);
+            form.setFieldValue("subscribe", false);
+            setLoading(false);
+            setInfoMessage({
+              type: "success",
+              text: "Your details updated successfully!",
+            });
+          } else {
+            setLoading(false);
+            setInfoMessage({
+              type: "error",
+              text: "Oops! A server error occurred!",
+            });
+          }
         }
       } else {
-        response1 = await removeReceiver(values1.email);
-        if (response1 === 204) {
-          setSubscribe(false);
-          form.setFieldValue("subscribe", false);
-        }
+        setLoading(false);
+        setInfoMessage({
+          type: "success",
+          text: "Your details updated successfully!",
+        });
       }
+    } else {
+      setLoading(false);
+      setInfoMessage({
+        type: "error",
+        text: "Oops! A server error occurred!",
+      });
     }
-    setLoading(false);
-    setInfoMessage({
-      type: "success",
-      text: "Your details updated successfully!",
-    });
+
     setTimeout(() => {
       setInfoMessage(null);
     }, 5000);
@@ -240,14 +274,25 @@ const MyAccountSection = () => {
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
     const response = await updatePassword(values2.password);
+    console.log(response);
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
+    if (response.status === 201) {
+      setLoading(false);
+      setInfoMessage({
+        type: "success",
+        text: "Your password updated successfully!",
+      });
+    } else {
+      setLoading(false);
+      setInfoMessage({
+        type: "error",
+        text: "Oops! A server error occurred!",
+      });
+    }
     setLoading(false);
-    setInfoMessage({
-      type: "success",
-      text: "Your password updated successfully!",
-    });
+
     setTimeout(() => {
       setInfoMessage(null);
     }, 5000);
@@ -267,9 +312,11 @@ const MyAccountSection = () => {
     <>
       {infoMessage && (
         <Alert
-          color="green"
-          icon={HiInformationCircle}
-          className="fixed bottom-0 right-0 m-4 p-4 z-10 text-[green] text-[16px] lg:text-[18px]"
+          color={infoMessage.type === "success" ? "green" : "red"}
+          icon={infoMessage.type === "success" ? FiCheckCircle : TfiAlert}
+          className={`fixed bottom-0 right-0 m-4 p-4 z-10 text-[16px] lg:text-[18px] ${
+            infoMessage.type === "success" ? "text-[green]" : "text-[red]"
+          }`}
         >
           {infoMessage.text}
         </Alert>
@@ -434,7 +481,17 @@ const MyAccountSection = () => {
               </label>
             </div>
           </div>
-          <Button text="Update" className="mt-[-20px]" type="submit" />
+          <Button
+            text="Update"
+            className="mt-[-20px]"
+            type="submit"
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
+          />
         </form>
 
         <form
@@ -474,7 +531,16 @@ const MyAccountSection = () => {
               </div>
             </div>
           </div>
-          <Button text="Update" className="" type="submit" />
+          <Button
+            text="Update"
+            type="submit"
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
+          />
         </form>
       </>
     </>

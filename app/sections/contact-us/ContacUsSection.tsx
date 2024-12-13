@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import { Alert } from "flowbite-react";
+import { TfiAlert } from "react-icons/tfi";
+import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
-import { HiInformationCircle } from "react-icons/hi";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
 import Input from "@/components/InputComponent";
@@ -20,7 +21,7 @@ const ContactUsSection = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{
-    type: "success" | "failure";
+    type: string;
     text: string;
   } | null>(null);
 
@@ -59,7 +60,26 @@ const ContactUsSection = () => {
       return;
     }
     const values = form.values;
-    await sendEmailToUs(values.fullName, values.email, values.message);
+    const response = await sendEmailToUs(
+      values.fullName,
+      values.email,
+      values.message
+    );
+
+    if (response === 200) {
+      setIsLoading(false);
+      setMessage({
+        type: "success",
+        text: "Message sent successfully!",
+      });
+    } else {
+      setIsLoading(false);
+      setMessage({
+        type: "error",
+        text: "Oops! A server error occurred!",
+      });
+    }
+
     if (attempts < MAX_ATTEMPTS) {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
@@ -68,11 +88,8 @@ const ContactUsSection = () => {
         setIsDisabled(true);
       }
     }
+
     setIsLoading(false);
-    setMessage({
-      type: "success",
-      text: "Message sent successfully!",
-    });
     setTimeout(() => {
       setMessage(null);
     }, 5000);
@@ -84,9 +101,11 @@ const ContactUsSection = () => {
     <>
       {message && (
         <Alert
-          color="green"
-          icon={HiInformationCircle}
-          className="fixed bottom-0 right-0 m-4 p-4 z-10 text-[green] text-[16px] lg:text-[18px]"
+          color={message.type === "success" ? "green" : "red"}
+          icon={message.type === "success" ? FiCheckCircle : TfiAlert}
+          className={`fixed bottom-0 right-0 m-4 p-4 z-10 text-[16px] lg:text-[18px] ${
+            message.type === "success" ? "text-[green]" : "text-[red]"
+          }`}
         >
           {message.text}
         </Alert>
@@ -154,6 +173,12 @@ const ContactUsSection = () => {
                 disabled={isDisabled}
                 type="submit"
                 tag="button"
+                onClick={() => {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  });
+                }}
               />
             </form>
           </div>

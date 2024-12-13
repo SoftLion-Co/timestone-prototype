@@ -42,7 +42,6 @@ export const loginUser = async (
       email,
       password,
     });
-    console.log(response);
     if (response?.data?.accessToken && response?.data?.refreshToken) {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
@@ -85,7 +84,7 @@ export const updatePassword = async (newPassword: string): Promise<any> => {
     const res = await api.post(`/auth/update-password`, {
       password: newPassword,
     });
-    return res.data;
+    return res;
   } catch (error) {
     console.error("Error updating password:", error);
   }
@@ -94,7 +93,8 @@ export const updatePassword = async (newPassword: string): Promise<any> => {
 export const updateRefreshToken = async (): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, refreshToken);
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, {refreshToken});
+
     return res.data;
   } catch (error) {
     console.error("Error refreshing token:", error);
