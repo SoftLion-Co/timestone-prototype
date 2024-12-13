@@ -68,7 +68,7 @@ const NewsSection = () => {
     setIsLoading(false);
     setMessage({
       type: "success",
-      text: "You have successfully subscribed to our newsletter!",
+      text: "You subscribed successfully to our newsletter!",
     });
     setTimeout(() => {
       setMessage(null);
@@ -83,7 +83,7 @@ const NewsSection = () => {
         <Alert
           color="green"
           icon={HiInformationCircle}
-          className="fixed bottom-0 right-0 m-4 z-10 text-[green]"
+          className="fixed bottom-0 right-0 m-4 p-4 z-10 text-[green] text-[16px] lg:text-[18px]"
         >
           {message.text}
         </Alert>

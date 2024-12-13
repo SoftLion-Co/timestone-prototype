@@ -227,7 +227,7 @@ const MyAccountSection = () => {
     setLoading(false);
     setInfoMessage({
       type: "success",
-      text: "Your details have been successfully updated!",
+      text: "Your details updated successfully!",
     });
     setTimeout(() => {
       setInfoMessage(null);
@@ -236,16 +236,17 @@ const MyAccountSection = () => {
 
   const handleSubmitPassword = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
     const response = await updatePassword(values2.password);
-
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
+    setLoading(false);
     setInfoMessage({
       type: "success",
-      text: "Your password has been successfully updated!",
+      text: "Your password updated successfully!",
     });
     setTimeout(() => {
       setInfoMessage(null);
@@ -268,223 +269,214 @@ const MyAccountSection = () => {
         <Alert
           color="green"
           icon={HiInformationCircle}
-          className="fixed bottom-0 right-0 m-4 text-[green]"
+          className="fixed bottom-0 right-0 m-4 p-4 z-10 text-[green] text-[16px] lg:text-[18px]"
         >
           {infoMessage.text}
         </Alert>
       )}
       {loading && <LoaderComponent />}
-      {loading ? (
-        <div className="container  flex justify-center items-center">
-          <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
+
+      <>
+        <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
+          <h1 className="text-black text-[32px] md:text-[46px] font-medium">
+            Hey, {userName}
+          </h1>
+          <p className="text-[12px] text-silver md:text-[14px] text-center">
+            Welcome to your dashboard, your one-stop-shop for all your recent
+            Timestone account activity.
+          </p>
         </div>
-      ) : (
-        <>
-          <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
-            <h1 className="text-black text-[32px] md:text-[46px] font-medium">
-              Hey, {userName}
-            </h1>
-            <p className="text-[12px] text-silver md:text-[14px] text-center">
-              Welcome to your dashboard, your one-stop-shop for all your recent
-              Timestone account activity.
-            </p>
+
+        <form
+          className="flex flex-col  items-center gap-[46px] lg:items-end"
+          onSubmit={handleSubmit}
+        >
+          <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
+            <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
+            <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+              <div className="w-full lg:w-[45%] flex flex-col">
+                <Input
+                  inputType="input"
+                  className="w-full"
+                  placeholder="First Name"
+                  type="text"
+                  error={true}
+                  errorType="critical"
+                  bordered
+                  fullWidth
+                  {...form.getInputProps("name")}
+                />
+              </div>
+
+              <div className="w-full lg:w-[45%] flex flex-col">
+                <Input
+                  inputType="input"
+                  className="w-full"
+                  placeholder="Last Name"
+                  type="text"
+                  error={true}
+                  errorType="critical"
+                  bordered
+                  fullWidth
+                  {...form.getInputProps("fullname")}
+                />
+              </div>
+
+              <div className="w-full lg:w-[45%] flex flex-col">
+                <Input
+                  inputType="input"
+                  className="w-full"
+                  placeholder="Email"
+                  type="email"
+                  fullWidth
+                  error={true}
+                  errorType="critical"
+                  bordered
+                  {...form.getInputProps("email")}
+                />
+              </div>
+
+              <div className="w-full lg:w-[45%] flex flex-col">
+                <Input
+                  inputType="input"
+                  placeholder="Phone Number"
+                  type="text"
+                  className="w-full"
+                  bordered
+                  errorType="critical"
+                  fullWidth
+                  {...form.getInputProps("phone")}
+                />
+              </div>
+              <Input
+                placeholder="Month"
+                inputType="select"
+                value={month}
+                scrollable={true}
+                onSelect={(value) => setMonth(value)}
+                options={months}
+                bordered={true}
+                className="mini:w-full lg:w-[45%]"
+              />
+
+              <Input
+                placeholder="Date"
+                inputType="select"
+                bordered={true}
+                value={day}
+                options={dayOptions}
+                scrollable={true}
+                onSelect={(value) => setDay(value)}
+                className="mini:w-full lg:w-[45%]"
+              />
+            </div>
           </div>
 
-          <form
-            className="flex flex-col  items-center gap-[46px] lg:items-end"
-            onSubmit={handleSubmit}
-          >
-            <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
-              <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    className="w-full"
-                    placeholder="First Name"
-                    type="text"
-                    error={true}
-                    errorType="critical"
-                    bordered
-                    fullWidth
-                    {...form.getInputProps("name")}
-                  />
-                </div>
+          <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
+            <h2 className="mb-[20px] text-[24px] text-silver">Address Book</h2>
 
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    className="w-full"
-                    placeholder="Last Name"
-                    type="text"
-                    error={true}
-                    errorType="critical"
-                    bordered
-                    fullWidth
-                    {...form.getInputProps("fullname")}
-                  />
-                </div>
-
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    className="w-full"
-                    placeholder="Email"
-                    type="email"
-                    fullWidth
-                    error={true}
-                    errorType="critical"
-                    bordered
-                    {...form.getInputProps("email")}
-                  />
-                </div>
-
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    placeholder="Phone Number"
-                    type="text"
-                    className="w-full"
-                    bordered
-                    errorType="critical"
-                    fullWidth
-                    {...form.getInputProps("phone")}
-                  />
-                </div>
+            <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+              <Input
+                name="country"
+                placeholder="Country"
+                inputType="select"
+                value={country}
+                options={countries}
+                onSelect={(value) => setCountry(value)}
+                className="mini:w-full lg:w-[45%]"
+              />
+              <Input
+                inputType="select"
+                name="city"
+                value={city}
+                options={cities}
+                scrollable
+                onSelect={(value) => {
+                  setCity(value);
+                }}
+                className="mini:w-full lg:w-[45%]"
+                placeholder="City"
+              />
+              <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  placeholder="Month"
-                  inputType="select"
-                  value={month}
-                  scrollable={true}
-                  onSelect={(value) => setMonth(value)}
-                  options={months}
-                  bordered={true}
-                  className="mini:w-full lg:w-[45%]"
+                  inputType="input"
+                  name="address"
+                  placeholder="Address"
+                  type="text"
+                  bordered
+                  className="w-full"
+                  {...form.getInputProps("address")}
                 />
-
+              </div>
+              <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  placeholder="Date"
-                  inputType="select"
-                  bordered={true}
-                  value={day}
-                  options={dayOptions}
-                  scrollable={true}
-                  onSelect={(value) => setDay(value)}
-                  className="mini:w-full lg:w-[45%]"
+                  inputType="input"
+                  name="zipCode"
+                  placeholder="Zip Code"
+                  type="text"
+                  bordered
+                  className="w-full"
+                  {...form.getInputProps("zipCode")}
                 />
               </div>
             </div>
+          </div>
+          <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
+            <div className="flex items-center">
+              <input
+                {...form.getInputProps("subscribe")}
+                type="checkbox"
+                id="sign-up-update"
+                className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+              />
+              <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
+                Sign-up to receive the latest updates and promotions
+              </label>
+            </div>
+          </div>
+          <Button text="Update" className="mt-[-20px]" type="submit" />
+        </form>
 
-            <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-              <h2 className="mb-[20px] text-[24px] text-silver">
-                Address Book
-              </h2>
-
-              <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+        <form
+          className="flex flex-col items-center gap-[46px] mt-[46px] lg:items-end"
+          onSubmit={handleSubmitPassword}
+        >
+          <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
+            <h2 className="mb-[20px] text-[24px] text-silver">New password</h2>
+            <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+              <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  name="country"
-                  placeholder="Country"
-                  inputType="select"
-                  value={country}
-                  options={countries}
-                  onSelect={(value) => setCountry(value)}
-                  className="mini:w-full lg:w-[45%]"
+                  inputType="input"
+                  type="password"
+                  name="password"
+                  placeholder="Your password"
+                  bordered
+                  error={true}
+                  errorType="critical"
+                  fullWidth
+                  className="w-full"
+                  {...formWithPass.getInputProps("password")}
                 />
+              </div>
+              <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  inputType="select"
-                  name="city"
-                  value={city}
-                  options={cities}
-                  scrollable
-                  onSelect={(value) => {
-                    setCity(value);
-                  }}
-                  className="mini:w-full lg:w-[45%]"
-                  placeholder="City"
+                  inputType="input"
+                  type="password"
+                  name="Confirm password"
+                  placeholder="Confirm password"
+                  bordered
+                  error={true}
+                  errorType="critical"
+                  fullWidth
+                  className="w-full"
+                  {...formWithPass.getInputProps("verify")}
                 />
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    name="address"
-                    placeholder="Address"
-                    type="text"
-                    bordered
-                    className="w-full"
-                    {...form.getInputProps("address")}
-                  />
-                </div>
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    name="zipCode"
-                    placeholder="Zip Code"
-                    type="text"
-                    bordered
-                    className="w-full"
-                    {...form.getInputProps("zipCode")}
-                  />
-                </div>
               </div>
             </div>
-            <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
-              <div className="flex items-center">
-                <input
-                  {...form.getInputProps("subscribe")}
-                  type="checkbox"
-                  id="sign-up-update"
-                  className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                />
-                <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
-                  Sign-up to receive the latest updates and promotions
-                </label>
-              </div>
-            </div>
-            <Button text="Update" className="mt-[-20px]" type="submit" />
-          </form>
-
-          <form
-            className="flex flex-col items-center gap-[46px] mt-[46px] lg:items-end"
-            onSubmit={handleSubmitPassword}
-          >
-            <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-silver">
-                New password
-              </h2>
-              <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    type="password"
-                    name="password"
-                    placeholder="Your password"
-                    bordered
-                    error={true}
-                    errorType="critical"
-                    fullWidth
-                    className="w-full"
-                    {...formWithPass.getInputProps("password")}
-                  />
-                </div>
-                <div className="w-full lg:w-[45%] flex flex-col">
-                  <Input
-                    inputType="input"
-                    type="password"
-                    name="Confirm password"
-                    placeholder="Confirm password"
-                    bordered
-                    error={true}
-                    errorType="critical"
-                    fullWidth
-                    className="w-full"
-                    {...formWithPass.getInputProps("verify")}
-                  />
-                </div>
-              </div>
-            </div>
-            <Button text="Update" className="" type="submit" />
-          </form>
-        </>
-      )}
+          </div>
+          <Button text="Update" className="" type="submit" />
+        </form>
+      </>
     </>
   );
 };
