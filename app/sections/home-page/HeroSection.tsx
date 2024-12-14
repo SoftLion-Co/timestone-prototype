@@ -7,10 +7,9 @@ import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
 import Twitter from "@/images/social-networks/twitter.svg";
 import Facebook from "@/images/social-networks/facebook.svg";
-import FollowUs from "@/images/social-networks/follow-us.svg";
 
 import Button from "@/components/ButtonComponent";
-import TitleComponents from "@/components/TitleComponents";
+
 
 interface HeroProps {
   className?: string;
@@ -35,13 +34,13 @@ const Links: FC<HeroProps> = ({ className }) => {
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 focus:bg-darkBurgundy hover:bg-darkBurgundy group"
+            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 hover:bg-darkBurgundy group"
           >
             <Image
               src={item.image}
               alt={item.title}
               height={12}
-              className="h-[18px] w-[18px] transition-all duration-300 group-hover:filter group-hover:brightness-0 group-hover:invert focus: group-focus:invert"
+              className="h-[18px] w-[18px] transition-all duration-300 group-hover:filter group-hover:brightness-0 group-hover:invert"
             />
           </Link>
         ))}
@@ -58,7 +57,7 @@ const Links: FC<HeroProps> = ({ className }) => {
 const HeroSection: FC = () => {
   return (
     <section className="flex flex-col relative py-[40px] lg:py-[60px]">
-      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[60px] lg:items-start xl:items-center">
+      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[15px] lg:items-start xl:items-center">
         <Links className="hidden lg:grid" />
 
         <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">
