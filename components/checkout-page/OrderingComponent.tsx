@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
+import ReactDOM from "react-dom";
+import { useDisclosure } from "@mantine/hooks";
 import React, {useEffect, useState} from "react";
 import { MantineProvider, Modal } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 
 import Button from "../ButtonComponent";
 
@@ -24,11 +25,11 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
       
     }
   }, [opened]);
-  return (
+  return ReactDOM.createPortal(
     <MantineProvider>
       {opened && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-[999]"
+          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-50"
           onClick={close}
         />
       )}
@@ -58,7 +59,8 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
           <Image src={Thanks} alt="thanks" className="object-cover rounded-[32px]" />
         </div>
       </Modal>
-    </MantineProvider>
+    </MantineProvider>,
+     document.body 
   );
 };
 
