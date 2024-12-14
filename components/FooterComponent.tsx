@@ -6,8 +6,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col items-center gap-[60px] pt-[80px]">
-      <Link href="/">
+    <footer className="flex flex-col items-center gap-[60px] pt-[80px] ">
+      <Link href="/" className="px-[20px]">
         <Image
           src={Logo}
           alt="Logo"
@@ -19,7 +19,7 @@ const Footer = () => {
 
       </Link>
 
-      <p className="bg-pearl w-[100%] py-[20px] text-center text-silver min-h-[60px] leading-[25px]">
+      <p className="bg-pearl w-[100%] py-[20px] text-center text-silver min-h-[60px] px-[20px] leading-[25px]">
         © Copyright {currentYear} TIMESTONE - All rights reserved.
       </p>
     </footer>

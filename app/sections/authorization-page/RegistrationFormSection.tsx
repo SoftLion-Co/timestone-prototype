@@ -134,28 +134,28 @@ const RegistrationFormSection = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
-  //   if (savedAttempts) {
-  //     const parsedAttempts = Number(savedAttempts);
-  //     setAttempts(parsedAttempts);
-  //     if (parsedAttempts >= MAX_ATTEMPTS) {
-  //       setIsDisabled(true);
-  //     }
-  //   }
-  //   if (
-  //     registrationForm.values.phone &&
-  //     !registrationForm.values.phone.startsWith("+38")
-  //   ) {
-  //     registrationForm.setFieldValue(
-  //       "phone",
-  //       `+38${registrationForm.values.phone}`
-  //     );
-  //   }
-  //   if (registrationForm.values.phone.length === 2) {
-  //     registrationForm.setFieldValue("phone", "");
-  //   }
-  // }, [registrationForm.values.phone]);
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
+    if (
+      registrationForm.values.phone &&
+      !registrationForm.values.phone.startsWith("+38")
+    ) {
+      registrationForm.setFieldValue(
+        "phone",
+        `+38${registrationForm.values.phone}`
+      );
+    }
+    if (registrationForm.values.phone.length === 2) {
+      registrationForm.setFieldValue("phone", "");
+    }
+  }, [registrationForm.values.phone]);
 
   return (
     <>
