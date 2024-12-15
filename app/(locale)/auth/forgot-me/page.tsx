@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import ForgotMeFormSection from "@/app/sections/authorization-page/ForgotMeFormSection";
 
 export const metadata: Metadata = {
   title: "TIMESTONE - Відновлення пароля",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <>
+    <ForgotMeFormSection/>
     </>
   );
 };
