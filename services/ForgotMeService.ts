@@ -8,7 +8,7 @@ export const sendResetPasswordEmail = async (email: string): Promise<any> => {
       email,
     });
     console.log(response);
-    return response.data;
+    return response.status;
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {

@@ -30,8 +30,9 @@ const ForgotMeFormSection = () => {
       const { email } = forgotMeForm.values;
       const response = await sendResetPasswordEmail(email);
       setIsLoading(false);
-      if (response.data === "Reset password email sent") {
-        setForgotMeMessage("Reset email sended");
+      if (response === 200) {
+        forgotMeForm.reset();
+        setForgotMeMessage("Reset email sended. Check your email box");
       } else if (response == "No user found with this email address") {
         setForgotMeMessage("User with this email does not exist. Try again.");
       } else {
@@ -48,7 +49,7 @@ const ForgotMeFormSection = () => {
             src={Background}
             alt="Background"
             className="w-full h-full"
-            layout="fill"
+            fill
             objectFit="cover"
             loading="lazy"
           />

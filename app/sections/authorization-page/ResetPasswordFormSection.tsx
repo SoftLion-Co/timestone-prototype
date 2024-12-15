@@ -63,7 +63,7 @@ const ResetPasswordFormSection = ({
             src={Background}
             alt="Background"
             className="w-full h-full"
-            layout="fill"
+            fill
             objectFit="cover"
             loading="lazy"
           />
