@@ -30,8 +30,10 @@ const ForgotMeFormSection = () => {
       const { email } = forgotMeForm.values;
       const response = await sendResetPasswordEmail(email);
       setIsLoading(false);
-      if (response === "200") {
+      if (response.data === "Reset password email sent") {
         setForgotMeMessage("Reset email sended");
+      } else if (response == "No user found with this email address") {
+        setForgotMeMessage("User with this email does not exist. Try again.");
       } else {
         setForgotMeMessage("Error with server.");
       }

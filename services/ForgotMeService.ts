@@ -7,8 +7,16 @@ export const sendResetPasswordEmail = async (email: string): Promise<any> => {
     const response = await axios.post(`${BASE_URL}/auth/forgot-password`, {
       email,
     });
+    console.log(response);
     return response.data;
   } catch (error) {
-    console.error("Error to send reset password enail", error);
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+        if (error.status === 409 || error.status === 400) {
+          return error.response?.data;
+        } else {
+          return "server error";
+        }
+      }
   }
 };
