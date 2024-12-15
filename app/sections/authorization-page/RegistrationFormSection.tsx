@@ -50,7 +50,6 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(

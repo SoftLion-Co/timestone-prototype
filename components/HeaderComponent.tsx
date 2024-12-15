@@ -23,7 +23,7 @@ const navData = [
 ];
 
 const Header = () => {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,7 +43,7 @@ const Header = () => {
             localStorage.setItem("refreshToken", tokens.refreshToken);
             setIsLoggedIn(true);
           }
-        } else{
+        } else {
           setIsLoggedIn(false);
         }
       } catch (error) {
@@ -64,29 +64,26 @@ const Header = () => {
               <Link
                 key={index}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
-              >
+                onClick={close}
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
                 {item.text}
               </Link>
             ))}
           </nav>
 
-          <MainButton text="Watches" tag="a" href="/catalog" />
+          <MainButton text="Watches" tag="a" href="/catalog" onClick={close} />
         </div>
 
         <div className="flex gap-[25px]">
-          {/* <Link href="/">
-            <Image src={Basket} alt="Basket" />
-          </Link> */}
           <button
             className="relative"
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
-            }}
-          >
+              close();
+            }}>
             {products.length > 0 && (
-              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-3.5">
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3 top-1">
                 {products.length}
               </div>
             )}
@@ -97,12 +94,14 @@ const Header = () => {
               text="Log in"
               tag="a"
               href="/auth"
+              onClick={close}
               background="transparent"
               className="!px-[5px] text-onyx font-semibold transition-all duration-300"
             />
           ) : (
             <Link
               href="/account"
+              onClick={close}
               className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
               <Image src={Profile} alt="profile" />
             </Link>
@@ -156,16 +155,14 @@ const Header = () => {
             header: {
               backgroundColor: "#ffffff",
             },
-          }}
-        >
+          }}>
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]"
-            >
+              className="w-[24px] h-[24px]">
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>

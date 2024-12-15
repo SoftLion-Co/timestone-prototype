@@ -1,10 +1,18 @@
-import CategoryMain from '@/app/sections/category-page/CategoryMain';
+import CategoryMain from "@/app/sections/category-page/CategoryMain";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Timestone - каталог",
   description: "Пропонуємо найбільший вибір годиннників",
-  keywords: ["Годинники", "Чернівці", "онлайн-магазин", "каталог", "пошук", "фільтрація", "онлайн шопінг"],
+  keywords: [
+    "Годинники",
+    "Чернівці",
+    "онлайн-магазин",
+    "каталог",
+    "пошук",
+    "фільтрація",
+    "онлайн шопінг",
+  ],
   openGraph: {
     title: "Timestone - каталог",
     description: "Ознайомтесь з широким асортиментом годинників",
@@ -18,8 +26,8 @@ export const metadata: Metadata = {
     ],
   },
 };
-export default function CategoryPage() {
 
+export default function CategoryPage() {
   return (
     <>
       <CategoryMain />

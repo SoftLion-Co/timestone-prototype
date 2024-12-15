@@ -7,10 +7,8 @@ import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
 import Twitter from "@/images/social-networks/twitter.svg";
 import Facebook from "@/images/social-networks/facebook.svg";
-import FollowUs from "@/images/social-networks/follow-us.svg";
 
 import Button from "@/components/ButtonComponent";
-import TitleComponents from "@/components/TitleComponents";
 
 interface HeroProps {
   className?: string;
@@ -26,8 +24,7 @@ const SocialObject = [
 const Links: FC<HeroProps> = ({ className }) => {
   return (
     <div
-      className={`${className} flex gap-[10px] lg:gap-[70px] w-max justify-items-center`}
-    >
+      className={`${className} flex gap-[10px] lg:gap-[70px] w-max justify-items-center`}>
       <div className="flex gap-[12px] lg:flex-col lg:items-center">
         {SocialObject.map((item, index) => (
           <Link
@@ -35,8 +32,7 @@ const Links: FC<HeroProps> = ({ className }) => {
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 focus:bg-darkBurgundy hover:bg-darkBurgundy group"
-          >
+            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 focus:bg-darkBurgundy hover:bg-darkBurgundy group">
             <Image
               src={item.image}
               alt={item.title}
@@ -54,7 +50,6 @@ const Links: FC<HeroProps> = ({ className }) => {
   );
 };
 
-//! знайти шрифт для заголовків
 const HeroSection: FC = () => {
   return (
     <section className="flex flex-col relative py-[40px] lg:py-[60px]">

@@ -25,17 +25,20 @@ const CardComponent: FC<CardProps> = ({
 
     !isOpen && changeOpenState(true);
 
-    addToCart({
-      id: id,
-      handle: handle,
-      title: title,
-      price: +price,
-      image: image,
-      quantity: 1,
-      maxQuantity: quantity,
-      caseColor: "red",
-      strapColor: "red",
-    });
+    addToCart(
+      {
+        id: id,
+        handle: handle,
+        title: title,
+        price: +price,
+        image: image,
+        quantity: 1,
+        maxQuantity: quantity,
+        caseColor: "red",
+        strapColor: "red",
+      },
+      1
+    );
   };
 
   return (
@@ -52,8 +55,7 @@ const CardComponent: FC<CardProps> = ({
         </Link>
         <button
           onClick={(e) => handleAddToBasket(e, id)}
-          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300"
-        >
+          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300">
           <Image
             src={Basket}
             width={33}
