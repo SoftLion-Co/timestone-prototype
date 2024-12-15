@@ -61,7 +61,7 @@ const AccountSection = () => {
   };
   return (
     <>
-      <section className="bg-[#F4F6F6] bg-opacity-50 min-h-screen">
+      <section className="bg-pearl bg-opacity-50 min-h-screen">
         <TitleComponents text="Timestone Account" />
         <ProfileSideBarComponent
           className="container pt-[20px] xl:pt-[40px]"

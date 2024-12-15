@@ -53,11 +53,9 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   };
 
   useEffect(() => {
-    console.log("r", type);
-    console.log(items);
-    console.log(selectedItems);
+    console.log("d", selectedItems);
 
-  }, [items]);
+  }, [selectedItems]);
 
   return (
     <>
@@ -84,7 +82,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "search" && (
           <div className="flex gap-3">
             <input
-              className="rounded-sm bg-white py-[14px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+              className="rounded-sm bg-white py-[8px] border pl-3 pr-10 w-full border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
               placeholder="Type Here"
               value={searchQuery}

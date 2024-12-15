@@ -5,14 +5,6 @@ import Button from "@/components/ButtonComponent";
 
 import TestImgWoman from "@/images/our-mission/watch-on-woman.png";
 
-const textOurMissionObject = {
-  title: "OUR MISSION",
-  textParagraph1:
-    "We have invested 6 year of our lifes to invent a new technology of production a 3D dials with quality of wristwatch industry. All what we need to turn on our imagination on maximum.",
-  textParagraph2:
-    "We love Out-of-the-box designs and believe there are many people who thinks the same.",
-};
-
 const OurMissionSection = () => {
   return (
     <section className="bg-onyx mb-[20px]">
@@ -22,6 +14,7 @@ const OurMissionSection = () => {
             src={TestImgWoman}
             alt="Woman"
             className="object-cover w-full h-[574px] md:w-auto lg:h-[668px]"
+            loading="lazy"
           />
 
           <div className="absolute top-0 -right-[4px] bg-gradient-to-l from-onyx to-transparent h-full w-[110px] hidden md:block" />
@@ -33,16 +26,19 @@ const OurMissionSection = () => {
         </div>
 
         <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] lg:w-[400px] md:mx-0 md:py-0 ">
-          <h1 className="font-spaceage leading-[50px] text-[28px] md:text-[32px] lg:text-[48px]">
-            {textOurMissionObject.title}
+          <h1 className="font-frontrunner  leading-[50px] text-[28px] md:text-[32px] lg:text-[48px]">
+          Наше призначення
           </h1>
           <p className="font-poppins text-default">
-            {textOurMissionObject.textParagraph1}
+            We have invested 6 year of our lifes to invent a new technology of
+            production a 3D dials with quality of wristwatch industry. All what
+            we need to turn on our imagination on maximum.
+            <br />
+            <br />
+            We love Out-of-the-box designs and believe there are many people who
+            thinks the same.
           </p>
-          <p className="font-poppins text-default">
-            {textOurMissionObject.textParagraph2}
-          </p>
-          <Button text="Contact Us" tag="a" href="/contact-us" />
+          <Button text="Контакти" tag="a" href="/contact-us" />
         </div>
       </div>
     </section>

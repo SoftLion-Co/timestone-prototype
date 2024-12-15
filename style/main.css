@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Besley&family=Open+Sans&family=Roboto:wght@300;400;500&display=swap");
+@import url("./../fonts/f/Frontrunner.ttf");
+
 @import-normalize;
 .container {
   max-width: 320px;
@@ -40,13 +41,13 @@ html {
 
 body {
   margin: 0;
-  font-family: "Roboto";
+  font-family: "Roboto", "Frontrunner";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: "Roboto";
+  font-family: "Roboto", "LogoFontik";
 }
 
 a {
