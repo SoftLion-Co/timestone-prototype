@@ -4,6 +4,8 @@ import CartProduct from "@/components/cart-component/CartProduct";
 import { useCart } from "@/hooks/useCart";
 import { motion } from "framer-motion";
 import { CreateOrder } from "@/services/OrderService";
+import Image from "next/image";
+import Shipping from "@/images/checkout-section/shipping.svg";
 
 const ProductsSection = ({
   basicInfo,
@@ -37,8 +39,9 @@ const ProductsSection = ({
       shippingAddress: {
         firstName: basicInfo.firstName,
         lastName: basicInfo.lastName,
-        address1: addressInfo.street ? addressInfo.street : addressInfo.warehouse,
-        address2: "буд " + addressInfo.house + ",  кв " + addressInfo.flat,
+        address1:
+          addressInfo.street || addressInfo.postomat || addressInfo.department,
+        address2: addressInfo.house + " , " + addressInfo.flat,
         city: basicInfo.city,
         zip: addressInfo.zipCode,
         countryCode: "UA",
@@ -70,6 +73,16 @@ const ProductsSection = ({
             {products.map((product) => (
               <CartProduct key={product.id} card={product} />
             ))}
+            {products.length == 0 && (
+              <div className="flex my-[10px]">
+                <Image src={Shipping} alt={Shipping} />
+                <div className="flex flex-col justify-center ml-[20px]">
+                  <p className="text-[13px] md:text-[15px] text-silver">
+                    У вас немає товарів у кошику
+                  </p>
+                </div>
+              </div>
+            )}
           </ul>
         </motion.div>
 

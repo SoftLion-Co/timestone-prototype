@@ -1,17 +1,11 @@
 "use client";
-import React, { FC, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "@/config/config";
+import React, { FC, useEffect, useState } from "react";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
-
-interface City {
-  Ref: string;
-  Present: string;
-  DeliveryCity: string;
-}
+import { getCities } from "@/services/ShippingService";
+import { City } from "@/config/types";
 
 const BasicInfoSection: FC<{
   isOpen: boolean;
@@ -29,7 +23,16 @@ const BasicInfoSection: FC<{
   setCityRef,
 }) => {
   const [cities, setCities] = useState<City[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
+  // useEffect(() => {
+  //   const localValues = localStorage.getItem("Basic Info");
+  
+  //   if (localValues) {
+  //     form.setValues(JSON.parse(localValues));
+  //   }
+  // }, []);
+  
   const handleInputChange = async ({
     target: { value },
   }: {
@@ -38,20 +41,21 @@ const BasicInfoSection: FC<{
     form.setFieldValue("city", value);
 
     if (!value.trim()) {
-      return setCities([]);
+      setCities([]);
+      setError(null);
+      return;
     }
 
-    const { data } = await axios.get(`${BASE_URL}/cities`, {
-      params: { query: value },
-    });
-    setCities(data?.[0]?.Addresses || []);
+    const city = await getCities(value);
+    if (city.length === 0) {
+      setError("Населений пункт не знайдено!");
+    } else {
+      setError(null);
+    }
+    setCities(city);
   };
 
-  const handleSelectChange = ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }) => {
+  const handleSelectChange = (value: string) => {
     const selectedCity = cities.find(({ Ref }) => Ref === value);
     if (selectedCity) {
       form.setFieldValue("city", selectedCity.Present);
@@ -59,10 +63,8 @@ const BasicInfoSection: FC<{
       setCityRef(selectedCity.DeliveryCity);
       setCities([]);
     }
-    // console.log(selectedCity?.Present);
-    // console.log(selectedCity?.Ref);
-    // console.log(selectedCity?.DeliveryCity);
   };
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -70,7 +72,6 @@ const BasicInfoSection: FC<{
       lastName: "",
       phone: "",
       city: "",
-      // zipCode: "",
     },
     validate: {
       email: isEmail("Invalid email"),
@@ -79,7 +80,6 @@ const BasicInfoSection: FC<{
       phone: (value) =>
         /^\d{10}$/.test(value) ? null : "Invalid phone number",
       city: (value) => (value.trim() ? null : "City is required"),
-      // zipCode: (value) => (/^\d{5}$/.test(value) ? null : "Invalid"),
     },
   });
 
@@ -87,6 +87,7 @@ const BasicInfoSection: FC<{
     const errors = form.validate();
     if (!errors.hasErrors) {
       onContinue(true);
+      localStorage.setItem("Basic Info", JSON.stringify(form.values));
       setBasicInfo(form.values);
     } else {
       onContinue(false);
@@ -100,6 +101,7 @@ const BasicInfoSection: FC<{
         className="items-center"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
+        closeText={form.values.firstName + " " + form.values.lastName}
       >
         <Input
           inputType="input"
@@ -155,17 +157,23 @@ const BasicInfoSection: FC<{
           onChange={handleInputChange}
           errorType="critical"
           fullWidth
-          className="mini:w-[80%]"
+          className="mini:w-[80%] mb-0"
         />
 
+        {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
+
         {cities.length > 0 && (
-          <select onChange={handleSelectChange}>
-            {cities.map((city) => (
-              <option key={city.Ref} value={city.Ref}>
-                {city.Present}
-              </option>
-            ))}
-          </select>
+          <Input
+            className="mini:w-[80%]"
+            inputType="select"
+            placeholder="Оберіть населений пункт"
+            options={cities.map((city) => ({
+              value: city.Ref,
+              label: city.Present,
+            }))}
+            onSelect={handleSelectChange}
+            scrollable
+          />
         )}
 
         <Button
@@ -180,41 +188,3 @@ const BasicInfoSection: FC<{
 };
 
 export default BasicInfoSection;
-
-// const options = [
-//   { value: "UA", label: "Ukraine" },
-//   { value: "PL", label: "Poland" },
-//   { value: "USA", label: "USA" },
-// ];
-
-// country: "",
-
-//country: (value) => (value ? null : "Please select a country"),
-
-{
-  /* <Input
-          inputType="select"
-          placeholder="Country"
-          options={options}
-          className="mini:w-[80%]"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("country")}
-          onSelect={(value) => form.setFieldValue("country", value)}
-          errorType="critical"
-        /> 
-
-          <Input
-            inputType="input"
-            placeholder="Zip Code"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("zipCode")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[40%]"
-        </div>
-        /> 
-  }
-  */
-}

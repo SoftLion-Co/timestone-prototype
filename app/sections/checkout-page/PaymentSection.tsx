@@ -12,53 +12,6 @@ const PaymentSection: FC<{
   const [selectedOption, setSelectedOption] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: "cardNumber" | "expDate" | "cvv"
-  ) => {
-    let value = e.target.value.replace(/\D/g, "");
-
-    if (type === "cardNumber") {
-      value = value.slice(0, 16);
-      const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
-      form.setFieldValue("cardNumber", formattedValue);
-    }
-
-    if (type === "expDate") {
-      value = value.slice(0, 4);
-      if (value.length > 2) {
-        value = `${value.slice(0, 2)}/${value.slice(2)}`;
-      }
-      form.setFieldValue("expDate", value);
-    }
-
-    if (type === "cvv") {
-      value = value.slice(0, 3);
-      form.setFieldValue("cvv", value);
-    }
-  };
-
-  const form = useForm({
-    initialValues: {
-      cardNumber: "",
-      expDate: "",
-      cvv: "",
-    },
-    validate: {
-      cardNumber: (value) =>
-        value.replace(/\s/g, "").length < 16 ? "Invalid" : null,
-      expDate: (value) => (!/^\d{2}\/\d{2}$/.test(value) ? "Invalid" : null),
-      cvv: (value) => (value.length < 3 ? "Invalid" : null),
-    },
-  });
-
-  const handlePay = () => {
-    const { errors } = form.validate();
-    if (Object.keys(errors).length > 0) {
-      return;
-    }
-  };
-
   const handleCompletePayment = () => {
     if (!selectedOption) {
       setError("Please select a payment method");
@@ -71,100 +24,31 @@ const PaymentSection: FC<{
 
   return (
     <section>
-      <FormComponent title="Payment" isOpen={isOpen} toggleOpen={toggleOpen}>
+      <FormComponent
+        title="Payment"
+        isOpen={isOpen}
+        toggleOpen={toggleOpen}
+        closeText={selectedOption}
+      >
         <div className="flex flex-col gap-[30px] font-semibold pl-[30px]">
           <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
             <input
               type="radio"
-              value="creditCard"
-              checked={selectedOption === "creditCard"}
-              onChange={() => setSelectedOption("creditCard")}
+              checked={selectedOption === "Кредитна картка"}
+              onChange={() => setSelectedOption("Кредитна картка")}
               className="w-[25px] h-[25px] accent-darkBurgundy"
             />
             Credit Card
           </label>
 
-          {selectedOption === "creditCard" && (
-            <>
-              <div className="flex flex-col gap-[15px] mini:mx-[25px]">
-                <div>
-                  <p className="pb-[10px] text-silver">Card Number</p>
-                  <Input
-                    inputType="input"
-                    type="text"
-                    placeholder="xxxx xxxx xxxx xxxx"
-                    {...form.getInputProps("cardNumber")}
-                    onChange={(e) => handleInputChange(e, "cardNumber")}
-                    errorType="critical"
-                    fullWidth
-                    required
-                    bordered
-                    className=" mb-[5px] mini:w-[90%]"
-                  />
-                </div>
-
-                <div className="flex flex-row gap-[5px] justify-between">
-                  <div className="w-1/2">
-                    <p className="pb-[10px] text-silver">Expire Date</p>
-                    <Input
-                      inputType="input"
-                      type="text"
-                      placeholder="MM/YY"
-                      {...form.getInputProps("expDate")}
-                      onChange={(e) => handleInputChange(e, "expDate")}
-                      errorType="critical"
-                      fullWidth
-                      required
-                      bordered
-                      className="mb-[5px] mini:w-[80%]"
-                    />
-                  </div>
-
-                  <div className="w-1/2">
-                    <p className="pb-[10px] text-silver">CVV</p>
-                    <Input
-                      inputType="input"
-                      type="text"
-                      placeholder="xxx"
-                      {...form.getInputProps("cvv")}
-                      onChange={(e) => handleInputChange(e, "cvv")}
-                      errorType="critical"
-                      fullWidth
-                      required
-                      bordered
-                      className="mb-[5px] mini:w-[80%]"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  text="Pay"
-                  background="transparent"
-                  bordered
-                  className=" w-[100%] mini:w-[90%]"
-                  onClick={handlePay}
-                />
-              </div>
-            </>
-          )}
-
           <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
             <input
               type="radio"
-              value="paypal"
-              checked={selectedOption === "paypal"}
-              onChange={() => setSelectedOption("paypal")}
+              checked={selectedOption === "Paypal"}
+              onChange={() => setSelectedOption("Paypal")}
               className="w-[25px] h-[25px] accent-darkBurgundy"
             />
             PayPal
-            {selectedOption === "paypal" && (
-              <Button
-                text="Pay"
-                background="transparent"
-                bordered
-                className="ml-[30px] mini:w-[50%] w-[100%]"
-              />
-            )}
           </label>
         </div>
 
