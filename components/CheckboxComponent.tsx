@@ -20,7 +20,7 @@ const CheckboxComponent: FC<checkboxProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex flex-col my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-whisper rounded cursor-pointer mini:w-[80%] w-[100%]">
+    <div className="flex flex-col my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-silver rounded cursor-pointer mini:w-[80%] w-[100%]">
       <div className="flex items-center" onClick={onChange}>
         <input
           type="checkbox"
@@ -34,18 +34,18 @@ const CheckboxComponent: FC<checkboxProps> = ({
               ${
                 checked
                   ? "bg-darkBurgundy border-darkBurgundy"
-                  : "border-whisper"
+                  : "border-silver"
               }`}
         ></div>
 
-        <div className="ml-[15px] md:text-[14px] text-[11px]">
-          <p>{label}</p>
-          <p className="text-silver">{description}</p>
-        </div>
+        <div className="flex flex-col gap-[7px] ml-[15px] xl:flex-row xl:items-center xl:justify-between w-full">
+          <div className="md:text-[14px] text-[11px] whitespace-nowrap">
+            <p>{label}</p>
+            <p className="text-silver">{description}</p>
+          </div>
 
-        <p className="md:text-[18px] ml-[50px] lg:ml-[100px] xl:ml-[200px]">
-          {price}
-        </p>
+          <p className="text-darkBurgundy whitespace-nowrap">{price}</p>
+        </div>
       </div>
       {children}
     </div>
