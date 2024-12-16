@@ -41,13 +41,13 @@ html {
 
 body {
   margin: 0;
-  font-family: "Roboto", "Frontrunner";
+  font-family: "Frontrunner";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: "Roboto", "LogoFontik";
+  font-family: "Frontrunner";
 }
 
 a {
