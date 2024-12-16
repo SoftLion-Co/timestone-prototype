@@ -27,7 +27,7 @@ const config: Config = {
         amethyst: '#7B51A6',
         darkerAmethyst: '#6C399E',
         silver: '#595959',
-        pearl: '#F9FAFE',
+        pearl: '#F5F5F5',
         coral: '#FF8585',
         onyx: '#000000',
         snow: '#ffffff',

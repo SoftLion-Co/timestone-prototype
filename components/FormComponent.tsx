@@ -7,6 +7,7 @@ interface formProps {
   title: string;
   isOpen?: boolean;
   children?: ReactNode;
+  closeText?: string | null;
   toggleOpen?: () => void;
 }
 
@@ -15,11 +16,12 @@ const FormComponent: FC<formProps> = ({
   title,
   children,
   isOpen,
+  closeText,
   toggleOpen,
 }) => {
   return (
     <div
-      className={`${className} rounded-[5px] border-[1px] border-whisper w-full justify-center md:w-[500px] lg:w-[600px] mini:w-[420px] xl:w-[760px] mx-auto lg:mx-0`}
+      className={`${className} rounded-[5px] border-[1px] border-whisper w-full justify-center md:w-[500px] lg:w-[600px] mini:w-[420px] xl:w-[760px] mx-auto lg:mx-0 bg-pearl`}
     >
       <p className="mx-[30px] my-[25px] flex justify-between">
         <span className="font-semibold">{title}</span>
@@ -44,6 +46,8 @@ const FormComponent: FC<formProps> = ({
           {children}
         </form>
       </div>
+
+      {!isOpen && <p className="mx-[30px] mb-[20px] text-silver">{closeText}</p>}
     </div>
   );
 };
