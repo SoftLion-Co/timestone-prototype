@@ -59,7 +59,7 @@ const LoginFormSection = () => {
       const response = await loginUser(email, password);
 
       setIsLoading(false);
-      if (response === "200") {
+      if (response === 200) {
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
         }

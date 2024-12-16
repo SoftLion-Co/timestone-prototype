@@ -6,49 +6,56 @@ import Image from "next/image";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
+import { resetForgetPassword } from "@/services/ForgotMeService";
+import { useRouter } from "next/navigation";
 
 const ResetPasswordFormSection = ({
   resetPasswordToken,
 }: {
   resetPasswordToken: string;
 }) => {
+  const router = useRouter();
   const [forgotMeMessage, setForgotMeMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resetPasswordForm = useForm({
-    initialValues: { 
-        password:"",
-        confirmPassword:""
+    initialValues: {
+      password: "",
+      confirmPassword: "",
     },
-        
-    validate: {
-        password: (value) => {
-            if (/\s/.test(value)) return "Password can not contain spaces";
-            if (value.length < 6) return "Password must be at least 6 characters";
-            if (value.length > 20)
-              return "Password must not be more than 20 characters";
-            if (!/[a-z]/.test(value))
-              return "Password must contain lowercase letter";
-            if (!/[A-Z]/.test(value))
-              return "Password must contain uppercase letter";
-            if (!/[0-9]/.test(value)) return "Password must contain digit";
-            return null;
-          },
-          confirmPassword: (value, values) =>
-            value !== values.password ? "Passwords must match" : null,
-    },
-    },
-  );
 
-  const handleResetEmail = async () => {
+    validate: {
+      password: (value) => {
+        if (/\s/.test(value)) return "Password can not contain spaces";
+        if (value.length < 6) return "Password must be at least 6 characters";
+        if (value.length > 20)
+          return "Password must not be more than 20 characters";
+        if (!/[a-z]/.test(value))
+          return "Password must contain lowercase letter";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain digit";
+        return null;
+      },
+      confirmPassword: (value, values) =>
+        value !== values.password ? "Passwords must match" : null,
+    },
+  });
+
+  const handleResetPassword = async () => {
     const errors = resetPasswordForm.validate();
     if (!errors.hasErrors) {
       setIsLoading(true);
-    
-      const response = "200";
+      const { password } = resetPasswordForm.values;
+      const response = await resetForgetPassword(resetPasswordToken, password);
       setIsLoading(false);
-      if (response === "200") {
-        setForgotMeMessage("Reset email sended");
+      if (response === 200) {
+        resetPasswordForm.reset();
+        router.push("/auth");
+      } else if (response == "No user found with this reset token") {
+        setForgotMeMessage("User not found. Try again.");
+      } else if (response == "Can not set same password") {
+        setForgotMeMessage("The password should be different.");
       } else {
         setForgotMeMessage("Error with server.");
       }
@@ -116,7 +123,7 @@ const ResetPasswordFormSection = ({
               text="Send Email"
               type="button"
               className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
-              onClick={handleResetEmail}
+              onClick={handleResetPassword}
             />
           </div>
         </form>
