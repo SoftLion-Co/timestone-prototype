@@ -40,7 +40,7 @@ export type SidebarProps = {
 };
 
 export type OrderItem = {
-  id: string; 
+  id: string;
   handle: string;
   name: string;
   vendor: string;
@@ -65,4 +65,27 @@ export type Order = {
 export type Option = {
   name: string;
   values: string[];
+};
+
+export type City = {
+  Ref: string;
+  Present: string;
+  DeliveryCity: string;
+};
+
+export type Street = {
+  Present: string;
+  SettlementStreetRef: string;
+};
+
+export type Postomat = {
+  Number: number;
+  ShortAddress: string;
+  Description: string;
+  Ref: string;
+};
+
+export type Department = {
+  Description: string;
+  Ref: string;
 };
