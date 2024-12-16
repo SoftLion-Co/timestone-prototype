@@ -26,7 +26,7 @@ const Links: FC<HeroProps> = ({ className }) => {
       <div
         className={`${className} flex gap-[10px] lg:gap-[90px] w-max justify-items-center`}
       >
-        <div className="flex gap-[12px] lg:flex-col lg:items-center">
+        <div className="flex gap-[12px] lg:flex-col lg:items-center ">
           {SocialObject.map((item, index) => (
             <Link
               key={index}
@@ -47,18 +47,18 @@ const Links: FC<HeroProps> = ({ className }) => {
         <p className="hidden lg:block font-frontrunner text-[15px] tracking-widest -rotate-90 ">
           Стеж за нами
         </p>
-        <p className="lg:hidden font-frontrunner tracking-widest">FOLLOW US</p>
+        <p className="lg:hidden font-frontrunner tracking-widest">Стеж за нами</p>
       </div>
   );
 };
 
 const HeroSection: FC = () => {
   return (
-    <section className="flex flex-col relative py-[40px] lg:py-[60px]">
-      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[15px] lg:items-start xl:items-center">
+    <section className="flex flex-col relative py-[40px] lg:py-[45px] lg:px-[0px]">
+      <div className="flex flex-col items-center mx-[20px] lg:mx-[0px] gap-[40px] lg:flex-row lg:gap-[0px] lg:items-center">
         <Links className="hidden lg:grid" />
 
-        <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[600px]">
+        <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start lg:mt-[52px] mini:w-[400px] lg:w-[500px] xl:w-[600px]">
           <h1 className="font-frontrunner text-black leading-[50px] mb-4 md:mb-[20px] text-[40px] lg:text-[45px] lg:mb-[25px] xl:text-[60px] ">
             Знайди свій годинник мрії
           </h1>
@@ -86,7 +86,7 @@ const HeroSection: FC = () => {
         />
       </div>
       <Image
-        className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[620px] xl:w-auto"
+        className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[600px] xl:w-auto"
         src={Watch}
         alt="Watch"
       />

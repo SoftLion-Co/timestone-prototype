@@ -3,12 +3,12 @@ import Image from "next/image";
 
 import Button from "@/components/ButtonComponent";
 
-import TestImgWoman from "@/images/our-mission/watch-on-woman.png";
+import TestImgWoman from "@/images/our-mission/1.jpg";
 
 const OurMissionSection = () => {
   return (
     <section className="bg-onyx mb-[20px]">
-      <div className="flex flex-col items-center md:flex-row md:gap-[140px] lg:gap-[250px]">
+      <div className="flex flex-col items-center md:flex-row md:gap-[100px] lg:gap-[20%] md:mr-[15px]">
         <div className="relative w-full md:w-auto">
           <Image
             src={TestImgWoman}
@@ -25,19 +25,14 @@ const OurMissionSection = () => {
           />
         </div>
 
-        <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] lg:w-[400px] md:mx-0 md:py-0 ">
+        <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] lg:w-[400px] md:mx-0 md:py-0 md:text-right">
           <h1 className="font-frontrunner  leading-[50px] text-[28px] md:text-[32px] lg:text-[48px]">
           Наше призначення
           </h1>
-          <p className="font-poppins text-default">
-            We have invested 6 year of our lifes to invent a new technology of
-            production a 3D dials with quality of wristwatch industry. All what
-            we need to turn on our imagination on maximum.
-            <br />
-            <br />
-            We love Out-of-the-box designs and believe there are many people who
-            thinks the same.
-          </p>
+          <div className="flex flex-col font-poppins text-default gap-[10px]">
+            <p> Наш магазин спеціалізується на продажі стильних та надійних годинників, які підходять для будь-якої ситуації — від повсякденних до урочистих моментів.</p>
+            <p> Ми прагнемо дарувати нашим клієнтам не тільки точність, але й емоційний зв’язок із часом, роблячи кожен момент особливим.</p>
+          </div>
           <Button text="Контакти" tag="a" href="/contact-us" />
         </div>
       </div>

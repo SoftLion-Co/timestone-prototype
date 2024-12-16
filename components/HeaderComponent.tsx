@@ -10,7 +10,9 @@ import { Modal, Button, ActionIcon } from "@mantine/core";
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
 
-import Logo from "@/images/vectors/logo.svg";
+import Logo from "@/images/1.svg";
+
+// import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
 import Burger from "@/images/vectors/burger.svg";
 import Basket from "@/images/vectors/basket.svg";
@@ -88,7 +90,7 @@ const Header = () => {
             }}
           >
             {products.length > 0 && (
-              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-[3.2px]">
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-[red] text-white -right-3.5 -top-[3.2px]">
                 {products.length}
               </div>
             )}
@@ -100,7 +102,7 @@ const Header = () => {
               tag="a"
               href="/auth"
               background="transparent"
-              className="!px-[5px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
+              className="!px-[0px] !py-[6px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
             />
           ) : (
             <Link
@@ -118,7 +120,7 @@ const Header = () => {
   const HeaderLogo = () => {
     return (
       <Link href="/">
-        <Image src={Logo} alt="Logo" loading="lazy" />
+        <Image src={Logo} alt="Logo" loading="lazy"  />
       </Link>
     );
   };
