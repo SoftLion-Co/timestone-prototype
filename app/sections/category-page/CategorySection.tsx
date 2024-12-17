@@ -1,26 +1,29 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { usePagination } from "@mantine/hooks";
-import { useCustomPagination } from "@/hooks/useCustomPagination";
+import React, { useContext, useEffect, useState } from "react";
 
+import { CardProps } from "@/config/types";
 import ProductSceleton from "./ProductSceleton";
 import { ProductsContext } from "./CategoryMain";
 import CardComponent from "@/components/CardComponent";
 import CustomSelect from "@/components/SelectComponent";
-import { CardProps } from "@/config/types";
+import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const CategorySection = ({
   totalProducts,
   limit,
   setSort,
   setReverse,
+  isStart,
 }: {
   totalProducts: number;
   limit: number;
   setSort: React.Dispatch<React.SetStateAction<string>>;
   setReverse: React.Dispatch<React.SetStateAction<boolean>>;
+  isStart: boolean;
 }) => {
-  const { goToPage } = useCustomPagination();
+  const { goToPage, currentPage } = useCustomPagination();
   const allProducts = useContext(ProductsContext);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,12 +57,21 @@ const CategorySection = ({
     total: Math.ceil(totalProducts / limit),
     initialPage: 1,
     siblings: 1,
-    boundaries: 1
+    boundaries: 1,
   });
 
   useEffect(() => {
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
   }, []);
+
+  useEffect(() => {
+    if (currentPage === 1) {
+      pagination.setPage(0);
+      goToPage(1);
+    }
+  }, [currentPage]);
 
   const handleChangePage = (range: number) => {
     pagination.setPage(range);
@@ -102,10 +114,21 @@ const CategorySection = ({
             <ProductSceleton key={index} />
           ))}
         </div>
+      ) : allProducts.length === 0 && !isStart ? (
+        <motion.div
+          className="text-center text-gray-500 text-lg py-[40px] lg:py-[60px] lg:text-2xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.3,
+            ease: "easeInOut",
+          }}
+        >
+          Товару з даними характеристиками не знайдено
+        </motion.div>
       ) : (
         <>
           <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
             {allProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
@@ -114,14 +137,16 @@ const CategorySection = ({
             <button
               disabled={pagination.active === 1}
               onClick={() => handleChangePage(pagination.active - 1)}
-              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold">
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold"
+            >
               &lt;
             </button>
             {generatePaginationRange().map((range, index) =>
               range === "..." ? (
                 <button
                   key={index}
-                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2">
+                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2"
+                >
                   ...
                 </button>
               ) : (
@@ -132,7 +157,8 @@ const CategorySection = ({
                       ? "bg-darkBurgundy text-white"
                       : "bg-pearl text-silver hover:font-bold"
                   }`}
-                  onClick={() => handleChangePage(range as number)}>
+                  onClick={() => handleChangePage(range as number)}
+                >
                   {range}
                 </button>
               )
@@ -140,7 +166,8 @@ const CategorySection = ({
             <button
               disabled={pagination.active === Math.ceil(totalProducts / limit)}
               onClick={() => handleChangePage(pagination.active + 1)}
-              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold ">
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold "
+            >
               &gt;
             </button>
           </div>

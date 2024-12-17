@@ -3,9 +3,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 
-import Eyes from "@/images/vectors/eyes.svg"
+import Eyes from "@/images/vectors/eyes.svg";
 import Arrow from "@/images/news-section/arrow.svg";
-import ClosedEyes from "@/images/vectors/closed-Eye.svg"
+import ClosedEyes from "@/images/vectors/closed-Eye.svg";
 
 interface InputProps {
   placeholder?: string;
@@ -27,7 +27,7 @@ interface InputProps {
   required?: boolean;
   disabled?: boolean;
   maxLength?: number;
-  visible?: boolean; 
+  visible?: boolean;
   onVisibilityChange?: (visibility: boolean) => void | undefined;
 }
 
@@ -154,7 +154,7 @@ const InputComponent: FC<InputProps> = ({
           )}
         </>
       );
-    }  else if (inputType === "input") {
+    } else if (inputType === "input") {
       return (
         <>
           <input
@@ -182,30 +182,46 @@ const InputComponent: FC<InputProps> = ({
       );
     } else if (inputType === "password") {
       return (
-        <div className="relative">
-        <input
-          className={`${className} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
-          type={visible ? "text" : "password"}
-          placeholder={placeholder}
-          value={value}
-          name={name}
-          required={required}
-          disabled={disabled}
-          onChange={onChange}
-          maxLength={maxLength}
-        />
-        <button
-          type="button"
-          className="absolute right-4 top-[50%] transform -translate-y-[50%] cursor-pointer"
-          onClick={() => {
-            if (onVisibilityChange) { 
-              onVisibilityChange(!visible); 
-            }
-          }}
-        >
-          {visible ? <Image src={Eyes} alt="eyes"/> : <Image src={ClosedEyes} alt="eyes"/>}
-        </button>
-      </div>
+        <>
+          <div className="relative">
+            <input
+              className={`${className} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
+              type={visible ? "text" : "password"}
+              placeholder={placeholder}
+              value={value}
+              name={name}
+              required={required}
+              disabled={disabled}
+              onChange={onChange}
+              maxLength={maxLength}
+            />
+
+            <button
+              type="button"
+              className="absolute right-4 top-[50%] transform -translate-y-[50%] cursor-pointer"
+              onClick={() => {
+                if (onVisibilityChange) {
+                  onVisibilityChange(!visible);
+                }
+              }}
+            >
+              {visible ? (
+                <Image src={Eyes} alt="eyes" />
+              ) : (
+                <Image src={ClosedEyes} alt="eyes" />
+              )}
+            </button>
+          </div>
+          {error && (
+            <p
+              className={`text-[14px] ${
+                errorType === "critical" ? "text-darkBurgundy" : "text-snow"
+              }`}
+            >
+              {error}
+            </p>
+          )}
+        </>
       );
     } else if (inputType === "textarea") {
       return (

@@ -6,7 +6,7 @@ import { useForm } from "@mantine/form";
 import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
@@ -19,31 +19,31 @@ import Arrow from "@/images/news-section/arrow.svg";
 
 //! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
-  const countries = [{ value: "Ukraine", label: "Україна" }];
+  // const cities = [
+  //   { value: "kyiv", label: "Київ" },
+  //   { value: "lviv", label: "Львів" },
+  //   { value: "kharkiv", label: "Харків" },
+  //   { value: "odesa", label: "Одеса" },
+  //   { value: "dnipro", label: "Дніпро" },
+  //   { value: "zaporizhzhia", label: "Запоріжжя" },
+  //   { value: "vinnytsia", label: "Вінниця" },
+  //   { value: "chernihiv", label: "Чернігів" },
+  //   { value: "sumy", label: "Суми" },
+  //   { value: "poltava", label: "Полтава" },
+  //   { value: "chernivtsi", label: "Чернівці" },
+  //   { value: "ivano-frankivsk", label: "Івано-Франківськ" },
+  //   { value: "uzhhorod", label: "Ужгород" },
+  //   { value: "ternopil", label: "Тернопіль" },
+  //   { value: "khmelnytskyi", label: "Хмельницький" },
+  //   { value: "mykolaiv", label: "Миколаїв" },
+  //   { value: "rivne", label: "Рівне" },
+  //   { value: "zhytomyr", label: "Житомир" },
+  //   { value: "cherkasy", label: "Черкаси" },
+  //   { value: "kropyvnytskyi", label: "Кропивницький" },
+  //   { value: "lutsk", label: "Луцьк" },
+  // ];
 
-  const cities = [
-    { value: "kyiv", label: "Київ" },
-    { value: "lviv", label: "Львів" },
-    { value: "kharkiv", label: "Харків" },
-    { value: "odesa", label: "Одеса" },
-    { value: "dnipro", label: "Дніпро" },
-    { value: "zaporizhzhia", label: "Запоріжжя" },
-    { value: "vinnytsia", label: "Вінниця" },
-    { value: "chernihiv", label: "Чернігів" },
-    { value: "sumy", label: "Суми" },
-    { value: "poltava", label: "Полтава" },
-    { value: "chernivtsi", label: "Чернівці" },
-    { value: "ivano-frankivsk", label: "Івано-Франківськ" },
-    { value: "uzhhorod", label: "Ужгород" },
-    { value: "ternopil", label: "Тернопіль" },
-    { value: "khmelnytskyi", label: "Хмельницький" },
-    { value: "mykolaiv", label: "Миколаїв" },
-    { value: "rivne", label: "Рівне" },
-    { value: "zhytomyr", label: "Житомир" },
-    { value: "cherkasy", label: "Черкаси" },
-    { value: "kropyvnytskyi", label: "Кропивницький" },
-    { value: "lutsk", label: "Луцьк" },
-  ];
+  const cities = ["Київ", "Львів", "Харків", "Одеса"];
 
   const months = [
     { value: "january", label: "January" },
@@ -90,6 +90,7 @@ const MyAccountSection = () => {
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
+  const [address1, setAddress1] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const dayOptions = getDaysInMonth(month);
@@ -258,12 +259,14 @@ const MyAccountSection = () => {
 
   const handleSubmitPassword = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
+
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
+    setLoading(true);
     const response = await updatePassword(values2.password);
     console.log(response);
     if (Object.keys(errors.errors).length > 0) {
+      setLoading(false);
       return;
     }
     if (response.status === 201) {
@@ -296,6 +299,18 @@ const MyAccountSection = () => {
     }
   }, [form.values.phone]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const clickedElement = event.target as HTMLElement;
+      if (!clickedElement.closest("#custom-select")) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <>
       {infoMessage && (
@@ -314,11 +329,11 @@ const MyAccountSection = () => {
       <>
         <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
           <h1 className="text-black text-[32px] md:text-[46px] font-medium">
-            Hey, {userName}
+            Привіт, {userName}
           </h1>
           <p className="text-[12px] text-silver md:text-[14px] text-center">
-            Welcome to your dashboard, your one-stop-shop for all your recent
-            Timestone account activity.
+            Ласкаво просимо до вашої панелі управління — універсального центру
+            для всіх ваших останніх дій у обліковому записі.
           </p>
         </div>
 
@@ -327,13 +342,15 @@ const MyAccountSection = () => {
           onSubmit={handleSubmit}
         >
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-            <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">
+              Моя інформація
+            </h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="First Name"
+                  placeholder="Ім'я"
                   type="text"
                   error={true}
                   errorType="critical"
@@ -347,7 +364,7 @@ const MyAccountSection = () => {
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="Last Name"
+                  placeholder="Прізвище"
                   type="text"
                   error={true}
                   errorType="critical"
@@ -361,7 +378,7 @@ const MyAccountSection = () => {
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="Email"
+                  placeholder="Електрона пошта"
                   type="email"
                   fullWidth
                   error={true}
@@ -374,7 +391,7 @@ const MyAccountSection = () => {
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
-                  placeholder="Phone Number"
+                  placeholder="Номер телефону"
                   type="text"
                   className="w-full"
                   bordered
@@ -384,7 +401,7 @@ const MyAccountSection = () => {
                 />
               </div>
               <Input
-                placeholder="Month"
+                placeholder="Місяць"
                 inputType="select"
                 value={month}
                 scrollable={true}
@@ -395,7 +412,7 @@ const MyAccountSection = () => {
               />
 
               <Input
-                placeholder="Date"
+                placeholder="Дата"
                 inputType="select"
                 bordered={true}
                 value={day}
@@ -408,26 +425,34 @@ const MyAccountSection = () => {
           </div>
 
           <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-            <h2 className="mb-[20px] text-[24px] text-silver">Address Book</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">Моя адреса</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <Select
-                className=""
+                className="relative"
                 classNames={{
                   root: "w-full lg:w-[45%] ",
                   wrapper: "w-full",
+                  dropdown:
+                    "bg-white absolute top-[26px] right-[25px] absolute mt-2 w-full border border-gray-300 rounded-lg bg-snow -z-20",
                   input:
                     "w-full border border-[1px] border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver focus:outline-none focus:border-[1px] focus:border-darkBurgundy",
                 }}
+                onClick={() => setIsOpen(true)}
+                id="custom-select"
+                nothingFoundMessage="Нічого не знайдено..."
                 searchable
                 name="address1"
+                data={cities}
                 rightSectionPointerEvents="none"
+                comboboxProps={{ position: 'bottom', middlewares: { flip: false, shift: false } }}
                 rightSection={
                   <Image
                     src={Arrow}
                     alt="Arrow"
-                    width={14}
-                    className={`absolute right-[25px] top-[25px] transition-transform ${
+                    width={15}
+                    height={14}
+                    className={`absolute top-[26px] right-[25px] transition-transform ${
                       isOpen ? "rotate-180" : "rotate-0"
                     }`}
                   />
@@ -435,20 +460,11 @@ const MyAccountSection = () => {
                 placeholder="Населений пункт"
                 {...form.getInputProps("address")}
               />
-              {/* <Input
-                  inputType="input"
-                  name="address"
-                  placeholder="Address"
-                  type="text"
-                  bordered
-                  className="w-full"
-                  {...form.getInputProps("address")}
-                /> */}
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
                   name="address2"
-                  placeholder="Вулиця,будинок,квартира"
+                  placeholder="Вулиця, будинок/квартира"
                   type="text"
                   bordered
                   className="w-full"
@@ -466,20 +482,14 @@ const MyAccountSection = () => {
                 className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
               />
               <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
-                Sign-up to receive the latest updates and promotions
+                Отримувати найсвіжіші оновлення та акції
               </label>
             </div>
           </div>
           <Button
-            text="Update"
+            text="Оновити"
             className="mt-[-20px]"
             type="submit"
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
           />
         </form>
 
@@ -488,7 +498,7 @@ const MyAccountSection = () => {
           onSubmit={handleSubmitPassword}
         >
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-            <h2 className="mb-[20px] text-[24px] text-silver">New password</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">Новий пароль</h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
@@ -497,7 +507,7 @@ const MyAccountSection = () => {
                   name="password"
                   visible={visible}
                   onVisibilityChange={toggle}
-                  placeholder="Your password"
+                  placeholder="Ваш пароль"
                   bordered
                   error={true}
                   errorType="critical"
@@ -513,7 +523,7 @@ const MyAccountSection = () => {
                   onVisibilityChange={toggle}
                   type="password"
                   name="Confirm password"
-                  placeholder="Confirm password"
+                  placeholder="Підтвердіть пароль"
                   bordered
                   error={true}
                   errorType="critical"
@@ -525,14 +535,8 @@ const MyAccountSection = () => {
             </div>
           </div>
           <Button
-            text="Update"
+            text="Оновити"
             type="submit"
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
           />
         </form>
       </>

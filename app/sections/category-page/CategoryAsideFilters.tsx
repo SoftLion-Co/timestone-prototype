@@ -18,6 +18,7 @@ const CategoryAsideFilters = ({
   filtersData,
   sort,
   reverse,
+  setIsStart,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
   handleChangeTotalProducts: (num: number) => void;
@@ -25,10 +26,14 @@ const CategoryAsideFilters = ({
   filtersData: any;
   sort: string;
   reverse: boolean;
+  setIsStart: any;
 }) => {
-  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } = useCustomPagination();
+  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } =
+    useCustomPagination();
   const [searchText, setSearchText] = useState<string>("");
-  const [priceRangeFromObject, setPriceRangeFromObject] = useState<[number, number]>([0, 30000]);
+  const [priceRangeFromObject, setPriceRangeFromObject] = useState<
+    [number, number]
+  >([0, 30000]);
   const [productType, setProductType] = useState<string>("");
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
@@ -54,7 +59,7 @@ const CategoryAsideFilters = ({
     console.log(checkboxes);
     setCheckboxes((prev) => {
       const currentValues = prev[title] || [];
-  
+
       return {
         ...prev,
         [title]: currentValues.includes(value)
@@ -63,7 +68,7 @@ const CategoryAsideFilters = ({
       };
     });
   };
-  
+
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
@@ -75,9 +80,9 @@ const CategoryAsideFilters = ({
       maxPrice: priceRangeFromObject[1],
       searchText: searchText,
     };
-	 
+
     const selectedOptions =
-	 Object.keys(checkboxes).length !== 0
+      Object.keys(checkboxes).length !== 0
         ? Object.entries(checkboxes)
             .flatMap(([key, values]) =>
               values.map(
@@ -99,7 +104,7 @@ const CategoryAsideFilters = ({
         reverse,
         true
       );
-		setCurrentPage(1);
+      setCurrentPage(1);
     } else if (previousPage < currentPage) {
       data = await getProducts(
         selectedFilters,
@@ -127,6 +132,7 @@ const CategoryAsideFilters = ({
 
     handleUpdateProducts([...data.products]);
     handleChangeTotalProducts(data.count);
+    setIsStart(false);
   };
 
   const handleOpenFilterClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -197,7 +203,8 @@ const CategoryAsideFilters = ({
       <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
-          className="pb-5 flex flex-col gap-5 font-poppins ">
+          className="pb-5 flex flex-col gap-5 font-poppins "
+        >
           {filtersData.search.title && (
             <CustomFilterComponent
               title={filtersData.search.title}
@@ -208,7 +215,6 @@ const CategoryAsideFilters = ({
               onApplyClick={handleApplySearch}
             />
           )}
-
           {filtersData.buttons.title && (
             <CustomFilterComponent
               title={filtersData.buttons.title}
@@ -218,7 +224,6 @@ const CategoryAsideFilters = ({
               onChangeButton={changeProductType}
             />
           )}
-
           {filtersData.priceRange.title && (
             <CustomFilterComponent
               title={filtersData.priceRange.title}
@@ -229,7 +234,6 @@ const CategoryAsideFilters = ({
               onApplyClick={handleApplyPrice}
             />
           )}
-
           {/* TODO для кожного блоку useState */}
           {filtersData.checkboxes.length > 0 &&
             filtersData.checkboxes.map((item: any) => (
@@ -244,12 +248,20 @@ const CategoryAsideFilters = ({
                 }
               />
             ))}
-
-          <Button
-            text="Apply Filters"
-            className="w-full text-[16px] font-medium"
-            type="submit"
-          />
+          <div className="flex flex-row gap-[10px]">
+            <Button
+              text="Скидання"
+              className="w-[30%] text-[16px] font-medium"
+              type="submit"
+              background="white"
+              bordered
+            />
+            <Button
+              text="Підтверження"
+              className="w-[70%] text-[16px] font-medium"
+              type="submit"
+            />
+          </div>
         </form>
       </aside>
 
@@ -274,7 +286,8 @@ const CategoryAsideFilters = ({
                 visibility: isOpen ? "visible" : "hidden",
                 translateY: isOpen ? "0" : "-500px",
               }}
-              transition={{ duration: 0.5 }}>
+              transition={{ duration: 0.5 }}
+            >
               {filtersData.search.title && (
                 <CustomFilterComponent
                   title={filtersData.search.title}
@@ -324,12 +337,22 @@ const CategoryAsideFilters = ({
 
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
+                <div className="flex flex-row gap-[10px]">
+                  <Button
+                  text="Скидання"
+                  className="w-[30%] text-[16px] font-medium"
+                  type="submit"
+                  background="white"
+                  bordered
+                />
                 <Button
                   text="Apply Filters"
-                  className="px-[50px] text-[14px] font-default"
+                  className="px-[50px] w-[70%] text-[14px] font-default"
                   type="submit"
                   onClick={handleSubmitFilters}
                 />
+                </div>
+                  
               ) : (
                 <h2 className="font-spaceage text-[28px] leading-[25px]">
                   Filters
@@ -338,7 +361,8 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}>
+                onClick={handleOpenFilterClick}
+              >
                 <Image
                   src={ArrowUp}
                   alt="arrow up"
