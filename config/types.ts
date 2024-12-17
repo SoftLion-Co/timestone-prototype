@@ -56,9 +56,6 @@ export type Order = {
   date: string;
   status: string;
   total: string;
-  // shipping: string;
-  // tax: string;
-  // subtotal: string;
   items: OrderItem[];
 };
 

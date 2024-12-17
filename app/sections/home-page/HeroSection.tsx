@@ -7,10 +7,8 @@ import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
 import Twitter from "@/images/social-networks/twitter.svg";
 import Facebook from "@/images/social-networks/facebook.svg";
-import FollowUs from "@/images/social-networks/follow-us.svg";
 
 import Button from "@/components/ButtonComponent";
-import TitleComponents from "@/components/TitleComponents";
 
 interface HeroProps {
   className?: string;
@@ -26,8 +24,7 @@ const SocialObject = [
 const Links: FC<HeroProps> = ({ className }) => {
   return (
     <div
-      className={`${className} grid gap-[10px] lg:gap-[60px] w-max justify-items-center`}
-    >
+      className={`${className} flex gap-[10px] lg:gap-[70px] w-max justify-items-center`}>
       <div className="flex gap-[12px] lg:flex-col lg:items-center">
         {SocialObject.map((item, index) => (
           <Link
@@ -35,8 +32,7 @@ const Links: FC<HeroProps> = ({ className }) => {
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 focus:bg-darkBurgundy hover:bg-darkBurgundy group"
-          >
+            className="bg-white shadow-lg rounded-[50%] p-[8px] transition-all duration-300 focus:bg-darkBurgundy hover:bg-darkBurgundy group">
             <Image
               src={item.image}
               alt={item.title}
@@ -46,19 +42,18 @@ const Links: FC<HeroProps> = ({ className }) => {
           </Link>
         ))}
       </div>
-      {/* за=брати картинку, зробити текст вертикально */}
-      <Image src={FollowUs} alt="Follow Us" className="hidden lg:block" />
-
-      <p className="lg:hidden">FOLLOW US</p>
+      <p className="hidden lg:block font-spaceage text-[15px] tracking-widest -rotate-90 ">
+        FOLLOW US
+      </p>
+      <p className="lg:hidden font-spaceage tracking-widest">FOLLOW US</p>
     </div>
   );
 };
 
-//! знайти шрифт для заголовків
 const HeroSection: FC = () => {
   return (
     <section className="flex flex-col relative py-[40px] lg:py-[60px]">
-      <div className="flex flex-col items-center mx-[20px] lg:mx-[60px] gap-[40px] lg:flex-row lg:gap-[90px] lg:items-start xl:items-center">
+      <div className="flex flex-col items-center mx-[20px] lg:mr-[60px] gap-[40px] lg:flex-row lg:gap-[60px] lg:items-start xl:items-center">
         <Links className="hidden lg:grid" />
 
         <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start mini:w-[400px] lg:w-[570px]">

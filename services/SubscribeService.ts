@@ -13,7 +13,6 @@ export const addNewReceiver = async (
     return response.data;
   } catch (error) {
     console.error("Error adding new receiver:", error);
-    // throw error;
   }
 };
 
@@ -31,7 +30,6 @@ export const sendEmailToUs = async (
     return response.data;
   } catch (error) {
     console.error("Error sending email to us:", error);
-    // throw error;
   }
 };
 
@@ -49,7 +47,6 @@ export const sendEmailNewsletter = async (
     return response.data;
   } catch (error) {
     console.error("Error sending email newsletter:", error);
-    // throw error;
   }
 };
 
@@ -61,6 +58,5 @@ export const removeReceiver = async (email: string): Promise<any> => {
     return response.data;
   } catch (error) {
     console.error("Error removing receiver:", error);
-    // throw error;
   }
 };

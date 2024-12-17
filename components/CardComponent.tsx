@@ -25,34 +25,37 @@ const CardComponent: FC<CardProps> = ({
 
     !isOpen && changeOpenState(true);
 
-    addToCart({
-      id: id,
-      handle: handle,
-      title: title,
-      price: +price,
-      image: image,
-      quantity: 1,
-      maxQuantity: quantity,
-      caseColor: "red",
-      strapColor: "red",
-    });
+    addToCart(
+      {
+        id: id,
+        handle: handle,
+        title: title,
+        price: +price,
+        image: image,
+        quantity: 1,
+        maxQuantity: quantity,
+        caseColor: "red",
+        strapColor: "red",
+      },
+      1
+    );
   };
 
   return (
     <div className="flex flex-col items-center font-poppins">
       <div className="relative rounded-md overflow-hidden">
-        <Image
-          src={image}
-          width={255}
-          height={300}
-          alt={`image of ${title}`}
-          className="object-cover w-[255px] h-[300px]"
-          loading="lazy"
-        />
+        <Link href={`/catalog/${handle}`}>
+          <Image
+            src={image}
+            width={255}
+            height={300}
+            alt={`image of ${title}`}
+            className="object-cover w-[255px] h-[300px]"
+          />
+        </Link>
         <button
           onClick={(e) => handleAddToBasket(e, id)}
-          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300"
-        >
+          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300">
           <Image
             src={Basket}
             width={33}
@@ -64,9 +67,8 @@ const CardComponent: FC<CardProps> = ({
       </div>
 
       <Link
-        href={`catalog/${handle}`}
-        className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300"
-      >
+        href={`/catalog/${handle}`}
+        className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>
       <span className="font-normal text-xl text-onyx">${price}</span>

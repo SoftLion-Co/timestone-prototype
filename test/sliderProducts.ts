@@ -13,7 +13,6 @@ export const TestSliderProducts = [
       "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
     ],
     options: [],
-    // createdAt: "2024-04-21T13:37:15Z"
   },
   {
     id: "2",
@@ -25,7 +24,6 @@ export const TestSliderProducts = [
       "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
     ],
     options: [],
-    // createdAt: "2024-04-21T13:37:15Z"
   },
   {
     id: "3",
@@ -37,7 +35,6 @@ export const TestSliderProducts = [
       "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
     ],
     options: [],
-    // createdAt: "2024-04-21T13:37:15Z"
   },
   {
     id: "4",
@@ -49,7 +46,6 @@ export const TestSliderProducts = [
       "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
     ],
     options: [],
-    // createdAt: "2024-04-21T13:37:15Z"
   },
   {
     id: "5",
@@ -61,6 +57,5 @@ export const TestSliderProducts = [
       "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
     ],
     options: [],
-    // createdAt: "2024-04-21T13:37:15Z"
   },
 ];

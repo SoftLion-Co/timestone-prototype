@@ -6,14 +6,11 @@ import React, { useState, useEffect } from "react";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
-// import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 
-//! кнопки для підєднання facebook or google
-
 const MyAccountSection = () => {
-  const countries = [{ value: "UA", label: "Ukraine" }];
+  const countries = [{ value: "Ukraine", label: "Україна" }];
 
   const cities = [
     { value: "kyiv", label: "Київ" },
@@ -40,71 +37,88 @@ const MyAccountSection = () => {
   ];
 
   const months = [
-    { value: "01", label: "January" },
-    { value: "02", label: "February" },
-    { value: "03", label: "March" },
-    { value: "04", label: "April" },
-    { value: "05", label: "May" },
-    { value: "06", label: "June" },
-    { value: "07", label: "July" },
-    { value: "08", label: "August" },
-    { value: "09", label: "September" },
-    { value: "10", label: "October" },
-    { value: "11", label: "November" },
-    { value: "12", label: "December" },
+    { value: "january", label: "January" },
+    { value: "february", label: "February" },
+    { value: "march", label: "March" },
+    { value: "april", label: "April" },
+    { value: "may", label: "May" },
+    { value: "june", label: "June" },
+    { value: "july", label: "July" },
+    { value: "august", label: "August" },
+    { value: "september", label: "September" },
+    { value: "october", label: "October" },
+    { value: "november", label: "November" },
+    { value: "december", label: "December" },
   ];
 
-  const getDaysInMonth = (month: string) => {
-    if (month === "02") {
-      return Array.from({ length: 29 }, (_, i) => ({
-        value: (i + 1).toString(),
-        label: (i + 1).toString(),
-      }));
-    }
+  const getDaysInMonth = (
+    month: string
+  ): { value: string; label: string }[] => {
+    const daysInMonthMap: { [key: string]: number } = {
+      january: 31,
+      february: 29,
+      march: 31,
+      april: 30,
+      may: 31,
+      june: 30,
+      july: 31,
+      august: 31,
+      september: 30,
+      october: 31,
+      november: 30,
+      december: 31,
+    };
 
-    if (["04", "06", "09", "11"].includes(month)) {
-      return Array.from({ length: 30 }, (_, i) => ({
-        value: (i + 1).toString(),
-        label: (i + 1).toString(),
-      }));
-    }
+    const daysInMonth = daysInMonthMap[month] || 31;
 
-    return Array.from({ length: 31 }, (_, i) => ({
-      value: (i + 1).toString(),
-      label: (i + 1).toString(),
+    return Array.from({ length: daysInMonth }, (_, i) => ({
+      label: String(i + 1).padStart(2, "0"),
+      value: String(i + 1),
     }));
   };
-
   const [userName, setUserName] = useState("");
-  const [loading, setLoading] = useState(false); //true
+  const [loading, setLoading] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
-  const [selectedMonth, setSelectedMonth] = React.useState<string>("");
-  const [days, setDays] = React.useState<{ value: string; label: string }[]>(
-    []
-  );
-
-  const handleMonthChange = (value: string) => {
-    setSelectedMonth(value);
-    setDays(getDaysInMonth(value));
-  };
+  const [month, setMonth] = useState("may");
+  const [day, setDay] = useState("16");
+  const [country, setCountry] = useState("Ukraine");
+  const [city, setCity] = useState("lviv");
+  const dayOptions = getDaysInMonth(month);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const { user, subscribe } = await getUser();
         setUserName(`${user.firstName} ${user.lastName}` || "");
+        const userMonth = user.dateOfBirth?.split(",")[0] || "";
+        const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
+        const userCountry = user.address?.split("&")[0] || "";
+        const userCity: string = (
+          user.address?.split("&")[1]?.trim() || ""
+        ).toLowerCase();
+
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
           email: user.email || "",
           phone: user.phone || "",
-          month: user.dateOfBirth?.split(",")[0] || "",
-          date: user.dateOfBirth?.split(",")[1] || "",
-          country: user.address?.split("&")[0] || "",
-          city: user.address?.split("&")[1] || "",
+          month: userMonth,
+          date: userDay,
+          country: userCountry,
+          city: userCity,
           address: user.address?.split("&")[2] || "",
           zipCode: user.address?.split("&")[3] || "",
         });
+        if (userMonth && userDay) {
+          setMonth(userMonth);
+          setDay(userDay);
+        }
+
+        if (userCountry && userCity) {
+          setCountry(userCountry);
+          setCity(userCity);
+        }
+
         setSubscribe(subscribe);
         setLoading(false);
       } catch (error) {
@@ -147,8 +161,15 @@ const MyAccountSection = () => {
       remember: false,
     },
     validate: {
-      password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
+      password: (value) => {
+        if (value.length < 6) return "Password must have at least 6 characters";
+        if (value.length > 20) return "Password must not exceed 20 characters";
+        if (!/[a-z]/.test(value)) return "Password must contain at least one lowercase letter";
+        if (!/[A-Z]/.test(value)) return "Password must contain at least one uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain at least one digit";
+        if (/\s/.test(value)) return "Password cannot contain spaces";
+        return null;
+      },
       verify: (value, values) =>
         value !== values.password ? "Passwords did not match" : null,
     },
@@ -175,12 +196,11 @@ const MyAccountSection = () => {
     let response1;
     if (subscribe !== values1.subscribe) {
       if (values1.subscribe) {
-        response1 = await addNewReceiver(values1.email, values1.name);
+        response1 = await addNewReceiver(values1.name, values1.email);
       } else {
         response1 = await removeReceiver(values1.email);
       }
     }
-    //! обробка помилки
   };
 
   const handleSubmitPassword = async (event: any) => {
@@ -192,7 +212,6 @@ const MyAccountSection = () => {
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
-    //! обробка помилки
     form.reset();
   };
 
@@ -225,8 +244,7 @@ const MyAccountSection = () => {
 
           <form
             className="flex flex-col items-center gap-[46px] lg:items-end"
-            onSubmit={handleSubmit}
-          >
+            onSubmit={handleSubmit}>
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
               <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
@@ -287,23 +305,23 @@ const MyAccountSection = () => {
                 <Input
                   placeholder="Month"
                   inputType="select"
-                  value={selectedMonth}
-                  onSelect={handleMonthChange}
+                  value={month}
+                  scrollable={true}
+                  onSelect={(value) => setMonth(value)}
                   options={months}
                   bordered={true}
-                  scrollable={true}
                   className="mini:w-full lg:w-[45%]"
-                  {...form.getInputProps("month")}
                 />
 
                 <Input
                   placeholder="Date"
                   inputType="select"
                   bordered={true}
-                  options={days}
+                  value={day}
+                  options={dayOptions}
                   scrollable={true}
+                  onSelect={(value) => setDay(value)}
                   className="mini:w-full lg:w-[45%]"
-                  {...form.getInputProps("date")}
                 />
               </div>
             </div>
@@ -317,38 +335,45 @@ const MyAccountSection = () => {
                   name="country"
                   placeholder="Country"
                   inputType="select"
-                  value={countries[0].label}
+                  value={country}
                   options={countries}
-                  className="mini:w-full lg:w-[47%]"
-                  {...form.getInputProps("country")}
+                  onSelect={(value) => setCountry(value)}
+                  className="mini:w-full lg:w-[45%]"
                 />
                 <Input
                   inputType="select"
                   name="city"
+                  value={city}
                   options={cities}
                   scrollable
-                  className="mini:w-full lg:w-[47%]"
+                  onSelect={(value) => {
+                    setCity(value);
+                  }}
+                  className="mini:w-full lg:w-[45%]"
                   placeholder="City"
-                  {...form.getInputProps("city")}
                 />
-                <Input
-                  inputType="input"
-                  name="address"
-                  placeholder="Address"
-                  type="text"
-                  bordered
-                  className="w-full lg:w-[47%]"
-                  {...form.getInputProps("address")}
-                />
-                <Input
-                  inputType="input"
-                  name="zipCode"
-                  placeholder="Zip Code"
-                  type="text"
-                  bordered
-                  className="w-full lg:w-[47%]"
-                  {...form.getInputProps("zipCode")}
-                />
+                <div className="w-full lg:w-[45%] flex flex-col">
+                  <Input
+                    inputType="input"
+                    name="address"
+                    placeholder="Address"
+                    type="text"
+                    bordered
+                    className="w-full"
+                    {...form.getInputProps("address")}
+                  />
+                </div>
+                <div className="w-full lg:w-[45%] flex flex-col">
+                  <Input
+                    inputType="input"
+                    name="zipCode"
+                    placeholder="Zip Code"
+                    type="text"
+                    bordered
+                    className="w-full"
+                    {...form.getInputProps("zipCode")}
+                  />
+                </div>
               </div>
             </div>
             <div className="w-full flex text-[14px] items-center flex-row text-silver gap-[10px] mt-[-20px] text-left">
@@ -369,8 +394,7 @@ const MyAccountSection = () => {
 
           <form
             className="flex flex-col items-center gap-[46px] mt-[46px] lg:items-end"
-            onSubmit={handleSubmitPassword}
-          >
+            onSubmit={handleSubmitPassword}>
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
               <h2 className="mb-[20px] text-[24px] text-silver">
                 New password

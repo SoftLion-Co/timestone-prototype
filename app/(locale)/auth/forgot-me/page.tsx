@@ -1,9 +1,8 @@
-import Auth from "@/app/sections/authorization-page/AuthorizationSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "TIMESTONE - Авторизація",
-  description: "Сторінка авторизації і реєстрації",
+  title: "TIMESTONE - Відновлення пароля",
+  description: "Сторінка відновлення пароля",
   icons: { icon: "@/app/favicon.ico" },
   viewport: { initialScale: 1.0, width: "device-width" },
 };
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <>
-      <Auth />
     </>
   );
 };

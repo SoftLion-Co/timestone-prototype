@@ -50,7 +50,6 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
@@ -58,8 +57,8 @@ const RegistrationFormSection = () => {
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [month, setMonth] = useState("january");
-  const [day, setDay] = useState("01");
+  const [month, setMonth] = useState("february");
+  const [day, setDay] = useState("1");
   const dayOptions = getDaysInMonth(month);
 
   const registrationForm = useForm({
@@ -80,7 +79,18 @@ const RegistrationFormSection = () => {
       email: isEmail("Invalid email"),
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
-      password: hasLength({ min: 6 }, "Must be at least 6 characters"),
+      password: (value) => {
+        if (/\s/.test(value)) return "Password can not contain spaces";
+        if (value.length < 6) return "Password must be at least 6 characters";
+        if (value.length > 20)
+          return "Password must not be more than 20 characters";
+        if (!/[a-z]/.test(value))
+          return "Password must contain lowercase letter";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain digit";
+        return null;
+      },
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
       phone: (value) =>
@@ -120,15 +130,16 @@ const RegistrationFormSection = () => {
         if (response === "created") {
           setIsModalVisible(true);
           registrationForm.reset();
-        } else if (response == "A user with this phone number already exists" ) {
+        } else if (response == "A user with this phone number already exists") {
           setRegistrationMessage("This phone already exist. Try another.");
-        } else if (response == "A user with this email address already exists") {
+        } else if (
+          response == "A user with this email address already exists"
+        ) {
           setRegistrationMessage("This email already exist. Try another.");
         } else if (response == "User not activated") {
           setRegistrationMessage("Your acc not activated. Check email box.");
         } else {
           setRegistrationMessage("Problems wih server");
-          
         }
       }
     }
@@ -167,8 +178,8 @@ const RegistrationFormSection = () => {
         />
       )}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?
         </h2>
         <p className="text-silver">Create a new account</p>
@@ -300,9 +311,9 @@ const RegistrationFormSection = () => {
             onChange={(e) =>
               registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="sign-up-update">
+          <label htmlFor="sign-up-update" className="cursor-pointer">
             Sign-up to receive the latest updates and promotions
           </label>
         </div>
@@ -315,10 +326,10 @@ const RegistrationFormSection = () => {
           )}
         </div>
 
-        <div className=" mt-[16px]">
+        <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center text-darkBurgundy`}>
+              <span className={`block text-center  text-[16px] text-darkBurgundy`}>
                 {registrationMessage}
               </span>
             )}
@@ -327,12 +338,12 @@ const RegistrationFormSection = () => {
           <Button
             text="Create Account"
             type="button"
-            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            className="!w-[208px] mx-auto mt-[8px] mb-[24px] lg:mb-[56px]"
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({
-                top: 0, 
-                behavior: "smooth", 
+                top: 0,
+                behavior: "smooth",
               });
             }}
             disabled={isDisabled}

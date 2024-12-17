@@ -12,13 +12,18 @@ export const CreateOrder = async (order: any, options: any): Promise<any> => {
     console.error("Error create order:", error);
   }
 };
-
 export const getUserOrders = async (): Promise<any> => {
   try {
-    const res = await api.get(`/order`);
+    const accessToken = localStorage.getItem("accessToken");
+
+    const res = await api.get(`/order`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error("Error fetching user orders:", error);
+    throw error;
   }
 };
-

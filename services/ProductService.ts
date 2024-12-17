@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { BASE_URL } from '@/config/config';
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
 
 export const getProducts = async (
   filters?: object,
-  options?: object,
+  optionsString?: string,
   limit?: number,
   pageCursor?: string,
   sortKey?: string,
@@ -11,19 +11,8 @@ export const getProducts = async (
   pagination?: boolean
 ): Promise<any> => {
   try {
-    let optionsString = '';
-
-    if (options) {
-      optionsString = Object.entries(options)
-        .flatMap(([key, values]) =>
-          values.map((value: any) => `${key}-${value}`)
-        )
-        .join(' ');
-    }
-
-    const response = await axios.post(
-      `${BASE_URL}/product`,
-      {
+    const response = await axios.get(`${BASE_URL}/product`, {
+      params: {
         filters,
         optionsString,
         pageCursor,
@@ -32,16 +21,17 @@ export const getProducts = async (
         reverse,
         pagination,
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 500) {
+    }
 
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error("Failed to fetch products:", error);
   }
 };
 
@@ -50,6 +40,18 @@ export const getProductByHandle = async (handle: string): Promise<any> => {
     const response = await axios.get(`${BASE_URL}/product/${handle}`);
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch product by handle:', error);
+    console.error("Failed to fetch product by handle:", error);
+  }
+};
+
+export const getFilters = async (): Promise<any> => {
+  try {
+    const response = await axios.get(`${BASE_URL}/filter`);
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Failed to fetch product by handle:", error);
   }
 };

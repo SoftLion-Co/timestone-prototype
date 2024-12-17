@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC, useState, useEffect } from "react";
@@ -22,8 +23,8 @@ const navData = [
 ];
 
 const Header = () => {
+  const pathname = usePathname();
   const [opened, { open, close }] = useDisclosure(false);
-
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -32,6 +33,7 @@ const Header = () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
+
         if (refreshToken) {
           if (accessToken) {
             setIsLoggedIn(true);
@@ -41,6 +43,8 @@ const Header = () => {
             localStorage.setItem("refreshToken", tokens.refreshToken);
             setIsLoggedIn(true);
           }
+        } else {
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.error("Failed to fetch orders", error);
@@ -48,42 +52,38 @@ const Header = () => {
     };
 
     fetchTokens();
-  }, []);
+  }, [pathname]);
 
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row`}
-      >
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}>
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
             {navData.map((item, index) => (
               <Link
                 key={index}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
-              >
+                onClick={close}
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
                 {item.text}
               </Link>
             ))}
           </nav>
 
-          <MainButton text="Watches" tag="a" href="/catalog" />
+          <MainButton text="Watches" tag="a" href="/catalog" onClick={close} />
         </div>
 
         <div className="flex gap-[25px]">
-          {/* <Link href="/">
-            <Image src={Basket} alt="Basket" />
-          </Link> */}
           <button
             className="relative"
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
-            }}
-          >
+              close();
+            }}>
             {products.length > 0 && (
-              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3.5 -top-3.5">
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3 top-1">
                 {products.length}
               </div>
             )}
@@ -94,14 +94,15 @@ const Header = () => {
               text="Log in"
               tag="a"
               href="/auth"
+              onClick={close}
               background="transparent"
               className="!px-[5px] text-onyx font-semibold transition-all duration-300"
             />
           ) : (
             <Link
               href="/account"
-              className="block px-4 py-2 text-sm text-onyx hover:text-[white]"
-            >
+              onClick={close}
+              className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
               <Image src={Profile} alt="profile" />
             </Link>
           )}
@@ -119,7 +120,7 @@ const Header = () => {
   };
 
   return (
-    <header className="mx-[20px] lg:mx-[60px]">
+    <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 
@@ -154,16 +155,14 @@ const Header = () => {
             header: {
               backgroundColor: "#ffffff",
             },
-          }}
-        >
+          }}>
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]"
-            >
+              className="w-[24px] h-[24px]">
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>
