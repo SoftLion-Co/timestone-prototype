@@ -8,12 +8,13 @@ import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { isEmail } from "@mantine/form";
 import { sendResetPasswordEmail } from "@/services/ForgotMeService";
+import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
 
 const ForgotMeFormSection = () => {
 
   const [forgotMeMessage, setForgotMeMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const forgotMeForm = useForm({
     initialValues: {
       email: ""
@@ -31,8 +32,8 @@ const ForgotMeFormSection = () => {
       const response = await sendResetPasswordEmail(email);
       setIsLoading(false);
       if (response === 200) {
+        setIsModalVisible(true);
         forgotMeForm.reset();
-        setForgotMeMessage("Reset email sended. Check your email box");
       } else if (response == "No user found with this email address") {
         setForgotMeMessage("User with this email does not exist. Try again.");
       } else {
@@ -43,6 +44,12 @@ const ForgotMeFormSection = () => {
 
   return (
     <>
+     {isModalVisible && (
+        <ModalWindowComponent
+          title="Email sended"
+          message="Please, check your email to and use the link to reset your password"
+        />
+      )}
       <section className="relative flex justify-center items-center font-poppins">
         <div className="bg-darkMaroon h-[500px] w-full absolute bottom-0 z-0">
           <Image
