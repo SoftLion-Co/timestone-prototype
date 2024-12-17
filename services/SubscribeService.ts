@@ -12,10 +12,12 @@ export const addNewReceiver = async (
       name,
       email,
     });
+
     return response.status;
   } catch (error) {
-    console.error("Error adding new receiver:", error);
-    // throw error;
+    if (axios.isAxiosError(error)) {
+      return error.status;
+    }
   }
 };
 

@@ -6,7 +6,7 @@ import Background from "@/images/legal-page/Rectangle.svg";
 
 const deliverySections = [
   {
-    title: "Delivery",
+    title: "Доставка",
     content: [
       "Ми прагнемо забезпечити швидку та надійну доставку, щоб ваші покупки прибували вчасно та у найкращому стані. Наша служба доставки співпрацює з провідними логістичними компаніями, щоб гарантувати, що кожне замовлення обробляється з максимальною увагою до деталей.",
       "Доставка доступна по всій території України, включно з віддаленими регіонами. Ви можете обирати зручний спосіб доставки: кур'єром до дверей або самовивіз із пунктів видачі.",
@@ -15,7 +15,7 @@ const deliverySections = [
     ],
   },
   {
-    title: "Delivery Time",
+    title: "Час доставки",
     content: [
       "Час доставки залежить від вашого місця розташування та обраного способу доставки. Зазвичай ми обробляємо замовлення протягом 1-2 робочих днів. Після цього доставка може зайняти від 2 до 7 робочих днів, залежно від віддаленості вашого регіону.",
       "Для великих міст доставка займає мінімальний час — у середньому 2-3 робочі дні. Якщо ви перебуваєте в сільській місцевості або у віддаленому регіоні, час доставки може бути довшим, проте ми докладаємо максимум зусиль, щоб скоротити очікування.",
@@ -24,7 +24,7 @@ const deliverySections = [
     ],
   },
   {
-    title: "Delivery Damage",
+    title: "Ризики доставки",
     content: [
       "Ми піклуємося про те, щоб ваше замовлення було належним чином запаковане та захищене від можливих пошкоджень під час транспортування. Ми використовуємо якісні матеріали для упаковки, включно з багатошаровим картоном та захисними наповнювачами.",
       "Однак, у виняткових випадках можуть виникати пошкодження під час доставки. Якщо ви отримали товар із пошкодженнями, будь ласка, дотримуйтесь наступних інструкцій:",
@@ -39,7 +39,7 @@ const deliverySections = [
 
 const LegalSection = () => {
   return (
-    <section className="relative bg-[#F9FAFE] flex justify-center items-center">
+    <section className="relative bg-pearl flex justify-center items-center">
       <div className="bg-darkMaroon h-[500px] md:h-[700px] w-full absolute bottom-0 z-1">
         <Image
           src={Background}
@@ -50,10 +50,10 @@ const LegalSection = () => {
         />
       </div>
       <div className="container flex flex-col items-center gap-[30px] pt-[40px] pb-[60px] xl:pb-[150px] z-10">
-        <h1 className="font-spaceage text-center text-[28px] md:text-[48px] text-black">
-          Delivery
+        <h1 className="font-frontrunner text-center text-[28px] md:text-[32px] lg:text-[48px] text-black">
+          Доставка
         </h1>
-        <div className="bg-white p-[30px] md:p-[50px] shadow-md rounded-lg ">
+        <div className="bg-white p-[30px] md:p-[50px] shadow-lg rounded-lg border">
           <div className="flex flex-col gap-[30px] items-start">
             {deliverySections.map((section, index) => (
               <div key={index} className="flex flex-col">

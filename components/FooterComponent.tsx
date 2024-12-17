@@ -1,12 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/images/vectors/logo.svg";
+import Logo from "@/images/1.svg";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col items-center gap-[60px] pt-[80px] ">
+    <footer className="flex flex-col items-center gap-[40px] pt-[40px] ">
       <Link href="/" className="px-[20px]">
         <Image
           src={Logo}

@@ -35,16 +35,16 @@ const NewsSection = () => {
     },
   });
 
-  useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedAttempts = localStorage.getItem("inputAttempts");
+  //   if (savedAttempts) {
+  //     const parsedAttempts = Number(savedAttempts);
+  //     setAttempts(parsedAttempts);
+  //     if (parsedAttempts >= MAX_ATTEMPTS) {
+  //       setIsDisabled(true);
+  //     }
+  //   }
+  // }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,12 +73,17 @@ const NewsSection = () => {
         type: "success",
         text: "You have successfully subscribed to our newsletter!",
       });
+      setValue("");
+    } else if (response === 400) {
+      setIsLoading(false);
+      setValue("Цей email вже існує!");
     } else {
       setIsLoading(false);
       setMessage({
         type: "error",
         text: "Oops! A server error occurred!",
       });
+      setValue("");
     }
 
     setIsLoading(false);
@@ -86,7 +91,6 @@ const NewsSection = () => {
       setMessage(null);
     }, 5000);
     form.reset();
-    setValue("");
   };
 
   return (
@@ -105,9 +109,9 @@ const NewsSection = () => {
       {isLoading && <LoaderComponent />}
       <section className="relative">
         <div className="container relative text-snow flex flex-col gap-[30px] items-center py-[60px] text-center">
-          <h3 className="font-bold text-[28px] xl:text-[36px] xl:w-[80%]">
-            Don't Miss Your Chance To Get Free Giveaway Sing Up To Our
-            Newsletter
+          <h3 className="font-bold text-[22px] md:text-[30px] xl:text-[36px] xl:w-[80%]">
+            Не втратьте можливість отримати подарунок! Підпишіться на нашу
+            розсилку
           </h3>
 
           <p className="text-[10px] xl:text-default">
@@ -148,6 +152,7 @@ const NewsSection = () => {
                 />
               </div>
             </div>
+            {value && <p className={`text-[14px] text-snow `}>{value}</p>}
             <Button
               text="Sing Up"
               type="submit"
@@ -155,12 +160,6 @@ const NewsSection = () => {
               background="onyx"
               className="w-[160px]"
               disabled={isDisabled}
-              onClick={() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
-              }}
             />
           </form>
 

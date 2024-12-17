@@ -46,7 +46,7 @@ const config: Config = {
       keyframes: {
         pulse: {},
       },
-      animation: {},
+      
     },
     screens: {
       mini: '520px',

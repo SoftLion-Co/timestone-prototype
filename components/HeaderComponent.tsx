@@ -29,6 +29,22 @@ const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -94,7 +110,7 @@ const Header = () => {
                 {products.length}
               </div>
             )}
-            <Image src={Basket} alt="Basket"/>
+            <Image src={Basket} alt="Basket" />
           </button>
           {!isLoggedIn ? (
             <MainButton
@@ -109,7 +125,7 @@ const Header = () => {
               href="/account"
               className="block px-4 py-2 transition-transform duration-300 hover:scale-125"
             >
-              <Image src={Profile} alt="profile"/>
+              <Image src={Profile} alt="profile" />
             </Link>
           )}
         </div>
@@ -120,13 +136,16 @@ const Header = () => {
   const HeaderLogo = () => {
     return (
       <Link href="/">
-        <Image src={Logo} alt="Logo" loading="lazy"  />
+        <Image src={Logo} alt="Logo" loading="lazy" />
       </Link>
     );
   };
 
   return (
-    <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
+    <header
+      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out
+      ${isScrolled ? "sticky top-0 shadow-lg" : ""}`}
+    >
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 

@@ -13,7 +13,6 @@ import { getProducts } from "@/services/ProductService";
 import ProductSceleton from "../category-page/ProductSceleton";
 
 const textSliderObject = {
-  title: "Watches",
   textParagraphPart1:
     "We have inVolumenzeit gives you a total of 48 style combinations with 4 dial types, 4 dial colors, 3 case colors, multiple stylish strap combinations, and customized engraving options.",
 };
@@ -80,10 +79,10 @@ const SliderSection = () => {
   }
   return (
     <>
-      <section className="py-[40px] lg:pb-[80px] lg:pt-[150px] xl:pt-[240px]">
+      <section className="py-[40px] lg:pb-[0px] lg:pt-[150px] xl:pt-[200px]">
         <div className="flex flex-col mx-[20px] lg:mx-[60px] gap-[10px] lg:items-start">
-          <h1 className="font-spaceage text-center text-[28px] md:text-[48px] lg:text-left">
-            {textSliderObject.title}
+          <h1 className="font-frontrunner text-center text-[28px] md:text-[35px] lg:text-[45px] lg:text-left">
+            Годинники
           </h1>
 
           <div className="font-poppins text-silver text-default text-center leading-[28px] lg:text-left lg:max-w-[600px]">

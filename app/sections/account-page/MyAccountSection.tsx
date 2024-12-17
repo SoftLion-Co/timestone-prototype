@@ -1,21 +1,23 @@
 "use client";
-import { Loader } from "@mantine/core";
+import Image from "next/image";
 import { Alert } from "flowbite-react";
+import { Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
+import { useDisclosure } from "@mantine/hooks";
 import React, { useState, useEffect } from "react";
-
-import { getUser, updatePassword, updateUser } from "@/services/AuthService";
-import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
 // import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
+import { getUser, updatePassword, updateUser } from "@/services/AuthService";
+import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
+
+import Arrow from "@/images/news-section/arrow.svg";
 
 //! кнопки для підєднання facebook or google
-
 const MyAccountSection = () => {
   const countries = [{ value: "Ukraine", label: "Україна" }];
 
@@ -88,8 +90,8 @@ const MyAccountSection = () => {
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
-  const [country, setCountry] = useState("Ukraine");
-  const [city, setCity] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [visible, { toggle }] = useDisclosure(false);
   const dayOptions = getDaysInMonth(month);
   const [infoMessage, setInfoMessage] = useState<{
     type: string;
@@ -100,14 +102,9 @@ const MyAccountSection = () => {
     const fetchUserData = async () => {
       try {
         const { user, subscribe } = await getUser();
-        console.log(subscribe);
         setUserName(`${user.firstName} ${user.lastName}` || "");
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
-        const userCountry = user.address?.split("&")[0] || "";
-        const userCity: string = (
-          user.address?.split("&")[1]?.trim() || ""
-        ).toLowerCase();
 
         form.setValues({
           name: user.firstName || "",
@@ -116,19 +113,12 @@ const MyAccountSection = () => {
           phone: user.phone || "",
           month: userMonth,
           date: userDay,
-          country: userCountry,
-          city: userCity,
-          address: user.address?.split("&")[2] || "",
-          zipCode: user.address?.split("&")[3] || "",
+          address1: user.address?.split("&")[0]?.trim() || "",
+          address2: user.address?.split("&")[1]?.trim() || "",
         });
         if (userMonth && userDay) {
           setMonth(userMonth);
           setDay(userDay);
-        }
-
-        if (userCountry && userCity) {
-          setCountry(userCountry);
-          setCity(userCity);
         }
 
         setSubscribe(subscribe);
@@ -149,10 +139,8 @@ const MyAccountSection = () => {
       phone: "",
       month: "",
       date: "",
-      country: "",
-      city: "",
-      address: "",
-      zipCode: "",
+      address1: "",
+      address2: "",
       subscribe: false,
     },
     validate: {
@@ -207,9 +195,9 @@ const MyAccountSection = () => {
       email: values1.email,
       phoneNumber: values1.phone,
       dateOfBirth: `${values1.month},${values1.date}`,
-      address: `${values1.country}&${values1.city}&${values1.address}&${values1.zipCode}`,
+      address: `${values1.address1}&${values1.address2}`,
     });
-    console.log(response);
+
     let response1;
     if (response === 201) {
       if (subscribe !== values1.subscribe) {
@@ -423,29 +411,31 @@ const MyAccountSection = () => {
             <h2 className="mb-[20px] text-[24px] text-silver">Address Book</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <Input
-                name="country"
-                placeholder="Country"
-                inputType="select"
-                value={country}
-                options={countries}
-                onSelect={(value) => setCountry(value)}
-                className="mini:w-full lg:w-[45%]"
-              />
-              <Input
-                inputType="select"
-                name="city"
-                value={city}
-                options={cities}
-                scrollable
-                onSelect={(value) => {
-                  setCity(value);
+              <Select
+                className=""
+                classNames={{
+                  root: "w-full lg:w-[45%] ",
+                  wrapper: "w-full",
+                  input:
+                    "w-full border border-[1px] border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver focus:outline-none focus:border-[1px] focus:border-darkBurgundy",
                 }}
-                className="mini:w-full lg:w-[45%]"
-                placeholder="City"
+                searchable
+                name="address1"
+                rightSectionPointerEvents="none"
+                rightSection={
+                  <Image
+                    src={Arrow}
+                    alt="Arrow"
+                    width={14}
+                    className={`absolute right-[25px] top-[25px] transition-transform ${
+                      isOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                }
+                placeholder="Населений пункт"
+                {...form.getInputProps("address")}
               />
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
+              {/* <Input
                   inputType="input"
                   name="address"
                   placeholder="Address"
@@ -453,17 +443,16 @@ const MyAccountSection = () => {
                   bordered
                   className="w-full"
                   {...form.getInputProps("address")}
-                />
-              </div>
+                /> */}
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
-                  name="zipCode"
-                  placeholder="Zip Code"
+                  name="address2"
+                  placeholder="Вулиця,будинок,квартира"
                   type="text"
                   bordered
                   className="w-full"
-                  {...form.getInputProps("zipCode")}
+                  {...form.getInputProps("address2")}
                 />
               </div>
             </div>
@@ -503,9 +492,11 @@ const MyAccountSection = () => {
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  inputType="input"
+                  inputType="password"
                   type="password"
                   name="password"
+                  visible={visible}
+                  onVisibilityChange={toggle}
                   placeholder="Your password"
                   bordered
                   error={true}
@@ -517,7 +508,9 @@ const MyAccountSection = () => {
               </div>
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
-                  inputType="input"
+                  inputType="password"
+                  visible={visible}
+                  onVisibilityChange={toggle}
                   type="password"
                   name="Confirm password"
                   placeholder="Confirm password"
