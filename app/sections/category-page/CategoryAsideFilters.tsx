@@ -1,16 +1,15 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import ArrowUp from "@/images/category-section/arrow-up.svg";
-import Button from "@/components/ButtonComponent";
-// import { useFilters } from "@/hooks/useFilters";
 import { CardProps } from "@/config/types";
+import Button from "@/components/ButtonComponent";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 import CustomFilterComponent from "@/components/filters-component/CustomFilterComponent";
+
+import ArrowUp from "@/images/category-section/arrow-up.svg";
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
@@ -27,27 +26,18 @@ const CategoryAsideFilters = ({
   sort: string;
   reverse: boolean;
 }) => {
-  // const { filters, dispatch } = useFilters();
-  const { setPageInfo, setTotalPages, pageInfo, currentPage } =
-    useCustomPagination();
-
+  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } = useCustomPagination();
   const [searchText, setSearchText] = useState<string>("");
-  const [priceRangeFromObject, setPriceRangeFromObject] = useState<
-    [number, number]
-  >([0, 30000]);
+  const [priceRangeFromObject, setPriceRangeFromObject] = useState<[number, number]>([0, 30000]);
   const [productType, setProductType] = useState<string>("");
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log(currentPage);
-    // console.log(checkboxes);
-    // console.log(Object.keys(checkboxes).length !== 0);
     const getData = async () => {
       await getProductData(false);
     };
-    console.log("t", filtersData)
     getData();
   }, [currentPage]);
 
@@ -74,7 +64,6 @@ const CategoryAsideFilters = ({
     });
   };
   
-
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
@@ -86,9 +75,9 @@ const CategoryAsideFilters = ({
       maxPrice: priceRangeFromObject[1],
       searchText: searchText,
     };
-
+	 
     const selectedOptions =
-      Object.keys(checkboxes).length !== 0
+	 Object.keys(checkboxes).length !== 0
         ? Object.entries(checkboxes)
             .flatMap(([key, values]) =>
               values.map(
@@ -110,6 +99,7 @@ const CategoryAsideFilters = ({
         reverse,
         true
       );
+		setCurrentPage(1);
     } else if (previousPage < currentPage) {
       data = await getProducts(
         selectedFilters,
@@ -131,10 +121,8 @@ const CategoryAsideFilters = ({
         false
       );
     }
-    //  console.log("d", data);
-
-    setPageInfo(data.pageInfo);
     setPreviousPage(currentPage);
+    setPageInfo(data.pageInfo);
     setTotalPages(data.count === 0 ? 1 : Math.ceil(data.count / limit));
 
     handleUpdateProducts([...data.products]);

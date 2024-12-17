@@ -1,16 +1,13 @@
 "use client";
-
 import React, { useContext, useEffect, useState } from "react";
-
 import { usePagination } from "@mantine/hooks";
+import { useCustomPagination } from "@/hooks/useCustomPagination";
 
-// import { useFilters } from "@/hooks/useFilters";
+import ProductSceleton from "./ProductSceleton";
+import { ProductsContext } from "./CategoryMain";
 import CardComponent from "@/components/CardComponent";
 import CustomSelect from "@/components/SelectComponent";
-import ProductSceleton from "./ProductSceleton";
 import { CardProps } from "@/config/types";
-import { ProductsContext } from "./CategoryMain";
-import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const CategorySection = ({
   totalProducts,
@@ -23,13 +20,8 @@ const CategorySection = ({
   setSort: React.Dispatch<React.SetStateAction<string>>;
   setReverse: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  // const { filters, dispatch } = useFilters();
   const { goToPage } = useCustomPagination();
-
   const allProducts = useContext(ProductsContext);
-
-  const [visibleProducts, setVisibleProducts] = useState<CardProps[]>([]);
-
   const [isLoading, setIsLoading] = useState(true);
 
   const generatePaginationRange = () => {
@@ -62,12 +54,7 @@ const CategorySection = ({
     total: Math.ceil(totalProducts / limit),
     initialPage: 1,
     siblings: 1,
-    boundaries: 1,
-    onChange(page) {
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      setVisibleProducts(allProducts.slice(start, end));
-    },
+    boundaries: 1
   });
 
   useEffect(() => {
@@ -83,24 +70,14 @@ const CategorySection = ({
   const handleChangeSorting = (value: string) => {
     let newValue = value == "HPRICE" || value == "LPRICE" ? "PRICE" : value;
 
-    if (value === "HPRICE") {
-      setReverse(true);
-      // dispatch({ type: "SET_REVERSE", payload: true });
-    }
-
-    if (value === "LPRICE") {
-      setReverse(false);
-      // dispatch({ type: "SET_REVERSE", payload: false });
-    }
-
+    if (value === "HPRICE") setReverse(true);
+    if (value === "LPRICE") setReverse(false);
     if (value === null || value === "") {
       setReverse(true);
-      // dispatch({ type: "SET_REVERSE", payload: true });
       newValue = "RELEVANCE";
     }
 
     setSort(newValue);
-    // dispatch({ type: "SET_SORTING", payload: newValue });
   };
 
   return (
@@ -128,37 +105,11 @@ const CategorySection = ({
       ) : (
         <>
           <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {/* {visibleProducts.map((card: CardProps) => (
-              <CardComponent {...card} key={card.id} />
-            ))} */}
+
             {allProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
           </div>
-
-          {/* TODO 1, 2, [...], lastIndex - ось така має бути пагінація  */}
-          {/* <div className="flex items-center justify-center gap-2 ml-auto mt-[70px]">
-            {pagination.range.map((range) =>
-              range === 'dots' ? (
-                <button
-                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2"
-                  key={range}>
-                  ...
-                </button>
-              ) : (
-                <button
-                  className={`h-[28px] w-[28px] rounded-sm text-center text-[10px] ${
-                    pagination.active === range
-                      ? 'bg-darkBurgundy text-white'
-                      : 'bg-pearl text-silver hover:font-bold'
-                  }`}
-                  key={range}
-                  onClick={() => handleChangePage(range)}>
-                  {range}
-                </button>
-              )
-            )}
-          </div> */}
           <div className="flex justify-center gap-2 mt-10 items-center">
             <button
               disabled={pagination.active === 1}
