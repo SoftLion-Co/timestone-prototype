@@ -11,7 +11,7 @@ import { PaginationProvider } from "@/hooks/useCustomPagination";
 import { getFilters } from "@/services/ProductService";
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 2;
+const LIMIT = 16;
 
 const filter = {
   search: {
