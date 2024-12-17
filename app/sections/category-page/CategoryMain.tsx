@@ -79,8 +79,10 @@ const CategoryMain = () => {
               limit={LIMIT}
               filtersData={filters}
               sort={sort}
-              setIsStart={setIsStart}
+				  setSort={setSort}
               reverse={reverse}
+              setReverse={setReverse}
+              setIsStart={setIsStart}
             />
             <CategorySection
               isStart={isStart}
@@ -88,6 +90,8 @@ const CategoryMain = () => {
               limit={LIMIT}
               setSort={setSort}
               setReverse={setReverse}
+				  reverse={reverse}
+				  sort={sort}
             />
           </div>
         </ProductsContext.Provider>

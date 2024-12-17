@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 import { CardProps } from "@/config/types";
 import Button from "@/components/ButtonComponent";
@@ -18,6 +18,8 @@ const CategoryAsideFilters = ({
   filtersData,
   sort,
   reverse,
+  setSort,
+  setReverse,
   setIsStart,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
@@ -26,7 +28,9 @@ const CategoryAsideFilters = ({
   filtersData: any;
   sort: string;
   reverse: boolean;
-  setIsStart: any;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
+  setReverse: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsStart: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } =
     useCustomPagination();
@@ -59,7 +63,6 @@ const CategoryAsideFilters = ({
     console.log(checkboxes);
     setCheckboxes((prev) => {
       const currentValues = prev[title] || [];
-
       return {
         ...prev,
         [title]: currentValues.includes(value)
@@ -72,6 +75,16 @@ const CategoryAsideFilters = ({
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
+  
+  const handleResetFilters = async () => {
+	setSearchText("");
+	setProductType("");
+	setSort("RELEVANCE");
+	setReverse(true);
+	setPriceRangeFromObject(filtersData.price.value);
+	setCheckboxes({});
+	await getProductData(true);
+ };
 
   const getProductData = async (isForm: boolean) => {
     const selectedFilters = {
@@ -156,43 +169,13 @@ const CategoryAsideFilters = ({
     setPriceRangeFromObject(value);
   };
 
-  const handleApplyPrice = () => {
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    handleSubmitFilters();
-  };
-
-  const handleApplySearch = () => {
-    //   dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    handleSubmitFilters();
-  };
-
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
     handleSubmitFilters();
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
-
     handleSubmitFilters();
     setIsOpen(false);
   };
@@ -212,7 +195,7 @@ const CategoryAsideFilters = ({
               searchQuery={searchText}
               onSearchChange={newHandleSearchText}
               clearSearchQuery={() => setSearchText("")}
-              onApplyClick={handleApplySearch}
+              onApplyClick={handleSubmitFilters}
             />
           )}
           {filtersData.buttons.title && (
@@ -228,13 +211,13 @@ const CategoryAsideFilters = ({
             <CustomFilterComponent
               title={filtersData.priceRange.title}
               type="price"
+				  limit={filtersData.price.value}
               rangeValue={priceRangeFromObject}
               step={1}
               onRangeChange={handlePriceChange}
-              onApplyClick={handleApplyPrice}
+              onApplyClick={handleSubmitFilters}
             />
           )}
-          {/* TODO для кожного блоку useState */}
           {filtersData.checkboxes.length > 0 &&
             filtersData.checkboxes.map((item: any) => (
               <CustomFilterComponent
@@ -255,6 +238,7 @@ const CategoryAsideFilters = ({
               type="submit"
               background="white"
               bordered
+              onClick={handleResetFilters}
             />
             <Button
               text="Підтверження"
@@ -295,7 +279,7 @@ const CategoryAsideFilters = ({
                   searchQuery={searchText}
                   onSearchChange={newHandleSearchText}
                   clearSearchQuery={() => setSearchText("")}
-                  onApplyClick={handleApplySearch}
+                  onApplyClick={handleSubmitFilters}
                 />
               )}
 
@@ -316,7 +300,7 @@ const CategoryAsideFilters = ({
                   rangeValue={priceRangeFromObject}
                   step={1}
                   onRangeChange={handlePriceChange}
-                  onApplyClick={handleApplyPrice}
+                  onApplyClick={handleSubmitFilters}
                 />
               )}
 
@@ -339,20 +323,20 @@ const CategoryAsideFilters = ({
               {isOpen ? (
                 <div className="flex flex-row gap-[10px]">
                   <Button
-                  text="Скидання"
-                  className="w-[30%] text-[16px] font-medium"
-                  type="submit"
-                  background="white"
-                  bordered
-                />
-                <Button
-                  text="Apply Filters"
-                  className="px-[50px] w-[70%] text-[14px] font-default"
-                  type="submit"
-                  onClick={handleSubmitFilters}
-                />
+                    text="Скидання"
+                    className="w-[30%] text-[16px] font-medium"
+                    type="submit"
+                    background="white"
+                    bordered
+                    onClick={handleResetFilters}
+                  />
+                  <Button
+                    text="Apply Filters"
+                    className="px-[50px] w-[70%] text-[14px] font-default"
+                    type="submit"
+                    onClick={handleSubmitFilters}
+                  />
                 </div>
-                  
               ) : (
                 <h2 className="font-spaceage text-[28px] leading-[25px]">
                   Filters

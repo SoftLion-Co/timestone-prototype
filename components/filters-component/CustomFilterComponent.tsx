@@ -21,6 +21,7 @@ type FilterComponentProps = {
 
   //price
   rangeValue?: [number, number];
+  limit?: [number, number];
   step?: number;
   onApplyClick?: () => void;
   onRangeChange?: (value: [number, number]) => void;
@@ -36,7 +37,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   items,
   selectedItems = [],
   onItemChange,
-  rangeValue = [0, 100],
+  rangeValue = [0, 1],
+  limit=[0, 1],
   step,
   onApplyClick,
   onRangeChange,
@@ -148,6 +150,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   }
                   className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Мінімальна ціна"
+						min={limit[0]}
+						max={limit[1]}
                 />
                 <span>—</span>
                 <input
@@ -158,6 +162,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   }
                   className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Максимальна ціна"
+						min={limit[0]}
+						max={limit[1]}
                 />
 
                 <button

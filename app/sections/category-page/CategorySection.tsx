@@ -13,12 +13,16 @@ import { useCustomPagination } from "@/hooks/useCustomPagination";
 const CategorySection = ({
   totalProducts,
   limit,
+  sort,
+  reverse,
   setSort,
   setReverse,
   isStart,
 }: {
   totalProducts: number;
   limit: number;
+  sort: string;
+  reverse: boolean;
   setSort: React.Dispatch<React.SetStateAction<string>>;
   setReverse: React.Dispatch<React.SetStateAction<boolean>>;
   isStart: boolean;
@@ -105,6 +109,7 @@ const CategorySection = ({
             { value: "BEST_SELLING", label: "Best Sellers" },
           ]}
           onSelect={handleChangeSorting}
+			 sort={sort}
         />
       </div>
 
