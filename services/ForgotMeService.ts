@@ -26,12 +26,10 @@ export const resetForgetPassword = async (
   password: string
 ): Promise<any> => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/auth/reset-password/${token}`,
-      {
-        password,
-      }
-    );
+    const response = await axios.post(`${BASE_URL}/auth/reset-password`, {
+      token,
+      password,
+    });
     return response.status;
   } catch (error) {
     console.log(error);
@@ -42,6 +40,22 @@ export const resetForgetPassword = async (
       } else {
         return "server error";
       }
+    }
+  }
+};
+
+export const checkResetToken = async (token: string): Promise<any> => {
+  try {
+    const res = await axios.get(`${BASE_URL}/auth/reset-password/check-token`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return true;
+  } catch (error) {
+    console.log("ddddddd");
+    if (axios.isAxiosError(error)) {
+    return error;
     }
   }
 };
