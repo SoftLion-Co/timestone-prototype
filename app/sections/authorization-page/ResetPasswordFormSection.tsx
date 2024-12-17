@@ -6,6 +6,7 @@ import Image from "next/image";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
+import { useDisclosure } from "@mantine/hooks";
 import { resetForgetPassword } from "@/services/ForgotMeService";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +18,7 @@ const ResetPasswordFormSection = ({
   const router = useRouter();
   const [forgotMeMessage, setForgotMeMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [visible, { toggle }] = useDisclosure(false);
   const resetPasswordForm = useForm({
     initialValues: {
       password: "",
@@ -86,9 +87,11 @@ const ResetPasswordFormSection = ({
           </div>
 
           <Input
-            inputType="input"
+            inputType="password"
             placeholder="Password"
             type="password"
+            visible={visible}
+              onVisibilityChange={toggle}
             bordered={true}
             fullWidth={true}
             required={true}
@@ -97,9 +100,11 @@ const ResetPasswordFormSection = ({
             className="!w-full mt-[10px]"
           />
           <Input
-            inputType="input"
+            inputType="password"
             placeholder="Confirm Password"
             type="password"
+            visible={visible}
+              onVisibilityChange={toggle}
             bordered={true}
             fullWidth={true}
             required={true}

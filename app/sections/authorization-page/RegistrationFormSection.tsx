@@ -8,7 +8,7 @@ import { registrateNewUser } from "@/services/AuthService";
 import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
-
+import { useDisclosure } from "@mantine/hooks";
 const months = [
   { value: "january", label: "January" },
   { value: "february", label: "February" },
@@ -61,6 +61,7 @@ const RegistrationFormSection = () => {
   const [month, setMonth] = useState("february");
   const [day, setDay] = useState("1");
   const dayOptions = getDaysInMonth(month);
+  const [visible, { toggle }] = useDisclosure(false);
 
   const registrationForm = useForm({
     initialValues: {
@@ -277,9 +278,11 @@ const RegistrationFormSection = () => {
         <div className="flex flex-col lg:flex-row gap-[10px]">
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               fullWidth={true}
               bordered={true}
               className="lg:min-w-[314px]"
@@ -291,9 +294,11 @@ const RegistrationFormSection = () => {
 
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Confirm Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               bordered={true}
               fullWidth={true}
               className="lg:min-w-[314px]"
@@ -330,7 +335,9 @@ const RegistrationFormSection = () => {
         <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center  text-[16px] text-darkBurgundy`}>
+              <span
+                className={`block text-center  text-[16px] text-darkBurgundy`}
+              >
                 {registrationMessage}
               </span>
             )}

@@ -2,7 +2,7 @@
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+import { useDisclosure } from "@mantine/hooks";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
@@ -15,6 +15,7 @@ const LoginFormSection = () => {
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [visible, { toggle }] = useDisclosure(false);
 
   const loginForm = useForm({
     initialValues: {
@@ -73,7 +74,7 @@ const LoginFormSection = () => {
       } else if (response == "User not activated") {
         setLoginMessage("Your acc not activated. Check email box.");
       } else {
-        setLoginMessage("Account does not exist");
+        setLoginMessage("Error with server.");
       }
     }
   };
@@ -112,7 +113,9 @@ const LoginFormSection = () => {
       />
 
       <Input
-        inputType="input"
+        inputType="password"
+        visible={visible}
+        onVisibilityChange={toggle}
         placeholder="Password"
         type="password"
         bordered={true}
