@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { MantineProvider, Modal } from "@mantine/core";
+import ReactDOM from "react-dom";
 import { useDisclosure } from "@mantine/hooks";
+import React, {useEffect, useState} from "react";
+import { MantineProvider, Modal } from "@mantine/core";
 
 import Button from "../ButtonComponent";
 
@@ -18,12 +19,20 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({
   title,
 }) => {
   const [opened, { open, close }] = useDisclosure(true);
-
-  return (
+  useEffect(() => {
+    if (opened) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      
+    }
+  }, [opened]);
+  return ReactDOM.createPortal(
     <MantineProvider>
       {opened && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-[999]"
+          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-50"
           onClick={close}
         />
       )}
@@ -56,7 +65,8 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({
           />
         </div>
       </Modal>
-    </MantineProvider>
+    </MantineProvider>,
+     document.body 
   );
 };
 

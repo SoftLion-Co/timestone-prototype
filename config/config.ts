@@ -32,12 +32,16 @@ api.interceptors.response.use(
 
       try {
         const tokens = await updateRefreshToken();
-        if (tokens?.accessToken) {
-          localStorage.setItem("accessToken", tokens.accessToken);
-          localStorage.setItem("refreshToken", tokens.refreshToken);
+        console.log(tokens);
+
+        if (tokens?.newAccessToken) {
+          localStorage.setItem("accessToken", tokens.newAccessToken);
+          localStorage.setItem("refreshToken", tokens.newRefreshToken);
+        console.log( tokens.newAccessToken);
+
           originalRequest.headers[
             "Authorization"
-          ] = `Bearer ${tokens.accessToken}`;
+          ] = `Bearer ${tokens.newAccessToken}`;
           return api(originalRequest);
         } else {
           localStorage.setItem("accessToken", "");

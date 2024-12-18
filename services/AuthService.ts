@@ -73,7 +73,7 @@ export const activateAccount = async (token: string): Promise<any> => {
 export const updateUser = async (userData: any): Promise<any> => {
   try {
     const res = await api.post(`/auth/update`, userData);
-    return res.data;
+    return res.status;
   } catch (error) {
     console.error("Error updating user:", error);
   }
@@ -84,7 +84,7 @@ export const updatePassword = async (newPassword: string): Promise<any> => {
     const res = await api.post(`/auth/update-password`, {
       password: newPassword,
     });
-    return res.data;
+    return res;
   } catch (error) {
     console.error("Error updating password:", error);
   }
@@ -93,7 +93,7 @@ export const updatePassword = async (newPassword: string): Promise<any> => {
 export const updateRefreshToken = async (): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, refreshToken);
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, {refreshToken});
     return res.data;
   } catch (error) {
     console.error("Error refreshing token:", error);
@@ -116,3 +116,25 @@ export const getUser = async (): Promise<any> => {
     throw error;
   }
 };
+
+// export const googleLogin = async (googleToken: string): Promise<any> => {
+//   try {
+//     const res = await axios.post(`${BASE_URL}/auth/google`, {
+//       token: googleToken,
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.error("Error during Google login:", error);
+//   }
+// };
+
+// export const facebookLogin = async (facebookToken: string): Promise<any> => {
+//   try {
+//     const res = await axios.post(`${BASE_URL}/auth/facebook`, {
+//       token: facebookToken,
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.error("Error during Facebook login:", error);
+//   }
+// };

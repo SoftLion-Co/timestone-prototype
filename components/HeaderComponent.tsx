@@ -10,7 +10,9 @@ import { Modal, Button, ActionIcon } from "@mantine/core";
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
 
-import Logo from "@/images/vectors/logo.svg";
+import Logo from "@/images/1.svg";
+
+// import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
 import Burger from "@/images/vectors/burger.svg";
 import Basket from "@/images/vectors/basket.svg";
@@ -27,6 +29,22 @@ const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -57,17 +75,19 @@ const Header = () => {
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}>
+        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}
+      >
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
-          <nav className="flex flex-col text-silver gap-[50px] text-center xl:flex-row xl:gap-[35px]">
+          <nav className="flex flex-col text-silver text-center xl:flex-row ">
             {navData.map((item, index) => (
-              <Link
+              <MainButton
+                tag="a"
+                background="transparent"
                 key={index}
+                text={item.text}
                 href={item.link}
-                onClick={close}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105">
-                {item.text}
-              </Link>
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105 pr-0"
+              />
             ))}
           </nav>
 
@@ -76,14 +96,14 @@ const Header = () => {
 
         <div className="flex gap-[25px]">
           <button
-            className="relative"
+            className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
               close();
             }}>
             {products.length > 0 && (
-              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-vividRed text-white -right-3 top-1">
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-[red] text-white -right-3.5 -top-[3.2px]">
                 {products.length}
               </div>
             )}
@@ -96,13 +116,13 @@ const Header = () => {
               href="/auth"
               onClick={close}
               background="transparent"
-              className="!px-[5px] text-onyx font-semibold transition-all duration-300"
+              className="!px-[0px] !py-[6px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
             />
           ) : (
             <Link
               href="/account"
-              onClick={close}
-              className="block px-4 py-2 text-sm text-onyx hover:text-[white]">
+              className="block px-4 py-2 transition-transform duration-300 hover:scale-125"
+            >
               <Image src={Profile} alt="profile" />
             </Link>
           )}
@@ -120,7 +140,10 @@ const Header = () => {
   };
 
   return (
-    <header className="mx-[20px] lg:mx-[60px] relative z-30 bg-white">
+    <header
+      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out
+      ${isScrolled ? "sticky top-0 shadow-lg" : ""}`}
+    >
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
 

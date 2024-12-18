@@ -8,7 +8,7 @@ import { registrateNewUser } from "@/services/AuthService";
 import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
-
+import { useDisclosure } from "@mantine/hooks";
 const months = [
   { value: "january", label: "January" },
   { value: "february", label: "February" },
@@ -60,6 +60,7 @@ const RegistrationFormSection = () => {
   const [month, setMonth] = useState("february");
   const [day, setDay] = useState("1");
   const dayOptions = getDaysInMonth(month);
+  const [visible, { toggle }] = useDisclosure(false);
 
   const registrationForm = useForm({
     initialValues: {
@@ -80,10 +81,11 @@ const RegistrationFormSection = () => {
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
       password: (value) => {
-        if (/\s/.test(value)) return "Password can not contain spaces";
-        if (value.length < 6) return "Password must be at least 6 characters";
-        if (value.length > 20)
-          return "Password must not be more than 20 characters";
+        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/[\u0400-\u04FF]/.test(value))
+          return "Cyrillic characters are not allowed";
+        if (value.length < 6) return "Minimum 6 characters required";
+        if (value.length > 20) return "Maximum 20 characters allowed";
         if (!/[a-z]/.test(value))
           return "Password must contain lowercase letter";
         if (!/[A-Z]/.test(value))
@@ -276,9 +278,11 @@ const RegistrationFormSection = () => {
         <div className="flex flex-col lg:flex-row gap-[10px]">
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               fullWidth={true}
               bordered={true}
               className="lg:min-w-[314px]"
@@ -290,9 +294,11 @@ const RegistrationFormSection = () => {
 
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Confirm Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               bordered={true}
               fullWidth={true}
               className="lg:min-w-[314px]"
@@ -329,7 +335,9 @@ const RegistrationFormSection = () => {
         <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center  text-[16px] text-darkBurgundy`}>
+              <span
+                className={`block text-center  text-[16px] text-darkBurgundy`}
+              >
                 {registrationMessage}
               </span>
             )}

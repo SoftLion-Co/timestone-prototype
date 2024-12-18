@@ -42,7 +42,7 @@ const CategoryAsideFilters = ({
     const getData = async () => {
       await getProductData(false);
     };
-
+    console.log("t", filtersData)
     getData();
   }, [currentPage]);
 
@@ -55,13 +55,20 @@ const CategoryAsideFilters = ({
   }, [sort, reverse]);
 
   const handleCheckboxChange = (title: string, value: string) => {
-    setCheckboxes((prev) => ({
-      ...prev,
-      [title]: prev[title].includes(value)
-        ? prev[title].filter((item) => item !== value)
-        : [...prev[title], value],
-    }));
+    console.log(9);
+    console.log(checkboxes);
+    setCheckboxes((prev) => {
+      const currentValues = prev[title] || [];
+  
+      return {
+        ...prev,
+        [title]: currentValues.includes(value)
+          ? currentValues.filter((item) => item !== value)
+          : [...currentValues, value],
+      };
+    });
   };
+  
 
   const handleSubmitFilters = async () => {
     await getProductData(true);

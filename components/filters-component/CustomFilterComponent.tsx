@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "react-range-slider-input/dist/style.css";
 
@@ -29,7 +29,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   type,
   title,
   items,
-  selectedItems,
+  selectedItems = [],
   onItemChange,
   rangeValue = [0, 100],
   step,
@@ -47,6 +47,11 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
     setIsOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    console.log("d", selectedItems);
+
+  }, [selectedItems]);
+
   return (
     <>
       <label className="relative flex flex-col gap-[10px] border-b text-[14px] border-silver border-opacity-20 pb-5">
@@ -54,14 +59,16 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
           className={`flex justify-between items-center ${
             type === "checkboxes" ? "cursor-pointer" : ""
           }`}
-          onClick={toggleOpen}>
+          onClick={toggleOpen}
+        >
           <h3 className="font-semibold text-[16px]">{title}</h3>
 
           {type === "checkboxes" && (
             <motion.div
               initial={{ rotate: 0 }}
               animate={{ rotate: isOpen ? 45 : 0 }}
-              transition={{ duration: 0.3 }}>
+              transition={{ duration: 0.3 }}
+            >
               <span className="text-4xl text-darkBurgundy">+</span>
             </motion.div>
           )}
@@ -70,7 +77,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "search" && (
           <div className="flex gap-3">
             <input
-              className="rounded-sm bg-white py-[14px] pl-3 pr-10 w-full focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
+              className="rounded-sm bg-white py-[8px] border pl-3 pr-10 w-full border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
               placeholder="Type Here"
               value={searchQuery}
@@ -79,13 +86,15 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
+                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]"
+              >
                 ✕
               </button>
             )}
             <button
               onClick={onApplyClick}
-              className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
+              className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon"
+            >
               OK
             </button>
           </div>
@@ -117,7 +126,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
                 <button
                   onClick={onApplyClick}
-                  className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
+                  className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon"
+                >
                   OK
                 </button>
               </div>
@@ -139,7 +149,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     activeButton === btn
                       ? "font-bold text-darkBurgundy"
                       : "text-silver"
-                  } `}>
+                  } `}
+                >
                   {btn}
                 </button>
               ))}
@@ -157,7 +168,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     activeButton === btn
                       ? "bg-darkBurgundy text-white"
                       : "bg-white"
-                  } py-[14px] px-[52px]`}>
+                  } py-[14px] px-[52px]`}
+                >
                   {btn}
                 </button>
               ))}
@@ -174,18 +186,20 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                 : { height: 0, opacity: 0 }
             }
             transition={{ duration: 0.3 }}
-            style={{ overflow: "hidden" }}>
+            style={{ overflow: "hidden" }}
+          >
             <div className="flex flex-col justify-start items-start overflow-y-scroll h-24">
               {items?.map((item, index) => (
                 <label
                   key={index}
                   htmlFor={`checkbox-item-${title.toLowerCase}-${item}`}
-                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200">
+                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200"
+                >
                   <input
                     id={`checkbox-item-${title.toLowerCase}-${item}`}
                     type="checkbox"
                     className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    checked={selectedItems?.includes(item)}
+                    checked={selectedItems ? selectedItems.includes(item) : false}
                     onChange={() => onItemChange?.(item)}
                   />
                   <span className="first-letter:uppercase">{item}</span>
