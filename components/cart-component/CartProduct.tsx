@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'next/image';
+import Image from "next/image";
 
-import { CartProductProps } from '@/config/types';
-import { useCart } from '@/hooks/useCart';
+import { CartProductProps } from "@/config/types";
+import { useCart } from "@/hooks/useCart";
 
-import Delete from '@/images/cart-component/delete.svg';
-// import { usePathname } from 'next/navigation';
+import Delete from "@/images/cart-component/delete.svg";
 
 const CartProduct = ({ card }: { card: CartProductProps }) => {
   const {
@@ -16,8 +15,6 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
     removeFromCart,
     changeOpenState,
   } = useCart();
-
-  // const pathname = usePathname();
 
   const onHandleClickDelete = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -60,35 +57,22 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between">
           <h4 className="text-[12px] text-silver">{card.title}</h4>
-          {/* {pathname !== '/checkout' && ( */}
-            <button onClick={(e) => onHandleClickDelete(e, card.id)}>
-              <Image
-                src={Delete}
-                alt="delete button"
-                className="object-fit h-5 w-5 hover:scale-110 duration-300"
-              />
-            </button>
-          {/* )} */}
+          <button onClick={(e) => onHandleClickDelete(e, card.id)}>
+            <Image
+              src={Delete}
+              alt="delete button"
+              className="object-fit h-5 w-5 hover:scale-110 duration-300"
+            />
+          </button>
         </div>
 
         <span className="text-black text-[20px] mb-[15px]">${card.price}</span>
 
         <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
-          {/* <ul className="flex gap-[25px] items-center">
-            <li className="flex items-center gap-[7px]">
-              <div className={`w-5 h-5 rounded-md bg-darkMaroon`}></div>
-              <span className="text-[12px] text-silver">Case Color</span>
-            </li>
-            <li className="flex items-center gap-[7px]">
-              <div className={`w-5 h-5 rounded-md bg-darkMaroon`}></div>
-              <span className="text-[12px] text-silver">Strap Color</span>
-            </li>
-          </ul> */}
-
           <button
             onClick={(e) => onHandleClickRemoveQuantity(e, card.id)}
             className={`w-8 h-8 rounded-sm border-r-2 ${
-              card.quantity > 1 ? 'hover:bg-white bg-gray-200' : 'bg-white'
+              card.quantity > 1 ? "hover:bg-white bg-gray-200" : "bg-white"
             }`}>
             -
           </button>
@@ -99,8 +83,8 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
             onClick={(e) => onHandleClickAddQuantity(e, card.id)}
             className={`w-8 h-8 rounded-sm border-l-2  ${
               card.quantity < card.maxQuantity
-                ? 'hover:bg-white bg-gray-200'
-                : 'bg-white'
+                ? "hover:bg-white bg-gray-200"
+                : "bg-white"
             }`}>
             +
           </button>

@@ -6,7 +6,6 @@ import TitleComponents from "@/components/TitleComponents";
 import CategoryAsideFilters from "./CategoryAsideFilters";
 import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
-// import { FiltersProvider } from "@/hooks/useFilters";
 import { PaginationProvider } from "@/hooks/useCustomPagination";
 import { getFilters } from "@/services/ProductService";
 
@@ -65,7 +64,6 @@ const CategoryMain = () => {
   return (
     <>
       <PaginationProvider>
-        {/* <FiltersProvider> */}
         <ProductsContext.Provider value={products}>
           <TitleComponents
             text="Products"
@@ -88,7 +86,6 @@ const CategoryMain = () => {
             />
           </div>
         </ProductsContext.Provider>
-        {/* </FiltersProvider> */}
       </PaginationProvider>
     </>
   );

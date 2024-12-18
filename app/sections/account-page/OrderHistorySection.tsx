@@ -101,8 +101,7 @@ const OrderHistorySection = () => {
                     <Accordion.Control className="mb-[3px] p-4 bg-white w-full border border-whisper border-solid rounded-lg">
                       <div
                         className="relative flex flex-row justify-between items-center"
-                        onClick={() => toggleOrderDetails(order.id)}
-                      >
+                        onClick={() => toggleOrderDetails(order.id)}>
                         <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-500">
                           {order.number}
                         </span>
@@ -110,8 +109,7 @@ const OrderHistorySection = () => {
                           {order.date}
                         </span>
                         <span
-                          className={`text-[10px] md:text-[12px] lg:text-[14px] py-1 px-2 rounded ${styles}`}
-                        >
+                          className={`text-[10px] md:text-[12px] lg:text-[14px] py-1 px-2 rounded ${styles}`}>
                           {text}
                         </span>
                         <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-800 font-semibold">
@@ -186,15 +184,6 @@ const OrderHistorySection = () => {
                           <span className="font-bold text-[12px] md:text-[14px] lg:text-[16px]">
                             Total: {order.total}
                           </span>
-                          {/* <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Shipping: {order.shipping}
-                      </span>
-                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Tax: {order.tax}
-                      </span>
-                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Subtotal: {order.subtotal}
-                      </span> */}
                         </div>
                       </div>
                     </Accordion.Panel>

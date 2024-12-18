@@ -51,8 +51,7 @@ const BasicInfoSection: FC<{
         title="Basic Info"
         className="items-center"
         isOpen={isOpen}
-        toggleOpen={toggleOpen}
-      >
+        toggleOpen={toggleOpen}>
         <Input
           inputType="input"
           placeholder="Email"
@@ -156,27 +155,3 @@ const BasicInfoSection: FC<{
 };
 
 export default BasicInfoSection;
-
-// const options = [
-//   { value: "UA", label: "Ukraine" },
-//   { value: "PL", label: "Poland" },
-//   { value: "USA", label: "USA" },
-// ];
-
-// country: "",
-
-//country: (value) => (value ? null : "Please select a country"),
-
-{
-  /* <Input
-          inputType="select"
-          placeholder="Country"
-          options={options}
-          className="mini:w-[80%]"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("country")}
-          onSelect={(value) => form.setFieldValue("country", value)}
-          errorType="critical"
-        /> */
-}

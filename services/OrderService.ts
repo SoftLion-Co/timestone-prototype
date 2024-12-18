@@ -18,13 +18,12 @@ export const getUserOrders = async (): Promise<any> => {
 
     const res = await api.get(`/order`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`, 
+        Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(res)
     return res.data;
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    throw error; 
+    throw error;
   }
 };

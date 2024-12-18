@@ -8,17 +8,13 @@ import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState, useEffect } from "react";
 
-// import { orders } from "@/test/orderData";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
-import Arrow from "@/images/news-section/arrow.svg";
-
 //! кнопки для підєднання facebook or google
-const MyAccountSection = () => {
   const countries = [{ value: "Ukraine", label: "Україна" }];
 
   const cities = [
@@ -86,7 +82,7 @@ const MyAccountSection = () => {
     }));
   };
   const [userName, setUserName] = useState("");
-  const [loading, setLoading] = useState(false); //true
+  const [loading, setLoading] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
@@ -252,10 +248,6 @@ const MyAccountSection = () => {
         text: "Oops! A server error occurred!",
       });
     }
-
-    setTimeout(() => {
-      setInfoMessage(null);
-    }, 5000);
   };
 
   const handleSubmitPassword = async (event: any) => {
@@ -323,7 +315,6 @@ const MyAccountSection = () => {
             Timestone account activity.
           </p>
         </div>
-
         <form
           className="flex flex-col  items-center gap-[46px] lg:items-end"
           onSubmit={handleSubmit}

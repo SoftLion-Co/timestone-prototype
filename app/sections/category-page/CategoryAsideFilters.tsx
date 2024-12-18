@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 
 import ArrowUp from "@/images/category-section/arrow-up.svg";
 import Button from "@/components/ButtonComponent";
-// import { useFilters } from "@/hooks/useFilters";
 import { CardProps } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
@@ -27,7 +26,6 @@ const CategoryAsideFilters = ({
   sort: string;
   reverse: boolean;
 }) => {
-  // const { filters, dispatch } = useFilters();
   const { setPageInfo, setTotalPages, pageInfo, currentPage } =
     useCustomPagination();
 
@@ -41,9 +39,6 @@ const CategoryAsideFilters = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log(currentPage);
-    // console.log(checkboxes);
-    // console.log(Object.keys(checkboxes).length !== 0);
     const getData = async () => {
       await getProductData(false);
     };
@@ -131,7 +126,6 @@ const CategoryAsideFilters = ({
         false
       );
     }
-    //  console.log("d", data);
 
     setPageInfo(data.pageInfo);
     setPreviousPage(currentPage);
@@ -163,41 +157,21 @@ const CategoryAsideFilters = ({
   };
 
   const handleApplyPrice = () => {
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
     handleSubmitFilters();
   };
 
   const handleApplySearch = () => {
-    //   dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
     handleSubmitFilters();
   };
 
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
     handleSubmitFilters();
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // dispatch({ type: "SET_SEARCH_TEXT", payload: searchText });
-    // dispatch({ type: "SET_MIN_PRICE", payload: priceRangeFromObject[0] });
-    // dispatch({ type: "SET_MAX_PRICE", payload: priceRangeFromObject[1] });
-    // dispatch({ type: "SET_PRODUCT_TYPE", payload: productType });
-    // dispatch({ type: "TOGGLE_CHECKBOXES", payload: checkboxes });
-    //  dispatch({ type: "TOGGLE_WATCH_COLOR", payload: watchesColor });
-    //  dispatch({ type: "TOGGLE_STRAP_COLOR", payload: strapsColor });
-    //  dispatch({ type: "SET_COUNTRIES", payload: countries });
 
     handleSubmitFilters();
     setIsOpen(false);
@@ -205,7 +179,6 @@ const CategoryAsideFilters = ({
 
   return (
     <>
-      {/* pc filters */}
       <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
@@ -242,7 +215,6 @@ const CategoryAsideFilters = ({
             />
           )}
 
-          {/* TODO для кожного блоку useState */}
           {filtersData.checkboxes.length > 0 &&
             filtersData.checkboxes.map((item: any) => (
               <CustomFilterComponent
@@ -265,11 +237,9 @@ const CategoryAsideFilters = ({
         </form>
       </aside>
 
-      {/* mobile filters */}
       <div className="z-20 top-0 xl:hidden bg-pearl">
         <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
-            {/* {isOpen && ( */}
             <motion.div
               className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
                 isOpen ? "pt-5" : ""
