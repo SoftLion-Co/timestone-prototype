@@ -44,6 +44,11 @@ const BasicInfoSection: FC<{
   });
 
   useEffect(() => {
+    const getCity = async () => {};
+    getCity();
+  }, [form.values.city]);
+
+  useEffect(() => {
     const localValues = localStorage.getItem("basicInfo");
     if (localValues) {
       const result = JSON.parse(localValues);
@@ -63,35 +68,33 @@ const BasicInfoSection: FC<{
     }
   }, [form.values]);
 
-  const handleInputChange = async ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }) => {
-    form.setFieldValue("city", value);
-
-    if (!value.trim()) {
-      setCities([]);
-      setError(null);
-      return;
-    }
-
-    const city = await getCities(value);
-    if (city.length === 0) {
-      setError("Населений пункт не знайдено!");
-    } else {
-      setError(null);
-    }
-    setCities(city);
-  };
-
-  const handleSelectChange = (value: string) => {
+  const handleSelect = async (value: string) => {
+    console.log("fef", form.values.city);
+    console.log(value);
     const selectedCity = cities.find(({ Ref }) => Ref === value);
+    const selectedCity2 = cities.find(({ Present }) => Present === value);
+    console.log(selectedCity, selectedCity2);
+
     if (selectedCity) {
+      console.log("3");
       form.setFieldValue("city", selectedCity.Present);
       setSettlementRef(selectedCity.Ref);
       setCityRef(selectedCity.DeliveryCity);
       setCities([]);
+    } else {
+      if (!value.trim()) {
+        setCities([]);
+        setError(null);
+        return;
+      }
+
+      const city = await getCities(value);
+      if (city.length === 0) {
+        setError("Населений пункт не знайдено!");
+      } else {
+        setError(null);
+      }
+      setCities(city);
     }
   };
 
@@ -159,7 +162,7 @@ const BasicInfoSection: FC<{
           className="mini:w-[80%]"
         />
 
-        <Input
+        {/* <Input
           inputType="input"
           placeholder="Населений пункт"
           required={true}
@@ -169,23 +172,22 @@ const BasicInfoSection: FC<{
           errorType="critical"
           fullWidth
           className="mini:w-[80%] mb-0"
-        />
+        /> */}
 
         {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
 
-        {cities.length > 0 && (
-          <Input
-            className="mini:w-[80%]"
-            inputType="select"
-            placeholder="Оберіть населений пункт"
-            options={cities.map((city) => ({
-              value: city.Ref,
-              label: city.Present,
-            }))}
-            onSelect={handleSelectChange}
-            scrollable
-          />
-        )}
+        <Input
+          className="mini:w-[80%]"
+          inputType="select"
+          placeholder="Оберіть населений пункт"
+          options={cities.map((city) => ({
+            value: city.Ref,
+            label: city.Present,
+          }))}
+          {...form.getInputProps("city")}
+          scrollable
+          onSelect={handleSelect}
+        />
 
         <Button
           text="Continue"
