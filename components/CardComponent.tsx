@@ -36,7 +36,7 @@ const CardComponent: FC<CardProps> = ({
       maxQuantity: quantity,
       caseColor: "red",
       strapColor: "red",
-    });
+    }, 1);
   };
 
   return (
