@@ -79,8 +79,7 @@ const CategoryAsideFilters = ({
   }, [priceRangeFromObject]);
 
   const handleCheckboxChange = (title: string, value: string) => {
-    // console.log(9);
-    // console.log(checkboxes);
+	if(value != ""){
     setCheckboxes((prev) => {
       const currentValues = prev[title] || [];
       return {
@@ -90,6 +89,7 @@ const CategoryAsideFilters = ({
           : [...currentValues, value],
       };
     });
+	}
   };
 
   const handleSubmitFilters = async () => {
@@ -201,7 +201,6 @@ const CategoryAsideFilters = ({
 
   return (
     <>
-      {/* pc filters */}
       <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
@@ -268,11 +267,9 @@ const CategoryAsideFilters = ({
         </form>
       </aside>
 
-      {/* mobile filters */}
       <div className="z-20 top-0 xl:hidden bg-pearl">
         <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
-            {/* {isOpen && ( */}
             <motion.div
               className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
                 isOpen ? "pt-5" : ""

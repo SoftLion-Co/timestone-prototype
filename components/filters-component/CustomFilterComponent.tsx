@@ -1,32 +1,27 @@
 "use client";
-
 import React, { FC, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 // import RangeSlider from "react-range-slider-input";
-import "react-range-slider-input/dist/style.css";
+// import "react-range-slider-input/dist/style.css";
 
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
   title: string;
 
-  //text
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   clearSearchQuery?: () => void;
 
-  //checkbox
   items?: string[];
   selectedItems?: string[];
   onItemChange?: (item: string) => void;
 
-  //price
   rangeValue?: [number, number];
   limit?: [number, number];
   step?: number;
   onApplyClick?: () => void;
   onRangeChange?: (value: [number, number]) => void;
 
-  // buttons
   activeButton?: string;
   onChangeButton?: (value: string) => void;
 };
@@ -34,7 +29,7 @@ type FilterComponentProps = {
 const CustomFilterComponent: FC<FilterComponentProps> = ({
   type,
   title,
-  items,
+  items = [],
   selectedItems = [],
   onItemChange,
   rangeValue = [0, 1],
@@ -49,18 +44,18 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   onChangeButton,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isStart, setIsStart] = useState(true);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
+	 if(type==="checkboxes"){
+		 setIsStart(true)
+	 }
   };
 
   useEffect(() => {
-  }, [selectedItems]);
-
-  useEffect(() => {
-    items?.map((item, index) => (
-    console.log("q", `${title.toLowerCase()}-${item}`)));
-  }, []);
+		setIsStart(false)
+  }, [isStart]);
 
   return (
     <>
@@ -247,7 +242,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     checked={
                       selectedItems ? selectedItems.includes(item) : false
                     }
-                    onChange={() => onItemChange?.(item)}
+                    onChange={() => onItemChange?.(isStart? "" : item)}
                   />
                   <span className="first-letter:uppercase">{item}</span>
                 </label>
