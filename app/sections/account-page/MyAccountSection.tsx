@@ -19,45 +19,43 @@ import Arrow from "@/images/news-section/arrow.svg";
 
 //! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
-  // const cities = [
-  //   { value: "kyiv", label: "Київ" },
-  //   { value: "lviv", label: "Львів" },
-  //   { value: "kharkiv", label: "Харків" },
-  //   { value: "odesa", label: "Одеса" },
-  //   { value: "dnipro", label: "Дніпро" },
-  //   { value: "zaporizhzhia", label: "Запоріжжя" },
-  //   { value: "vinnytsia", label: "Вінниця" },
-  //   { value: "chernihiv", label: "Чернігів" },
-  //   { value: "sumy", label: "Суми" },
-  //   { value: "poltava", label: "Полтава" },
-  //   { value: "chernivtsi", label: "Чернівці" },
-  //   { value: "ivano-frankivsk", label: "Івано-Франківськ" },
-  //   { value: "uzhhorod", label: "Ужгород" },
-  //   { value: "ternopil", label: "Тернопіль" },
-  //   { value: "khmelnytskyi", label: "Хмельницький" },
-  //   { value: "mykolaiv", label: "Миколаїв" },
-  //   { value: "rivne", label: "Рівне" },
-  //   { value: "zhytomyr", label: "Житомир" },
-  //   { value: "cherkasy", label: "Черкаси" },
-  //   { value: "kropyvnytskyi", label: "Кропивницький" },
-  //   { value: "lutsk", label: "Луцьк" },
-  // ];
-
-  const cities = ["Київ", "Львів", "Харків", "Одеса"];
+  const cities = [
+    { value: "kyiv", label: "Київ" },
+    { value: "lviv", label: "Львів" },
+    { value: "kharkiv", label: "Харків" },
+    { value: "odesa", label: "Одеса" },
+    { value: "dnipro", label: "Дніпро" },
+    { value: "zaporizhzhia", label: "Запоріжжя" },
+    { value: "vinnytsia", label: "Вінниця" },
+    { value: "chernihiv", label: "Чернігів" },
+    { value: "sumy", label: "Суми" },
+    { value: "poltava", label: "Полтава" },
+    { value: "chernivtsi", label: "Чернівці" },
+    { value: "ivano-frankivsk", label: "Івано-Франківськ" },
+    { value: "uzhhorod", label: "Ужгород" },
+    { value: "ternopil", label: "Тернопіль" },
+    { value: "khmelnytskyi", label: "Хмельницький" },
+    { value: "mykolaiv", label: "Миколаїв" },
+    { value: "rivne", label: "Рівне" },
+    { value: "zhytomyr", label: "Житомир" },
+    { value: "cherkasy", label: "Черкаси" },
+    { value: "kropyvnytskyi", label: "Кропивницький" },
+    { value: "lutsk", label: "Луцьк" },
+  ];
 
   const months = [
-    { value: "january", label: "January" },
-    { value: "february", label: "February" },
-    { value: "march", label: "March" },
-    { value: "april", label: "April" },
-    { value: "may", label: "May" },
-    { value: "june", label: "June" },
-    { value: "july", label: "July" },
-    { value: "august", label: "August" },
-    { value: "september", label: "September" },
-    { value: "october", label: "October" },
-    { value: "november", label: "November" },
-    { value: "december", label: "December" },
+    { value: "january", label: "Січень" },
+    { value: "february", label: "Лютий" },
+    { value: "march", label: "Березень" },
+    { value: "april", label: "Квітень" },
+    { value: "may", label: "Травень" },
+    { value: "june", label: "Червень" },
+    { value: "july", label: "Липень" },
+    { value: "august", label: "Серпень" },
+    { value: "september", label: "Вересень" },
+    { value: "october", label: "Жовтень" },
+    { value: "november", label: "Листопад" },
+    { value: "december", label: "Грудень" },
   ];
 
   const getDaysInMonth = (
@@ -86,12 +84,11 @@ const MyAccountSection = () => {
     }));
   };
   const [userName, setUserName] = useState("");
-  const [loading, setLoading] = useState(false); //true
+  const [loading, setLoading] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
   const [address1, setAddress1] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const dayOptions = getDaysInMonth(month);
   const [infoMessage, setInfoMessage] = useState<{
@@ -106,7 +103,7 @@ const MyAccountSection = () => {
         setUserName(`${user.firstName} ${user.lastName}` || "");
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
-
+        const userAddress1 = user.address?.split("&")[0]?.trim() || "";
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
@@ -114,12 +111,16 @@ const MyAccountSection = () => {
           phone: user.phone || "",
           month: userMonth,
           date: userDay,
-          address1: user.address?.split("&")[0]?.trim() || "",
+          address1: userAddress1,
           address2: user.address?.split("&")[1]?.trim() || "",
         });
         if (userMonth && userDay) {
           setMonth(userMonth);
           setDay(userDay);
+        }
+
+        if (userAddress1) {
+          setAddress1(userAddress1);
         }
 
         setSubscribe(subscribe);
@@ -299,18 +300,6 @@ const MyAccountSection = () => {
     }
   }, [form.values.phone]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const clickedElement = event.target as HTMLElement;
-      if (!clickedElement.closest("#custom-select")) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <>
       {infoMessage && (
@@ -405,7 +394,9 @@ const MyAccountSection = () => {
                 inputType="select"
                 value={month}
                 scrollable={true}
-                onSelect={(value) => setMonth(value)}
+                onSelect={(value) => {setMonth(value);
+                  form.setFieldValue("month", value); 
+                }}
                 options={months}
                 bordered={true}
                 className="mini:w-full lg:w-[45%]"
@@ -418,7 +409,9 @@ const MyAccountSection = () => {
                 value={day}
                 options={dayOptions}
                 scrollable={true}
-                onSelect={(value) => setDay(value)}
+                onSelect={(value) => {setDay(value);
+                  form.setFieldValue("date", value); 
+                }}
                 className="mini:w-full lg:w-[45%]"
               />
             </div>
@@ -428,37 +421,18 @@ const MyAccountSection = () => {
             <h2 className="mb-[20px] text-[24px] text-silver">Моя адреса</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <Select
-                className="relative"
-                classNames={{
-                  root: "w-full lg:w-[45%] ",
-                  wrapper: "w-full",
-                  dropdown:
-                    "bg-white absolute top-[26px] right-[25px] absolute mt-2 w-full border border-gray-300 rounded-lg bg-snow -z-20",
-                  input:
-                    "w-full border border-[1px] border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver focus:outline-none focus:border-[1px] focus:border-darkBurgundy",
-                }}
-                onClick={() => setIsOpen(true)}
-                id="custom-select"
-                nothingFoundMessage="Нічого не знайдено..."
-                searchable
-                name="address1"
-                data={cities}
-                rightSectionPointerEvents="none"
-                comboboxProps={{ position: 'bottom', middlewares: { flip: false, shift: false } }}
-                rightSection={
-                  <Image
-                    src={Arrow}
-                    alt="Arrow"
-                    width={15}
-                    height={14}
-                    className={`absolute top-[26px] right-[25px] transition-transform ${
-                      isOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
-                }
+              <Input
                 placeholder="Населений пункт"
-                {...form.getInputProps("address")}
+                inputType="select"
+                bordered={true}
+                value={address1}
+                options={cities}
+                scrollable={true}
+                onSelect={(value) => {setAddress1(value);
+                  form.setFieldValue("address1", value); 
+                }}
+                
+                className="mini:w-full lg:w-[45%]"
               />
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
@@ -486,11 +460,7 @@ const MyAccountSection = () => {
               </label>
             </div>
           </div>
-          <Button
-            text="Оновити"
-            className="mt-[-20px]"
-            type="submit"
-          />
+          <Button text="Оновити" className="mt-[-20px]" type="submit" />
         </form>
 
         <form
@@ -534,10 +504,7 @@ const MyAccountSection = () => {
               </div>
             </div>
           </div>
-          <Button
-            text="Оновити"
-            type="submit"
-          />
+          <Button text="Оновити" type="submit" />
         </form>
       </>
     </>

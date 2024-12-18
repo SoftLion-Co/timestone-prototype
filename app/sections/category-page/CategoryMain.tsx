@@ -23,7 +23,7 @@ const filter = {
   },
   priceRange: {
     title: "Price",
-    value: [0, 150],
+    value: [0, 10],
   },
   checkboxes: [
     {

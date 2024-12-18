@@ -49,7 +49,7 @@ const InputComponent: FC<InputProps> = ({
   name,
   error,
   onChange,
-  options,
+  options = [],
   onSelect,
   errorType,
   scrollable = false,
@@ -64,6 +64,7 @@ const InputComponent: FC<InputProps> = ({
   const borderClass = bordered ? "border border-whisper border-solid" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
+  const [inputValue, setInputValue] = useState<string>(value || "");
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(value || null);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -94,65 +95,88 @@ const InputComponent: FC<InputProps> = ({
     onSelect?.(value);
     setIsOpen(false);
   };
-
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "") {
+      setSelected(null);
+    }
+    
+    setInputValue(value);
+    onChange?.(e);
+  };
   const inputContent = () => {
     if (inputType === "select") {
+      const filteredOptions = inputValue
+        ? options.filter((option) =>
+            option.label.toLowerCase().includes(inputValue.toLowerCase())
+          )
+        : options;
+
       return (
-        <>
-          <div
-            className={`${className} relative w-full mini:w-[320px]`}
-            ref={selectRef}
-          >
-            <div
-              className={`border border-whisper border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver`}
-              onClick={toggleDropdown}
-            >
-              {selected
-                ? options?.find((option) => option.value === selected)?.label
-                : placeholder}
-
-              <Image
-                src={Arrow}
-                alt="Arrow"
-                width={14}
-                className={`absolute right-[25px] top-[25px] transition-transform ${
-                  isOpen ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </div>
-
-            {isOpen && (
-              <motion.ul
-                className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-snow z-10 ${
-                  scrollable ? "max-h-[160px] overflow-y-auto" : ""
-                }`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                {options?.map((option) => (
-                  <li
-                    key={option.value}
-                    className="p-2 hover:bg-gray-200 cursor-pointer text-silver rounded-lg"
-                    onClick={() => handleSelect(option.value)}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </motion.ul>
-            )}
+        <div
+          className={`${className} relative w-full mini:w-[320px]`}
+          ref={selectRef}
+        >
+          <input
+            className={`${
+              bordered ? "border border-solid border-gray-300" : ""
+            } py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
+            type={type}
+            placeholder={placeholder}
+            value={
+              selected && !inputValue
+                ? options?.find((option) => option.value === selected)?.label ||
+                  ""
+                : inputValue || ""
+            }
+            name={name}
+            required={required}
+            disabled={disabled}
+            onChange={handleInputChange}
+            onFocus={() => setIsOpen(true)}
+            maxLength={maxLength}
+          />
+          <div className="absolute right-[25px] top-[50%] transform -translate-y-[50%] cursor-pointer">
+            <Image
+              src={Arrow}
+              alt="Arrow"
+              width={14}
+              className={`transition-transform ${
+                isOpen ? "rotate-180" : "rotate-0"
+              }`}
+            />
           </div>
+          {isOpen && options.length > 0 && (
+            <motion.ul
+              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white z-10 ${
+                scrollable ? "max-h-[160px] overflow-y-auto" : ""
+              }`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              {filteredOptions.map((option) => (
+                <li
+                  key={option.value}
+                  className="p-2 hover:bg-gray-200 cursor-pointer text-gray-700 rounded-lg"
+                  onClick={() => handleSelect(option.value)}
+                >
+                  {option.label}
+                </li>
+              ))}
+            </motion.ul>
+          )}
           {error && (
             <p
               className={`text-[14px] ${
-                errorType === "critical" ? "text-darkBurgundy" : "text-snow"
+                errorType === "critical" ? "text-darkBurgundy" : "text-gray-400"
               }`}
             >
               {error}
             </p>
           )}
-        </>
+        </div>
       );
     } else if (inputType === "input") {
       return (

@@ -37,25 +37,36 @@ const CategoryAsideFilters = ({
   const [searchText, setSearchText] = useState<string>("");
   const [priceRangeFromObject, setPriceRangeFromObject] = useState<
     [number, number]
-  >([0, 30000]);
+  >([0, 10]);
   const [productType, setProductType] = useState<string>("");
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const getData = async () => {
-      await getProductData(false);
-    };
-    getData();
+    setPriceRangeFromObject(filtersData.priceRange.value);
+  }, [filtersData]);
+
+  useEffect(() => {
+    console.log(filtersData.priceRange.value[1]);
+    if (filtersData.priceRange.value[1] != 10) {
+      console.log("t");
+      const getData = async () => {
+        await getProductData(false);
+      };
+      getData();
+    }
   }, [currentPage]);
 
   useEffect(() => {
-    const getData = async () => {
-      await getProductData(true);
-    };
+    if (filtersData.priceRange.value[1] != 10) {
+      console.log("z");
+      const getData = async () => {
+        await getProductData(true);
+      };
 
-    getData();
+      getData();
+    }
   }, [sort, reverse]);
 
   const handleCheckboxChange = (title: string, value: string) => {
@@ -75,16 +86,16 @@ const CategoryAsideFilters = ({
   const handleSubmitFilters = async () => {
     await getProductData(true);
   };
-  
+
   const handleResetFilters = async () => {
-	setSearchText("");
-	setProductType("");
-	setSort("RELEVANCE");
-	setReverse(true);
-	setPriceRangeFromObject(filtersData.price.value);
-	setCheckboxes({});
-	await getProductData(true);
- };
+    setSearchText("");
+    setProductType("");
+    setSort("RELEVANCE");
+    setReverse(true);
+    setPriceRangeFromObject(filtersData.priceRange.value);
+    setCheckboxes({});
+    await getProductData(true);
+  };
 
   const getProductData = async (isForm: boolean) => {
     const selectedFilters = {
@@ -211,7 +222,7 @@ const CategoryAsideFilters = ({
             <CustomFilterComponent
               title={filtersData.priceRange.title}
               type="price"
-				  limit={filtersData.price.value}
+              limit={filtersData.priceRange.value}
               rangeValue={priceRangeFromObject}
               step={1}
               onRangeChange={handlePriceChange}
@@ -297,6 +308,7 @@ const CategoryAsideFilters = ({
                 <CustomFilterComponent
                   title={filtersData.priceRange.title}
                   type="price"
+                  limit={filtersData.priceRange.value}
                   rangeValue={priceRangeFromObject}
                   step={1}
                   onRangeChange={handlePriceChange}
