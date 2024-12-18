@@ -1,26 +1,47 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
-import Input from "@/components/InputComponent";
-import { useForm } from "@mantine/form";
+import Checkbox from "@/components/CheckboxComponent";
 
 const PaymentSection: FC<{
   isOpen: boolean;
   toggleOpen: () => void;
+  paymentInfo: any;
+  setPaymentInfo: any;
   completePayment: (isValid: boolean) => void;
-}> = ({ completePayment, isOpen, toggleOpen }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+}> = ({ completePayment, isOpen, toggleOpen, setPaymentInfo, paymentInfo }) => {
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const localValues = localStorage.getItem("paymentInfo");
+    if (localValues) {
+      setPaymentInfo(JSON.parse(localValues));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (paymentInfo) {
+      localStorage.setItem("paymentInfo", JSON.stringify(paymentInfo));
+    }
+  }, [paymentInfo]);
+
   const handleCompletePayment = () => {
-    if (!selectedOption) {
+    if (!paymentInfo) {
       setError("Please select a payment method");
       completePayment(false);
     } else {
+      setPaymentInfo(paymentInfo);
       setError(null);
       completePayment(true);
     }
   };
+
+  const closeText =
+    paymentInfo == "LiqPay"
+      ? "LiqPay - оплата на картку"
+      : paymentInfo == "Post"
+      ? "Накладний платіж"
+      : "";
 
   return (
     <section>
@@ -28,29 +49,22 @@ const PaymentSection: FC<{
         title="Payment"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
-        closeText={selectedOption}
+        closeText={closeText}
+        className="items-center"
       >
-        <div className="flex flex-col gap-[30px] font-semibold pl-[30px]">
-          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-            <input
-              type="radio"
-              checked={selectedOption === "Кредитна картка"}
-              onChange={() => setSelectedOption("Кредитна картка")}
-              className="w-[25px] h-[25px] accent-darkBurgundy"
-            />
-            Credit Card
-          </label>
+        <Checkbox
+          label="LiqPay - оплата на картку"
+          description="Visa, MasterCard, Apple Pay, Google Pay, PrivatPay"
+          checked={paymentInfo === "LiqPay"}
+          onChange={() => setPaymentInfo("LiqPay")}
+        />
 
-          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-            <input
-              type="radio"
-              checked={selectedOption === "Paypal"}
-              onChange={() => setSelectedOption("Paypal")}
-              className="w-[25px] h-[25px] accent-darkBurgundy"
-            />
-            PayPal
-          </label>
-        </div>
+        <Checkbox
+          label="Накладний платіж"
+          description="Оплата при отриманні"
+          checked={paymentInfo === "Post"}
+          onChange={() => setPaymentInfo("Post")}
+        />
 
         {error && (
           <p className="text-[14px] text-darkBurgundy text-center">{error}</p>

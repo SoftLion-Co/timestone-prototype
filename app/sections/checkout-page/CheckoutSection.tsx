@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
 import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
@@ -16,9 +16,9 @@ const CheckoutSection = () => {
   const [basicInfo, setBasicInfo] = useState({});
   const [shippingValue, setShippingValue] = useState({});
   const [addressInfo, setAddressInfo] = useState({});
+  const [paymentInfo, setPaymentInfo] = useState<string>("");
   const [settlementRef, setSettlementRef] = useState<string>("");
   const [cityRef, setCityRef] = useState<string>("");
-  
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
@@ -37,6 +37,7 @@ const CheckoutSection = () => {
   const handleCompletePayment = (isValid: boolean) => {
     if (isValid) {
       setPaymentOpen(false);
+      console.log(paymentInfo);
     }
   };
 
@@ -62,6 +63,7 @@ const CheckoutSection = () => {
             basicInfo={basicInfo}
             shippingValue={shippingValue}
             addressInfo={addressInfo}
+            paymentInfo={paymentInfo}
           />
         </div>
 
@@ -89,6 +91,8 @@ const CheckoutSection = () => {
             isOpen={PaymentOpen}
             toggleOpen={() => setPaymentOpen(!PaymentOpen)}
             completePayment={handleCompletePayment}
+            setPaymentInfo={setPaymentInfo}
+            paymentInfo={paymentInfo}
           />
         </div>
       </div>

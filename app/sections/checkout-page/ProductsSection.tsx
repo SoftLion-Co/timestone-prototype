@@ -6,62 +6,75 @@ import { motion } from "framer-motion";
 import { CreateOrder } from "@/services/OrderService";
 import Image from "next/image";
 import Shipping from "@/images/checkout-section/shipping.svg";
+import { error } from "console";
 
 const ProductsSection = ({
   basicInfo,
   shippingValue,
   addressInfo,
+  paymentInfo,
 }: {
   basicInfo: any;
   shippingValue: any;
   addressInfo: any;
+  paymentInfo: any;
 }) => {
   const { products, totalAmount } = useCart();
 
   const handleSubmit = async () => {
-    const lineItems = products.map((product) => ({
-      productId: product.id,
-      title: product.title,
-      priceSet: {
-        shopMoney: {
-          amount: product.price,
-          currencyCode: "UAH",
+    if (paymentInfo === "") {
+      console.log("Error");
+      throw new Error("oops!");
+    }
+    if (paymentInfo === "Post") {
+      const lineItems = products.map((product) => ({
+        productId: product.id,
+        title: product.title,
+        priceSet: {
+          shopMoney: {
+            amount: product.price,
+            currencyCode: "UAH",
+          },
         },
-      },
-      quantity: product.quantity,
-    }));
+        quantity: product.quantity,
+      }));
 
-    const data = {
-      currency: "UAH",
-      customerId: "",
-      email: basicInfo.email,
-      phone: "+38" + basicInfo.phone,
-      shippingAddress: {
-        firstName: basicInfo.firstName,
-        lastName: basicInfo.lastName,
-        address1:
-          addressInfo.street || addressInfo.postomat || addressInfo.department,
-        address2: addressInfo.house + " , " + addressInfo.flat,
-        city: basicInfo.city,
-        zip: addressInfo.zipCode,
-        countryCode: "UA",
-      },
-      shippingLines: shippingValue.shippingLines
-        ? shippingValue.shippingLines
-        : [],
-      lineItems: lineItems,
-    };
+      const data = {
+        currency: "UAH",
+        customerId: "",
+        email: basicInfo.email,
+        phone: "+38" + basicInfo.phone,
+        shippingAddress: {
+          firstName: basicInfo.firstName,
+          lastName: basicInfo.lastName,
+          address1:
+            addressInfo.street ||
+            addressInfo.postomat ||
+            addressInfo.department,
+          address2: addressInfo.house + " , " + addressInfo.flat,
+          city: basicInfo.city,
+          zip: addressInfo.zipCode,
+          countryCode: "UA",
+        },
+        shippingLines: shippingValue.shippingLines
+          ? shippingValue.shippingLines
+          : [],
+        lineItems: lineItems,
+      };
 
-    const response = await CreateOrder(data, {
-      sendReceipt: "true",
-      sendFulfillmentReceipt: "true",
-      inventoryBehaviour: "BYPASS",
-    });
+      const response = await CreateOrder(data, {
+        sendReceipt: "true",
+        sendFulfillmentReceipt: "true",
+        inventoryBehaviour: "BYPASS",
+      });
+    } else {
+      //! LiqPay
+    }
   };
 
   return (
     <section>
-      <div className="flex flex-col mini:mx-auto lg:mx-0 mini:w-[420px] md:w-[500px] lg:w-[350px] xl:w-[450px]">
+      <div className="flex flex-col mini:mx-auto lg:mx-0 mini:w-[420px] md:w-[500px] lg:w-[350px] xl:w-[450px] sticky top-[15px] ">
         <motion.div
           className="bordered-[10px] shadow-lg rounded-lg px-[20px]"
           initial={{ opacity: 0, height: 0 }}

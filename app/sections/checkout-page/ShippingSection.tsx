@@ -1,18 +1,16 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import FormComponent from "@/components/FormComponent";
 import Checkbox from "@/components/CheckboxComponent";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
-import { hasLength, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { Street, Postomat, Department } from "@/config/types";
 import {
   getStreets,
   getPostomates,
   getDepartments,
 } from "@/services/ShippingService";
-import { BASE_URL } from "@/config/config";
-import axios from "axios";
 
 const ShippingSection: FC<{
   onContinue: (isValid: boolean) => void;
@@ -33,9 +31,52 @@ const ShippingSection: FC<{
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string | null>(null);
   const [streets, setStreets] = useState<Street[]>([]);
   const [postomates, setPostomates] = useState<Postomat[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+
+  const form = useForm({
+    initialValues: {
+      street: "",
+      house: "",
+      flat: "",
+      postomat: "",
+      department: "",
+    },
+  });
+
+  useEffect(() => {
+    const localValues = localStorage.getItem("shippingInfo");
+    if (localValues) {
+      const result = JSON.parse(localValues);
+      form.setValues(result);
+      if (result.selectedOption) {
+        setSelectedOption(result.selectedOption);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const { department, street, house, flat, postomat } = form.values;
+
+    if (selectedOption == "Department" && department !== "") {
+      localStorage.setItem("shippingInfo", JSON.stringify({ department, selectedOption }));
+    } else if (
+      selectedOption === "Courier" &&
+      (street !== "" || house !== "" || flat !== "")
+    ) {
+      localStorage.setItem(
+        "shippingInfo",
+        JSON.stringify({ street, house, flat, selectedOption })
+      );
+    } else if (selectedOption === "Postomat" && postomat !== "") {
+      localStorage.setItem(
+        "shippingInfo",
+        JSON.stringify({ postomat, selectedOption })
+      );
+    }
+  }, [form.values, selectedOption]);
 
   const handleStreetChange = async ({
     target: { value },
@@ -46,15 +87,15 @@ const ShippingSection: FC<{
 
     if (!value.trim() || !settlementRef) {
       setStreets([]);
-      setError(null);
+      setValidationErrors(null);
       return;
     }
 
     const street = await getStreets(value, settlementRef);
     if (street.length === 0) {
-      setError("Вулиця не знайдена!");
+      setValidationErrors("Вулиця не знайдена!");
     } else {
-      setError(null);
+      setValidationErrors(null);
     }
     setStreets(street);
   };
@@ -68,16 +109,16 @@ const ShippingSection: FC<{
 
     if (!value.trim() || !cityRef) {
       setPostomates([]);
-      setError(null);
+      setValidationErrors(null);
       return;
     }
 
     const postomat = await getPostomates(value, cityRef);
 
     if (postomat.length === 0) {
-      setError("Поштомат не знайдено!");
+      setValidationErrors("Поштомат не знайдено!");
     } else {
-      setError(null);
+      setValidationErrors(null);
     }
     setPostomates(postomat);
   };
@@ -91,24 +132,23 @@ const ShippingSection: FC<{
 
     if (!value.trim() || !cityRef) {
       setDepartments([]);
-      setError(null);
+      setValidationErrors(null);
       return;
     }
-
     const department = await getDepartments(value, cityRef);
     if (department.length === 0) {
-      setError("Відділення не знайдено!");
+      setValidationErrors("Відділення не знайдено!");
     } else {
-      setError(null);
+      setValidationErrors(null);
     }
     setDepartments(department);
   };
 
   const handleSelectChange = (value: string) => {
-    const selectedStreet = streets.find(({ Present }) => Present === value);
-    const selectedPostomat = postomates.find(
-      ({ Description }) => Description === value
+    const selectedStreet = streets.find(
+      ({ SettlementStreetRef }) => SettlementStreetRef === value
     );
+    const selectedPostomat = postomates.find(({ Ref }) => Ref === value);
     const selectedDepartment = departments.find(({ Ref }) => Ref === value);
 
     if (selectedStreet) {
@@ -116,7 +156,10 @@ const ShippingSection: FC<{
       setStreets([]);
     }
     if (selectedPostomat) {
-      form.setFieldValue("postomat", selectedPostomat.Description);
+      form.setFieldValue(
+        "postomat",
+        "№ " + selectedPostomat.Number + ", " + selectedPostomat.ShortAddress
+      );
       setPostomates([]);
     }
     if (selectedDepartment) {
@@ -125,24 +168,44 @@ const ShippingSection: FC<{
     }
   };
 
-  const form = useForm({
-    initialValues: {
-      street: "",
-      house: "",
-      flat: "",
-      postomat: "",
-      department: "",
-    },
-  });
-
   const handleContinue = () => {
+    let validationError = "";
+
+    switch (selectedOption) {
+      case "Department":
+        if (!form.values.department) {
+          validationError = "Введіть дані для доставки";
+        }
+        break;
+
+      case "Postomat":
+        if (!form.values.postomat) {
+          validationError = "Введіть дані для доставки";
+        }
+        break;
+      case "Courier":
+        if (!form.values.street || !form.values.house) {
+          validationError = "Введіть дані для доставки";
+        }
+        break;
+    }
+
     if (!selectedOption) {
       setError("Please select a shipping method");
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
+      onContinue(false);
+      return;
+    }
+    if (validationError) {
+      setValidationErrors(validationError);
       onContinue(false);
       return;
     }
     setAddressInfo(form.values);
     setError(null);
+    setValidationErrors(null);
     onContinue(true);
   };
 
@@ -150,7 +213,7 @@ const ShippingSection: FC<{
     setSelectedOption(option);
 
     switch (option) {
-      case "Самовивіз з Нової Пошти":
+      case "Department":
         setShippingValue({
           shippingLines: [
             {
@@ -167,7 +230,7 @@ const ShippingSection: FC<{
         });
         break;
 
-      case "Кур'єр Нової Пошти":
+      case "Courier":
         setShippingValue({
           shippingLines: [
             {
@@ -184,7 +247,7 @@ const ShippingSection: FC<{
         });
         break;
 
-      case "Самовивіз з поштоматів Нової Пошти":
+      case "Postomat":
         setShippingValue({
           shippingLines: [
             {
@@ -203,6 +266,15 @@ const ShippingSection: FC<{
     }
   };
 
+  const closeText =
+    selectedOption == "Postomat"
+      ? "Поштомат Нової Пошти"
+      : selectedOption == "Department"
+      ? "Самовивіз з Нової Пошти"
+      : selectedOption == "Courier"
+      ? "Кур'єр Нової Пошти"
+      : "";
+
   return (
     <section>
       <FormComponent
@@ -210,16 +282,16 @@ const ShippingSection: FC<{
         isOpen={isOpen}
         toggleOpen={toggleOpen}
         className="items-center"
-        closeText={selectedOption}
+        closeText={closeText}
       >
         <Checkbox
           label="Самовивіз з Нової Пошти"
           description="Середній термін доставки 2 дні"
-          price="За тарифами перевізника"
-          checked={selectedOption == "Самовивіз з Нової Пошти"}
-          onChange={() => handleOptionChange("Самовивіз з Нової Пошти")}
+          price="від 70₴"
+          checked={selectedOption == "Department"}
+          onChange={() => handleOptionChange("Department")}
         >
-          {selectedOption == "Самовивіз з Нової Пошти" && (
+          {selectedOption == "Department" && (
             <>
               <Input
                 inputType="input"
@@ -232,6 +304,12 @@ const ShippingSection: FC<{
                 fullWidth
                 className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
               />
+
+              {validationErrors && (
+                <p className="text-darkBurgundy text-[14px]">
+                  {validationErrors}
+                </p>
+              )}
 
               {departments.length > 0 && (
                 <Input
@@ -249,15 +327,14 @@ const ShippingSection: FC<{
             </>
           )}
         </Checkbox>
-
         <Checkbox
           label="Кур'єр Нової Пошти"
           description="Середній термін доставки 2 дні"
-          price="За тарифами перевізника"
-          checked={selectedOption == "Кур'єр Нової Пошти"}
-          onChange={() => handleOptionChange("Кур'єр Нової Пошти")}
+          price="від 70₴"
+          checked={selectedOption == "Courier"}
+          onChange={() => handleOptionChange("Courier")}
         >
-          {selectedOption == "Кур'єр Нової Пошти" && (
+          {selectedOption == "Courier" && (
             <>
               <Input
                 inputType="input"
@@ -271,13 +348,9 @@ const ShippingSection: FC<{
                 className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
               />
 
-              {error && (
-                <p className="text-darkBurgundy text-[14px]">{error}</p>
-              )}
-
               {streets.length > 0 && (
                 <Input
-                  className="mini:w-[100%] lg:w-[85%]"
+                  className="mini:w-[100%] lg:w-[85%] m-auto"
                   inputType="select"
                   placeholder="Оберіть вулицю"
                   options={streets.map((street) => ({
@@ -289,7 +362,7 @@ const ShippingSection: FC<{
                 />
               )}
 
-              <div className="flex flex-col  m-auto gap-[15px]  w-full lg:w-[85%] mini:flex-row">
+              <div className="flex flex-col m-auto gap-[15px] w-full lg:w-[85%] mini:flex-row my-[10px]">
                 <Input
                   inputType="input"
                   placeholder="Будинок"
@@ -314,20 +387,23 @@ const ShippingSection: FC<{
                   className="mini:w-3/6"
                 />
               </div>
+
+              {validationErrors && (
+                <p className="text-darkBurgundy text-[14px]">
+                  {validationErrors}
+                </p>
+              )}
             </>
           )}
         </Checkbox>
-
         <Checkbox
-          label="Самовивіз з поштоматів Нової Пошти"
+          label="Поштоматів Нової Пошти"
           description="Середній термін доставки 2 дні"
-          price="За тарифами перевізника"
-          checked={selectedOption == "Самовивіз з поштоматів Нової Пошти"}
-          onChange={() =>
-            handleOptionChange("Самовивіз з поштоматів Нової Пошти")
-          }
+          price="від 70₴"
+          checked={selectedOption == "Postomat"}
+          onChange={() => handleOptionChange("Postomat")}
         >
-          {selectedOption == "Самовивіз з поштоматів Нової Пошти" && (
+          {selectedOption == "Postomat" && (
             <>
               <Input
                 inputType="input"
@@ -341,15 +417,17 @@ const ShippingSection: FC<{
                 className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
               />
 
-              {error && (
-                <p className="text-darkBurgundy text-[14px]">{error}</p>
+              {validationErrors && (
+                <p className="text-darkBurgundy text-[14px]">
+                  {validationErrors}
+                </p>
               )}
 
               {postomates.length > 0 && (
                 <Input
                   className="mini:w-[100%] lg:w-[85%] m-auto"
                   inputType="select"
-                  placeholder="Оберіть поштомат "
+                  placeholder="Оберіть поштомат"
                   options={postomates.map((postomat) => ({
                     value: postomat.Ref,
                     label: postomat.Description,
@@ -361,11 +439,9 @@ const ShippingSection: FC<{
             </>
           )}
         </Checkbox>
-
         {error && (
           <p className="text-[14px] text-darkBurgundy text-center">{error}</p>
         )}
-
         <Button
           text="Continue"
           className="mini:w-[80%] w-[100%]"

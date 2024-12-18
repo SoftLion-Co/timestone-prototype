@@ -25,14 +25,44 @@ const BasicInfoSection: FC<{
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const localValues = localStorage.getItem("Basic Info");
-  
-  //   if (localValues) {
-  //     form.setValues(JSON.parse(localValues));
-  //   }
-  // }, []);
-  
+  const form = useForm({
+    initialValues: {
+      email: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      city: "",
+    },
+    validate: {
+      email: isEmail("Invalid email"),
+      firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
+      lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
+      phone: (value) =>
+        /^\d{10}$/.test(value) ? null : "Invalid phone number",
+      city: (value) => (value.trim() ? null : "City is required"),
+    },
+  });
+
+  useEffect(() => {
+    const localValues = localStorage.getItem("basicInfo");
+    if (localValues) {
+      const result = JSON.parse(localValues);
+      form.setValues(result);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      form.values.city != "" ||
+      form.values.email != "" ||
+      form.values.firstName != "" ||
+      form.values.lastName != "" ||
+      form.values.phone != ""
+    ) {
+      localStorage.setItem("basicInfo", JSON.stringify(form.values));
+    }
+  }, [form.values]);
+
   const handleInputChange = async ({
     target: { value },
   }: {
@@ -65,29 +95,10 @@ const BasicInfoSection: FC<{
     }
   };
 
-  const form = useForm({
-    initialValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      phone: "",
-      city: "",
-    },
-    validate: {
-      email: isEmail("Invalid email"),
-      firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      phone: (value) =>
-        /^\d{10}$/.test(value) ? null : "Invalid phone number",
-      city: (value) => (value.trim() ? null : "City is required"),
-    },
-  });
-
   const handleContinue = () => {
     const errors = form.validate();
     if (!errors.hasErrors) {
       onContinue(true);
-      localStorage.setItem("Basic Info", JSON.stringify(form.values));
       setBasicInfo(form.values);
     } else {
       onContinue(false);
