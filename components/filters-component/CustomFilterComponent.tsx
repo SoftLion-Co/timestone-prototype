@@ -55,7 +55,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   };
 
   useEffect(() => {
-    console.log("d", selectedItems);
+    // console.log("d", selectedItems);
 
   }, [selectedItems]);
 

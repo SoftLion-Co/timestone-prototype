@@ -42,15 +42,10 @@ const CategoryAsideFilters = ({
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFilter, setIsFilter] = useState<boolean>(false);
 
   useEffect(() => {
-    setPriceRangeFromObject(filtersData.priceRange.value);
-  }, [filtersData]);
-
-  useEffect(() => {
-    console.log(filtersData.priceRange.value[1]);
-    if (filtersData.priceRange.value[1] != 10) {
-      console.log("t");
+    if (isFilter) {
       const getData = async () => {
         await getProductData(false);
       };
@@ -59,19 +54,33 @@ const CategoryAsideFilters = ({
   }, [currentPage]);
 
   useEffect(() => {
-    if (filtersData.priceRange.value[1] != 10) {
-      console.log("z");
+    if (isFilter) {
       const getData = async () => {
         await getProductData(true);
       };
-
       getData();
     }
   }, [sort, reverse]);
 
+  useEffect(() => {
+    if (filtersData.priceRange.value[1] != 10) {
+      setPriceRangeFromObject(filtersData.priceRange.value);
+      setIsFilter(true);
+    }
+  }, [filtersData]);
+
+  useEffect(() => {
+    if (isFilter && priceRangeFromObject === filtersData.priceRange.value ) {
+      const getData = async () => {
+        await getProductData(false);
+      };
+      getData();
+    }
+  }, [priceRangeFromObject]);
+
   const handleCheckboxChange = (title: string, value: string) => {
-    console.log(9);
-    console.log(checkboxes);
+    // console.log(9);
+    // console.log(checkboxes);
     setCheckboxes((prev) => {
       const currentValues = prev[title] || [];
       return {
@@ -117,7 +126,6 @@ const CategoryAsideFilters = ({
         : "";
 
     let data;
-
     if (currentPage == 1 || isForm) {
       data = await getProducts(
         selectedFilters,
