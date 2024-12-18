@@ -42,8 +42,8 @@ const CheckoutSection = () => {
   };
 
   return (
-    <>
-      <TitleComponents text="CHECKOUT" />
+    <section>
+      <TitleComponents text="Оформлення замовлення" />
 
       <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
         <Button
@@ -96,7 +96,7 @@ const CheckoutSection = () => {
           />
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -98,15 +98,18 @@ const InputComponent: FC<InputProps> = ({
     onSelect?.(value);
     setIsOpen(false);
   };
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === "") {
+    console.log(options)
+    console.log("n", value, selected, options?.find((option) => option.value === selected)?.label )
+    if (value === "" ||  options?.find((option) => option.value === selected)?.label)  {
       setSelected(null);
     }
-
     setInputValue(value);
     onChange?.(e);
   };
+
   const inputContent = () => {
     if (inputType === "select") {
       const filteredOptions = inputValue
@@ -152,8 +155,8 @@ const InputComponent: FC<InputProps> = ({
           </div>
           {isOpen && options.length > 0 && (
             <motion.ul
-              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white z-10 ${
-                scrollable ? "max-h-[160px] overflow-y-auto" : ""
+              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white ${
+                scrollable ? "max-h-[150px] overflow-y-auto z-[10]" : ""
               }`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}

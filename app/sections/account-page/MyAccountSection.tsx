@@ -15,8 +15,6 @@ import LoaderComponent from "@/components/LoaderComponent";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
-import Arrow from "@/images/news-section/arrow.svg";
-
 //! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
   const cities = [

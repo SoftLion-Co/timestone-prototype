@@ -109,14 +109,30 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    <section>
+    <>
       <FormComponent
-        title="Basic Info"
+        title="Інформація"
         className="items-center"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
         closeText={form.values.firstName + " " + form.values.lastName}
       >
+        <Input
+          className="mini:w-[80%] mb-[10px]"
+          inputType="select"
+          placeholder="Оберіть населений пункт"
+          options={cities.map((city) => ({
+            value: city.Ref,
+            label: city.Present,
+          }))}
+          {...form.getInputProps("city")}
+          scrollable
+          onSelect={handleSelect}
+        />
+        <p className="mini:w-[80%] md:w-[85%] lg:w-[91%] mx-[25px] font-semibold text-silver">
+          Дані отримувача
+        </p>
+
         <Input
           inputType="input"
           placeholder="Email"
@@ -131,7 +147,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Fist Name"
+          placeholder="Ім'я"
           required={true}
           bordered={true}
           {...form.getInputProps("firstName")}
@@ -142,7 +158,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Last Name"
+          placeholder="Прізвище"
           required={true}
           bordered={true}
           {...form.getInputProps("lastName")}
@@ -153,7 +169,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Phone Number"
+          placeholder="Номер телефону"
           required={true}
           bordered={true}
           {...form.getInputProps("phone")}
@@ -162,41 +178,16 @@ const BasicInfoSection: FC<{
           className="mini:w-[80%]"
         />
 
-        {/* <Input
-          inputType="input"
-          placeholder="Населений пункт"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("city")}
-          onChange={handleInputChange}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%] mb-0"
-        /> */}
-
         {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
 
-        <Input
-          className="mini:w-[80%]"
-          inputType="select"
-          placeholder="Оберіть населений пункт"
-          options={cities.map((city) => ({
-            value: city.Ref,
-            label: city.Present,
-          }))}
-          {...form.getInputProps("city")}
-          scrollable
-          onSelect={handleSelect}
-        />
-
         <Button
-          text="Continue"
+          text="Продовжити"
           className="mini:w-[80%] w-[100%]"
           type="button"
           onClick={handleContinue}
         />
       </FormComponent>
-    </section>
+    </>
   );
 };
 

@@ -73,7 +73,7 @@ const ProductsSection = ({
   };
 
   return (
-    <section>
+    <>
       <div className="flex flex-col mini:mx-auto lg:mx-0 mini:w-[420px] md:w-[500px] lg:w-[350px] xl:w-[450px] sticky top-[15px] ">
         <motion.div
           className="bordered-[10px] shadow-lg rounded-lg px-[20px]"
@@ -107,7 +107,7 @@ const ProductsSection = ({
           <p className="text-[16px] md:text-[15px]">Grand Total</p>
         </div>
       </div>
-    </section>
+    </>
   );
 };
 

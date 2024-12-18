@@ -44,7 +44,7 @@ const PaymentSection: FC<{
       : "";
 
   return (
-    <section>
+    <>
       <FormComponent
         title="Payment"
         isOpen={isOpen}
@@ -91,7 +91,7 @@ const PaymentSection: FC<{
           </p>
         </div>
       </FormComponent>
-    </section>
+    </>
   );
 };
 

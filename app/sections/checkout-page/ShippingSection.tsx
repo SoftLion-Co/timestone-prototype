@@ -276,7 +276,7 @@ const ShippingSection: FC<{
       : "";
 
   return (
-    <section>
+    <>
       <FormComponent
         title="Shipping"
         isOpen={isOpen}
@@ -449,7 +449,7 @@ const ShippingSection: FC<{
           onClick={handleContinue}
         />
       </FormComponent>
-    </section>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { FC, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import React, { FC, useState, useEffect } from "react";
 import "react-range-slider-input/dist/style.css";
 
 type FilterComponentProps = {
@@ -59,7 +59,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
   return (
     <>
-      <label className="relative flex flex-col gap-[10px] border-b text-[14px] border-silver border-opacity-20 pb-5">
+      <div className="relative flex flex-col gap-[10px] border-b text-[14px] border-silver border-opacity-20 pb-5">
         <div
           className={`flex justify-between items-center ${
             type === "checkboxes" ? "cursor-pointer" : ""
@@ -146,7 +146,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
         {type === "buttons" && (
           <>
-            <div className="hidden xl:flex flex-col justify-start items-start gap-1">
+            {/* <div className="hidden xl:flex flex-col justify-start items-start gap-1">
               {items?.map((btn) => (
                 <button
                   key={btn}
@@ -163,26 +163,27 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   {btn}
                 </button>
               ))}
-            </div>
+            </div> */}
 
-            <div className="xl:hidden bg-darkBurgundy border-darkBurgundy border flex items-center w-fit rounded-md overflow-hidden gap-[2px]">
-              {items?.map((btn) => (
-                <button
-                  key={btn}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onChangeButton?.(btn);
-                  }}
-                  className={`${
-                    activeButton === btn
-                      ? "bg-darkBurgundy text-white"
-                      : "bg-white"
-                  } py-[14px] px-[52px]`}
-                >
-                  {btn}
-                </button>
-              ))}
-            </div>
+<div className=" flex flex-row gap-[5px]">
+  {items?.map((btn) => (
+    <button
+      key={btn}
+      onClick={(e) => {
+        e.preventDefault();
+        onChangeButton?.(btn);
+      }}
+      className={`${
+        activeButton === btn
+          ? "bg-darkBurgundy text-white"
+          : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
+      } py-[6px] px-[12px] text-sm font-medium rounded-md`}
+    >
+      {btn}
+    </button>
+  ))}
+</div>
+
           </>
         )}
 
@@ -197,7 +198,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             transition={{ duration: 0.3 }}
             style={{ overflow: "hidden" }}
           >
-            <div className="flex flex-col justify-start items-start overflow-y-scroll h-24">
+            <div className="flex flex-col justify-start items-start overflow-y-scroll h-50">
               {items?.map((item, index) => (
                 <label
                   key={`${title.toLowerCase()}-${item}`}
@@ -219,7 +220,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             </div>
           </motion.div>
         )}
-      </label>
+      </div>
     </>
   );
 };
