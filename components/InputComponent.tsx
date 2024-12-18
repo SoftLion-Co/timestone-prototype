@@ -5,7 +5,7 @@ import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 
 import Eyes from "@/images/vectors/eyes.svg"
 import Arrow from "@/images/news-section/arrow.svg";
-import ClosedEyes from "@/images/vectors/closed-Eye.svg"
+import ClosedEyes from "@/images/vectors/closed-eye.svg"
 
 interface InputProps {
   placeholder?: string;
