@@ -86,7 +86,7 @@ const HeroSection: FC = () => {
         />
       </div>
       <Image
-        className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[5%] xl:top-[15%]  lg:h-[520px] w-[50%]"
+        className="hidden object-contain -right-7 lg:absolute lg:block lg:-z-10 lg:top-[5%] xl:top-[15%] lg:h-[520px] w-[50%]"
         src={Watch}
         alt="Watch"
       />
