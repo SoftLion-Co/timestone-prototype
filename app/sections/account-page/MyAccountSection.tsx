@@ -15,6 +15,7 @@ import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
 //! кнопки для підєднання facebook or google
+const MyAccountSection = () => {
   const countries = [{ value: "Ukraine", label: "Україна" }];
 
   const cities = [
@@ -404,7 +405,7 @@ import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
             <h2 className="mb-[20px] text-[24px] text-silver">Address Book</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <Select
+              {/* <Select
                 className=""
                 classNames={{
                   root: "w-full lg:w-[45%] ",
@@ -427,16 +428,7 @@ import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
                 }
                 placeholder="Населений пункт"
                 {...form.getInputProps("address")}
-              />
-              {/* <Input
-                  inputType="input"
-                  name="address"
-                  placeholder="Address"
-                  type="text"
-                  bordered
-                  className="w-full"
-                  {...form.getInputProps("address")}
-                /> */}
+              /> */}
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
