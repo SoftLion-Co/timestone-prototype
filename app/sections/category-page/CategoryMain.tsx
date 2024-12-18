@@ -1,16 +1,15 @@
 "use client";
-
 import React, { useState, createContext, useEffect } from "react";
 
-import TitleComponents from "@/components/TitleComponents";
-import CategoryAsideFilters from "./CategoryAsideFilters";
-import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
-import { PaginationProvider } from "@/hooks/useCustomPagination";
+import CategorySection from "./CategorySection";
 import { getFilters } from "@/services/ProductService";
+import CategoryAsideFilters from "./CategoryAsideFilters";
+import TitleComponents from "@/components/TitleComponents";
+import { PaginationProvider } from "@/hooks/useCustomPagination";
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 16;
+const LIMIT = 2;
 
 const filter = {
   search: {
@@ -22,7 +21,7 @@ const filter = {
   },
   priceRange: {
     title: "Price",
-    value: [0, 150],
+    value: [0, 10],
   },
   checkboxes: [
     {
@@ -40,6 +39,7 @@ const CategoryMain = () => {
   const [filters, setFilters] = useState(filter);
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [products, setProducts] = useState<CardProps[]>([]);
+  const [isStart, setIsStart] = useState<boolean>(true);
 
   const [sort, setSort] = useState<string>("RELEVANCE");
   const [reverse, setReverse] = useState<boolean>(true);
@@ -76,13 +76,19 @@ const CategoryMain = () => {
               limit={LIMIT}
               filtersData={filters}
               sort={sort}
+				  setSort={setSort}
               reverse={reverse}
+              setReverse={setReverse}
+              setIsStart={setIsStart}
             />
             <CategorySection
+              isStart={isStart}
               totalProducts={totalProducts}
               limit={LIMIT}
               setSort={setSort}
               setReverse={setReverse}
+				  reverse={reverse}
+				  sort={sort}
             />
           </div>
         </ProductsContext.Provider>

@@ -17,6 +17,7 @@ type FilterComponentProps = {
   onItemChange?: (item: string) => void;
 
   rangeValue?: [number, number];
+  limit?: [number, number];
   step?: number;
   onApplyClick?: () => void;
   onRangeChange?: (value: [number, number]) => void;
@@ -31,7 +32,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   items,
   selectedItems = [],
   onItemChange,
-  rangeValue = [0, 100],
+  rangeValue = [0, 1],
+  limit = [0, 1],
   step,
   onApplyClick,
   onRangeChange,
@@ -48,9 +50,12 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   };
 
   useEffect(() => {
-    console.log("d", selectedItems);
-
   }, [selectedItems]);
+
+  useEffect(() => {
+    items?.map((item, index) => (
+    console.log("q", `${title.toLowerCase()}-${item}`)));
+  }, []);
 
   return (
     <>
@@ -112,6 +117,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   }
                   className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Мінімальна ціна"
+                  min={limit[0]}
+                  max={limit[1]}
                 />
                 <span>—</span>
                 <input
@@ -122,6 +129,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   }
                   className="w-[30%] p-2 border rounded-[4px] border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
                   placeholder="Максимальна ціна"
+                  min={limit[0]}
+                  max={limit[1]}
                 />
 
                 <button
@@ -191,15 +200,17 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             <div className="flex flex-col justify-start items-start overflow-y-scroll h-24">
               {items?.map((item, index) => (
                 <label
-                  key={index}
-                  htmlFor={`checkbox-item-${title.toLowerCase}-${item}`}
+                  key={`${title.toLowerCase()}-${item}`}
+                  htmlFor={`checkbox-item-${title.toLowerCase()}-${item}`}
                   className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200"
                 >
                   <input
-                    id={`checkbox-item-${title.toLowerCase}-${item}`}
+                    id={`checkbox-item-${title.toLowerCase()}-${item}`}
                     type="checkbox"
                     className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    checked={selectedItems ? selectedItems.includes(item) : false}
+                    checked={
+                      selectedItems ? selectedItems.includes(item) : false
+                    }
                     onChange={() => onItemChange?.(item)}
                   />
                   <span className="first-letter:uppercase">{item}</span>
