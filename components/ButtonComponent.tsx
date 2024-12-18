@@ -14,7 +14,7 @@ interface ButtonProps {
   target?: string;
   tag?: "a" | "button";
   type?: "button" | "submit" | "reset";
-  background?: "darkBurgundy" | "transparent" | "onyx";
+  background?: "darkBurgundy" | "transparent" | "onyx" | "white";
   bordered?: boolean;
   fullWidth?: boolean;
   disabled?: boolean;
@@ -41,6 +41,8 @@ const Button: FC<ButtonProps> = ({
   const backgroundClass =
     finalBackground === "darkBurgundy"
       ? "bg-darkBurgundy"
+      : finalBackground === "white"
+      ? "bg-show"
       : finalBackground === "onyx"
       ? "bg-onyx"
       : "bg-transparent";
@@ -49,7 +51,7 @@ const Button: FC<ButtonProps> = ({
       ? "disabled:bg-darkBurgundy  disabled:bg-opacity-70 disabled:text-snow"
       : "disabled:bg-black  disabled:bg-opacity-60 disabled:text-snow";
   const textClass =
-    finalBackground === "darkBurgundy" || finalBackground === "onyx"
+    finalBackground === "darkBurgundy" || finalBackground === "onyx" 
       ? "text-white"
       : bordered
       ? "text-darkBurgundy"

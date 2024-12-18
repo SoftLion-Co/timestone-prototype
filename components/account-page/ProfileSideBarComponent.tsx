@@ -51,7 +51,7 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
               "section1" === selectedCategory ? activeClass : inactiveClass
             }
           >
-            Dashboard
+            Профіль
           </p>
           <p
             onClick={() => {
@@ -61,7 +61,7 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
               "section2" === selectedCategory ? activeClass : inactiveClass
             }
           >
-            Order History
+            Історія замовлень
           </p>
         </nav>
         <div className="flex flex-row items-center">
@@ -69,7 +69,7 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
             bordered
             onClick={handleLogout}
             className="text-[12px] py-[8px] px-[10px]"
-            text="Log out"
+            text="Вийти"
             background="transparent"
             icon="logout"
             type="button"

@@ -1,15 +1,15 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
-import ArrowUp from "@/images/category-section/arrow-up.svg";
-import Button from "@/components/ButtonComponent";
 import { CardProps } from "@/config/types";
+import Button from "@/components/ButtonComponent";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 import CustomFilterComponent from "@/components/filters-component/CustomFilterComponent";
+
+import ArrowUp from "@/images/category-section/arrow-up.svg";
 
 const CategoryAsideFilters = ({
   handleUpdateProducts,
@@ -18,6 +18,9 @@ const CategoryAsideFilters = ({
   filtersData,
   sort,
   reverse,
+  setSort,
+  setReverse,
+  setIsStart,
 }: {
   handleUpdateProducts: (newProducts: CardProps[]) => void;
   handleChangeTotalProducts: (num: number) => void;
@@ -25,45 +28,81 @@ const CategoryAsideFilters = ({
   filtersData: any;
   sort: string;
   reverse: boolean;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
+  setReverse: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsStart: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { setPageInfo, setTotalPages, pageInfo, currentPage } =
+  const { setPageInfo, setTotalPages, pageInfo, currentPage, setCurrentPage } =
     useCustomPagination();
-
   const [searchText, setSearchText] = useState<string>("");
   const [priceRangeFromObject, setPriceRangeFromObject] = useState<
     [number, number]
-  >([0, 30000]);
+  >([0, 10]);
   const [productType, setProductType] = useState<string>("");
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFilter, setIsFilter] = useState<boolean>(false);
 
   useEffect(() => {
-    const getData = async () => {
-      await getProductData(false);
-    };
-
-    getData();
+    if (isFilter) {
+      const getData = async () => {
+        await getProductData(false);
+      };
+      getData();
+    }
   }, [currentPage]);
 
   useEffect(() => {
-    const getData = async () => {
-      await getProductData(true);
-    };
-
-    getData();
+    if (isFilter) {
+      const getData = async () => {
+        await getProductData(true);
+      };
+      getData();
+    }
   }, [sort, reverse]);
 
+  useEffect(() => {
+    if (filtersData.priceRange.value[1] != 10) {
+      setPriceRangeFromObject(filtersData.priceRange.value);
+      setIsFilter(true);
+    }
+  }, [filtersData]);
+
+  useEffect(() => {
+    if (isFilter && priceRangeFromObject === filtersData.priceRange.value ) {
+      const getData = async () => {
+        await getProductData(false);
+      };
+      getData();
+    }
+  }, [priceRangeFromObject]);
+
   const handleCheckboxChange = (title: string, value: string) => {
-    setCheckboxes((prev) => ({
-      ...prev,
-      [title]: prev[title].includes(value)
-        ? prev[title].filter((item) => item !== value)
-        : [...prev[title], value],
-    }));
+    // console.log(9);
+    // console.log(checkboxes);
+    setCheckboxes((prev) => {
+      const currentValues = prev[title] || [];
+      return {
+        ...prev,
+        [title]: currentValues.includes(value)
+          ? currentValues.filter((item) => item !== value)
+          : [...currentValues, value],
+      };
+    });
   };
 
   const handleSubmitFilters = async () => {
+    await getProductData(true);
+  };
+
+  const handleResetFilters = async () => {
+    setSearchText("");
+    setProductType("");
+    setSort("RELEVANCE");
+    setReverse(true);
+    setPriceRangeFromObject(filtersData.priceRange.value);
+    setCheckboxes({});
     await getProductData(true);
   };
 
@@ -87,7 +126,6 @@ const CategoryAsideFilters = ({
         : "";
 
     let data;
-
     if (currentPage == 1 || isForm) {
       data = await getProducts(
         selectedFilters,
@@ -98,6 +136,7 @@ const CategoryAsideFilters = ({
         reverse,
         true
       );
+      setCurrentPage(1);
     } else if (previousPage < currentPage) {
       data = await getProducts(
         selectedFilters,
@@ -119,13 +158,13 @@ const CategoryAsideFilters = ({
         false
       );
     }
-
-    setPageInfo(data.pageInfo);
     setPreviousPage(currentPage);
+    setPageInfo(data.pageInfo);
     setTotalPages(data.count === 0 ? 1 : Math.ceil(data.count / limit));
 
     handleUpdateProducts([...data.products]);
     handleChangeTotalProducts(data.count);
+    setIsStart(false);
   };
 
   const handleOpenFilterClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -149,33 +188,25 @@ const CategoryAsideFilters = ({
     setPriceRangeFromObject(value);
   };
 
-  const handleApplyPrice = () => {
-    handleSubmitFilters();
-  };
-
-  const handleApplySearch = () => {
-    handleSubmitFilters();
-  };
-
   const handleSubmitFormForPc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     handleSubmitFilters();
   };
 
   const handleSubmitFormForMobile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     handleSubmitFilters();
     setIsOpen(false);
   };
 
   return (
     <>
+      {/* pc filters */}
       <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
         <form
           onSubmit={handleSubmitFormForPc}
-          className="pb-5 flex flex-col gap-5 font-poppins ">
+          className="pb-5 flex flex-col gap-5 font-poppins "
+        >
           {filtersData.search.title && (
             <CustomFilterComponent
               title={filtersData.search.title}
@@ -183,10 +214,9 @@ const CategoryAsideFilters = ({
               searchQuery={searchText}
               onSearchChange={newHandleSearchText}
               clearSearchQuery={() => setSearchText("")}
-              onApplyClick={handleApplySearch}
+              onApplyClick={handleSubmitFilters}
             />
           )}
-
           {filtersData.buttons.title && (
             <CustomFilterComponent
               title={filtersData.buttons.title}
@@ -196,18 +226,17 @@ const CategoryAsideFilters = ({
               onChangeButton={changeProductType}
             />
           )}
-
           {filtersData.priceRange.title && (
             <CustomFilterComponent
               title={filtersData.priceRange.title}
               type="price"
+              limit={filtersData.priceRange.value}
               rangeValue={priceRangeFromObject}
               step={1}
               onRangeChange={handlePriceChange}
-              onApplyClick={handleApplyPrice}
+              onApplyClick={handleSubmitFilters}
             />
           )}
-
           {filtersData.checkboxes.length > 0 &&
             filtersData.checkboxes.map((item: any) => (
               <CustomFilterComponent
@@ -221,18 +250,29 @@ const CategoryAsideFilters = ({
                 }
               />
             ))}
-
-          <Button
-            text="Apply Filters"
-            className="w-full text-[16px] font-medium"
-            type="submit"
-          />
+          <div className="flex flex-row gap-[10px]">
+            <Button
+              text="Скидання"
+              className="w-[30%] text-[16px] font-medium"
+              type="submit"
+              background="white"
+              bordered
+              onClick={handleResetFilters}
+            />
+            <Button
+              text="Підтверження"
+              className="w-[70%] text-[16px] font-medium"
+              type="submit"
+            />
+          </div>
         </form>
       </aside>
 
+      {/* mobile filters */}
       <div className="z-20 top-0 xl:hidden bg-pearl">
         <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
           <form onSubmit={handleSubmitFormForMobile}>
+            {/* {isOpen && ( */}
             <motion.div
               className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
                 isOpen ? "pt-5" : ""
@@ -249,7 +289,8 @@ const CategoryAsideFilters = ({
                 visibility: isOpen ? "visible" : "hidden",
                 translateY: isOpen ? "0" : "-500px",
               }}
-              transition={{ duration: 0.5 }}>
+              transition={{ duration: 0.5 }}
+            >
               {filtersData.search.title && (
                 <CustomFilterComponent
                   title={filtersData.search.title}
@@ -257,7 +298,7 @@ const CategoryAsideFilters = ({
                   searchQuery={searchText}
                   onSearchChange={newHandleSearchText}
                   clearSearchQuery={() => setSearchText("")}
-                  onApplyClick={handleApplySearch}
+                  onApplyClick={handleSubmitFilters}
                 />
               )}
 
@@ -275,10 +316,11 @@ const CategoryAsideFilters = ({
                 <CustomFilterComponent
                   title={filtersData.priceRange.title}
                   type="price"
+                  limit={filtersData.priceRange.value}
                   rangeValue={priceRangeFromObject}
                   step={1}
                   onRangeChange={handlePriceChange}
-                  onApplyClick={handleApplyPrice}
+                  onApplyClick={handleSubmitFilters}
                 />
               )}
 
@@ -299,12 +341,22 @@ const CategoryAsideFilters = ({
 
             <div className="flex justify-between items-center py-[22px]">
               {isOpen ? (
-                <Button
-                  text="Apply Filters"
-                  className="px-[50px] text-[14px] font-default"
-                  type="submit"
-                  onClick={handleSubmitFilters}
-                />
+                <div className="flex flex-row gap-[10px]">
+                  <Button
+                    text="Скидання"
+                    className="w-[30%] text-[16px] font-medium"
+                    type="submit"
+                    background="white"
+                    bordered
+                    onClick={handleResetFilters}
+                  />
+                  <Button
+                    text="Apply Filters"
+                    className="px-[50px] w-[70%] text-[14px] font-default"
+                    type="submit"
+                    onClick={handleSubmitFilters}
+                  />
+                </div>
               ) : (
                 <h2 className="font-spaceage text-[28px] leading-[25px]">
                   Filters
@@ -313,7 +365,8 @@ const CategoryAsideFilters = ({
 
               <button
                 className="w-[55px] h-[55px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                onClick={handleOpenFilterClick}>
+                onClick={handleOpenFilterClick}
+              >
                 <Image
                   src={ArrowUp}
                   alt="arrow up"

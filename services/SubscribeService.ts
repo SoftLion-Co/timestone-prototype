@@ -6,13 +6,18 @@ export const addNewReceiver = async (
   email: string
 ): Promise<any> => {
   try {
+    console.log(name, email);
+
     const response = await axios.post(`${BASE_URL}/newsletter/receiver`, {
       name,
       email,
     });
-    return response.data;
+
+    return response.status;
   } catch (error) {
-    console.error("Error adding new receiver:", error);
+    if (axios.isAxiosError(error)) {
+      return error.status;
+    }
   }
 };
 
@@ -22,14 +27,17 @@ export const sendEmailToUs = async (
   text: string
 ): Promise<any> => {
   try {
+    console.log(fullName, email, text);
     const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
       fullName,
       email,
       text,
     });
-    return response.data;
+
+    return response.status;
   } catch (error) {
     console.error("Error sending email to us:", error);
+    // throw error;
   }
 };
 
@@ -44,9 +52,10 @@ export const sendEmailNewsletter = async (
       text,
       html,
     });
-    return response.data;
+    return response.status;
   } catch (error) {
     console.error("Error sending email newsletter:", error);
+    // throw error;
   }
 };
 
@@ -55,8 +64,9 @@ export const removeReceiver = async (email: string): Promise<any> => {
     const response = await axios.delete(`${BASE_URL}/newsletter/unsubscribe`, {
       params: { email },
     });
-    return response.data;
+    return response.status;
   } catch (error) {
     console.error("Error removing receiver:", error);
+    // throw error;
   }
 };

@@ -7,8 +7,8 @@ const AboutUsSection = () => {
       className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] "
     >
       <div className="flex flex-col text-center lg:text-left lg:w-[400px]">
-        <h2 className="font-spaceage text-[28px] mb-6 lg:text-[42px]">
-          ABOUT US
+        <h2 className="font-frontrunner mb-6 text-[28px] md:text-[35px] lg:text-[45px]">
+          Про нас 
         </h2>
         <p className="text-gray-600 leading-7">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accumsan

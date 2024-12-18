@@ -1,33 +1,34 @@
 "use client";
-
+import { motion } from "framer-motion";
+import { usePagination } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
 
-import { usePagination } from "@mantine/hooks";
-
+import { CardProps } from "@/config/types";
+import ProductSceleton from "./ProductSceleton";
+import { ProductsContext } from "./CategoryMain";
 import CardComponent from "@/components/CardComponent";
 import CustomSelect from "@/components/SelectComponent";
-import ProductSceleton from "./ProductSceleton";
-import { CardProps } from "@/config/types";
-import { ProductsContext } from "./CategoryMain";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
 
 const CategorySection = ({
   totalProducts,
   limit,
+  sort,
+  reverse,
   setSort,
   setReverse,
+  isStart,
 }: {
   totalProducts: number;
   limit: number;
+  sort: string;
+  reverse: boolean;
   setSort: React.Dispatch<React.SetStateAction<string>>;
   setReverse: React.Dispatch<React.SetStateAction<boolean>>;
+  isStart: boolean;
 }) => {
-  const { goToPage } = useCustomPagination();
-
+  const { goToPage, currentPage } = useCustomPagination();
   const allProducts = useContext(ProductsContext);
-
-  const [visibleProducts, setVisibleProducts] = useState<CardProps[]>([]);
-
   const [isLoading, setIsLoading] = useState(true);
 
   const generatePaginationRange = () => {
@@ -61,16 +62,20 @@ const CategorySection = ({
     initialPage: 1,
     siblings: 1,
     boundaries: 1,
-    onChange(page) {
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      setVisibleProducts(allProducts.slice(start, end));
-    },
   });
 
   useEffect(() => {
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
   }, []);
+
+  useEffect(() => {
+    if (currentPage === 1) {
+      pagination.setPage(0);
+      goToPage(1);
+    }
+  }, [currentPage]);
 
   const handleChangePage = (range: number) => {
     pagination.setPage(range);
@@ -81,14 +86,8 @@ const CategorySection = ({
   const handleChangeSorting = (value: string) => {
     let newValue = value == "HPRICE" || value == "LPRICE" ? "PRICE" : value;
 
-    if (value === "HPRICE") {
-      setReverse(true);
-    }
-
-    if (value === "LPRICE") {
-      setReverse(false);
-    }
-
+    if (value === "HPRICE") setReverse(true);
+    if (value === "LPRICE") setReverse(false);
     if (value === null || value === "") {
       setReverse(true);
       newValue = "RELEVANCE";
@@ -110,6 +109,7 @@ const CategorySection = ({
             { value: "BEST_SELLING", label: "Best Sellers" },
           ]}
           onSelect={handleChangeSorting}
+			 sort={sort}
         />
       </div>
 
@@ -119,6 +119,18 @@ const CategorySection = ({
             <ProductSceleton key={index} />
           ))}
         </div>
+      ) : allProducts.length === 0 && !isStart ? (
+        <motion.div
+          className="text-center text-gray-500 text-lg py-[40px] lg:py-[60px] lg:text-2xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.3,
+            ease: "easeInOut",
+          }}
+        >
+          Товару з даними характеристиками не знайдено
+        </motion.div>
       ) : (
         <>
           <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -126,19 +138,20 @@ const CategorySection = ({
               <CardComponent {...card} key={card.id} />
             ))}
           </div>
-
           <div className="flex justify-center gap-2 mt-10 items-center">
             <button
               disabled={pagination.active === 1}
               onClick={() => handleChangePage(pagination.active - 1)}
-              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold">
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold"
+            >
               &lt;
             </button>
             {generatePaginationRange().map((range, index) =>
               range === "..." ? (
                 <button
                   key={index}
-                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2">
+                  className="h-[28px] rounded-sm text-center text-[10px] bg-pearl text-silver px-2"
+                >
                   ...
                 </button>
               ) : (
@@ -149,7 +162,8 @@ const CategorySection = ({
                       ? "bg-darkBurgundy text-white"
                       : "bg-pearl text-silver hover:font-bold"
                   }`}
-                  onClick={() => handleChangePage(range as number)}>
+                  onClick={() => handleChangePage(range as number)}
+                >
                   {range}
                 </button>
               )
@@ -157,7 +171,8 @@ const CategorySection = ({
             <button
               disabled={pagination.active === Math.ceil(totalProducts / limit)}
               onClick={() => handleChangePage(pagination.active + 1)}
-              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold ">
+              className="h-7 w-3 text-darkBurgundy rounded-sm disabled:opacity-0 hover:font-extrabold "
+            >
               &gt;
             </button>
           </div>

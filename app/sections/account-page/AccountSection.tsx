@@ -1,4 +1,5 @@
 "use client";
+import { Loader } from "@mantine/core";
 import React, { useState, useEffect } from "react";
 
 import Button from "@/components/ButtonComponent";
@@ -11,6 +12,7 @@ import ProfileSideBarComponent from "@/components/account-page/ProfileSideBarCom
 const AccountSection = () => {
   const [activeSection, setActiveSection] = useState("section1");
   const [isToken, setIsToken] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const tokenAccess = localStorage.getItem("accessToken");
@@ -19,10 +21,18 @@ const AccountSection = () => {
     if (tokenAccess || tokenRefresh) {
       setIsToken(true);
     }
+    setLoading(false);
   }, []);
 
-  if (isToken !== true) {
+  if (loading) {
+    return (
+      <div className="container  flex justify-center items-center">
+        <Loader className="animate-spin rounded-full border-4 border-darkBurgundy border-b-transparent w-10 h-10" />
+      </div>
+    );
+  }
 
+  if (isToken !== true) {
     return (
       <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px] min-h-screen">
         <h1 className="text-black text-[24px] md:text-[32px] font-medium">
@@ -51,8 +61,8 @@ const AccountSection = () => {
   };
   return (
     <>
-      <section className="bg-[#F4F6F6] bg-opacity-50 min-h-screen">
-        <TitleComponents text="Timestone Account" />
+      <section className="bg-pearl bg-opacity-50 min-h-screen">
+        <TitleComponents text="Ваш акаунт" />
         <ProfileSideBarComponent
           className="container pt-[20px] xl:pt-[40px]"
           setActiveSection={setActiveSection}
