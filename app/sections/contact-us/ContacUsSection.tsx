@@ -54,11 +54,12 @@ const ContactUsSection = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    setIsLoading(true);
+
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
+    setIsLoading(true);
     const values = form.values;
     const response = await sendEmailToUs(
       values.fullName,
@@ -140,24 +141,27 @@ const ContactUsSection = () => {
                   placeholder="І'мя"
                   required={true}
                   bordered={true}
-                  className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
-                  {...form.getInputProps("fullName")}
+                  className=" lg:w-[90%] xl:w-[70%] "
                   errorType="critical"
                   disabled={isDisabled}
+                  {...form.getInputProps("fullName")}
                 />
+
                 <Input
                   inputType="input"
                   required={true}
                   bordered={true}
                   placeholder="Email"
                   type="email"
-                  className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
-                  {...form.getInputProps("email")}
+                  className="lg:w-[90%] xl:w-[70%] "
                   errorType="critical"
                   disabled={isDisabled}
+                  {...form.getInputProps("email")}
                 />
+
                 <Input
                   inputType="textarea"
+                  type="text"
                   placeholder="Повідомлення"
                   required={true}
                   bordered={true}
@@ -182,11 +186,11 @@ const ContactUsSection = () => {
               />
             </form>
           </div>
-          <div className="hidden absolute py-[11px] px-[17px] bg-darkBurgundy rounded-full left-[49%] top-[50%] lg:block xl:py-[21px] xl:px-[27px] xl:left-[58%] xl:top-[50%]">
+          <div className="hidden cursor-pointer absolute py-[11px] px-[17px] bg-darkBurgundy rounded-full left-[49%] top-[45%] lg:block xl:py-[21px] xl:px-[27px] xl:left-[58%] xl:top-[40%] hover:scale-110 transition-transform duration-300">
             <Image
               src={Message}
               alt="message"
-              className="lg:w-[45px] lg:h-[56px]"
+              className="lg:w-[45px] lg:h-[56px] transition-transform duration-300"
               width={60}
               height={71}
             />

@@ -35,16 +35,16 @@ const NewsSection = () => {
     },
   });
 
-  // useEffect(() => {
-  //   const savedAttempts = localStorage.getItem("inputAttempts");
-  //   if (savedAttempts) {
-  //     const parsedAttempts = Number(savedAttempts);
-  //     setAttempts(parsedAttempts);
-  //     if (parsedAttempts >= MAX_ATTEMPTS) {
-  //       setIsDisabled(true);
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputAttempts");
+    if (savedAttempts) {
+      const parsedAttempts = Number(savedAttempts);
+      setAttempts(parsedAttempts);
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

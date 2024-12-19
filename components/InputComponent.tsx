@@ -189,7 +189,7 @@ const InputComponent: FC<InputProps> = ({
       return (
         <div className={`${className} flex flex-col w-full`}>
           <input
-            className={` ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
+            className={`${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
             type={type}
             placeholder={placeholder}
             pattern={pattern}
