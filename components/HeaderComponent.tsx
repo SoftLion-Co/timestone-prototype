@@ -29,22 +29,6 @@ const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -102,6 +86,7 @@ const Header = () => {
             className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
               e.preventDefault();
+              close(); 
               changeOpenState(true);
             }}
           >
@@ -121,12 +106,13 @@ const Header = () => {
               className="!px-[0px] !py-[6px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
             />
           ) : (
-            <Link
+            <MainButton
+              tag="a"
+              icon="profile"
+              background="transparent"
               href="/account"
-              className="block px-4 py-2 transition-transform duration-300 hover:scale-125"
-            >
-              <Image src={Profile} alt="profile" />
-            </Link>
+              className="!px-[4px] !py-[2px] block transition-transform duration-300 hover:scale-125"
+            />
           )}
         </div>
       </div>
@@ -143,8 +129,7 @@ const Header = () => {
 
   return (
     <header
-      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out
-      ${isScrolled ? "sticky top-0 shadow-lg" : ""}`}
+      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
