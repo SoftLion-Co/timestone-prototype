@@ -1,8 +1,6 @@
 "use client";
-
 import { motion } from "framer-motion";
-import React, { FC, useState, useEffect } from "react";
-import "react-range-slider-input/dist/style.css";
+import React, { FC, useState} from "react";
 
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
@@ -48,14 +46,6 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
-
-  useEffect(() => {
-  }, [selectedItems]);
-
-  useEffect(() => {
-    items?.map((item, index) => (
-    console.log("q", `${title.toLowerCase()}-${item}`)));
-  }, []);
 
   return (
     <>
@@ -146,7 +136,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
         {type === "buttons" && (
           <>
-            {/* <div className="hidden xl:flex flex-col justify-start items-start gap-1">
+            <div className=" flex flex-row gap-[5px]">
               {items?.map((btn) => (
                 <button
                   key={btn}
@@ -156,34 +146,14 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   }}
                   className={`${
                     activeButton === btn
-                      ? "font-bold text-darkBurgundy"
-                      : "text-silver"
-                  } `}
+                      ? "bg-darkBurgundy text-white"
+                      : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
+                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}
                 >
                   {btn}
                 </button>
               ))}
-            </div> */}
-
-<div className=" flex flex-row gap-[5px]">
-  {items?.map((btn) => (
-    <button
-      key={btn}
-      onClick={(e) => {
-        e.preventDefault();
-        onChangeButton?.(btn);
-      }}
-      className={`${
-        activeButton === btn
-          ? "bg-darkBurgundy text-white"
-          : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
-      } py-[6px] px-[12px] text-sm font-medium rounded-md`}
-    >
-      {btn}
-    </button>
-  ))}
-</div>
-
+            </div>
           </>
         )}
 
