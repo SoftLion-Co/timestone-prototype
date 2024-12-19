@@ -61,7 +61,10 @@ const ShippingSection: FC<{
     const { department, street, house, flat, postomat } = form.values;
 
     if (selectedOption == "Department" && department !== "") {
-      localStorage.setItem("shippingInfo", JSON.stringify({ department, selectedOption }));
+      localStorage.setItem(
+        "shippingInfo",
+        JSON.stringify({ department, selectedOption })
+      );
     } else if (
       selectedOption === "Courier" &&
       (street !== "" || house !== "" || flat !== "")
@@ -78,93 +81,75 @@ const ShippingSection: FC<{
     }
   }, [form.values, selectedOption]);
 
-  const handleStreetChange = async ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }) => {
-    form.setFieldValue("street", value);
-
+  const handleStreetSelect = async (value: string) => {
     if (!value.trim() || !settlementRef) {
       setStreets([]);
       setValidationErrors(null);
       return;
     }
 
-    const street = await getStreets(value, settlementRef);
-    if (street.length === 0) {
-      setValidationErrors("Вулиця не знайдена!");
+    const selectedStreet = streets.find(
+      ({ SettlementStreetRef }) => SettlementStreetRef === value
+    );
+    if (selectedStreet) {
+      form.setFieldValue("street", selectedStreet.Present);
+      setStreets([]);
     } else {
-      setValidationErrors(null);
+      const street = await getStreets(value, settlementRef);
+      if (street.length === 0) {
+        setValidationErrors("Не знайдено!");
+      } else {
+        setValidationErrors(null);
+        setStreets(street);
+      }
     }
-    setStreets(street);
   };
 
-  const handlePostomatChange = async ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }) => {
-    form.setFieldValue("postomat", value);
-
+  const handlePostomatSelect = async (value: string) => {
     if (!value.trim() || !cityRef) {
       setPostomates([]);
       setValidationErrors(null);
       return;
     }
 
-    const postomat = await getPostomates(value, cityRef);
-
-    if (postomat.length === 0) {
-      setValidationErrors("Поштомат не знайдено!");
-    } else {
-      setValidationErrors(null);
-    }
-    setPostomates(postomat);
-  };
-
-  const handleDepartmentChange = async ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }) => {
-    form.setFieldValue("department", value);
-
-    if (!value.trim() || !cityRef) {
-      setDepartments([]);
-      setValidationErrors(null);
-      return;
-    }
-    const department = await getDepartments(value, cityRef);
-    if (department.length === 0) {
-      setValidationErrors("Відділення не знайдено!");
-    } else {
-      setValidationErrors(null);
-    }
-    setDepartments(department);
-  };
-
-  const handleSelectChange = (value: string) => {
-    const selectedStreet = streets.find(
-      ({ SettlementStreetRef }) => SettlementStreetRef === value
-    );
     const selectedPostomat = postomates.find(({ Ref }) => Ref === value);
-    const selectedDepartment = departments.find(({ Ref }) => Ref === value);
-
-    if (selectedStreet) {
-      form.setFieldValue("street", selectedStreet.Present);
-      setStreets([]);
-    }
     if (selectedPostomat) {
       form.setFieldValue(
         "postomat",
         "№ " + selectedPostomat.Number + ", " + selectedPostomat.ShortAddress
       );
       setPostomates([]);
+      return;
     }
+
+    const postomat = await getPostomates(value, cityRef);
+    if (postomat.length === 0) {
+      setValidationErrors("Не знайдено!");
+    } else {
+      setValidationErrors(null);
+      setPostomates(postomat);
+    }
+  };
+
+  const handleDepartmentSelect = async (value: string) => {
+    if (!value.trim() || !cityRef) {
+      setDepartments([]);
+      setValidationErrors(null);
+      return;
+    }
+
+    const selectedDepartment = departments.find(({ Ref }) => Ref === value);
     if (selectedDepartment) {
       form.setFieldValue("department", selectedDepartment.Description);
       setDepartments([]);
+    } else {
+      const department = await getDepartments(value, cityRef);
+      if (department.length === 0) {
+        setValidationErrors("Не знайдено!");
+      } else {
+        setValidationErrors(null);
+        setDepartments(department);
+      }
     }
   };
 
@@ -294,39 +279,27 @@ const ShippingSection: FC<{
           {selectedOption == "Department" && (
             <>
               <Input
-                inputType="input"
-                placeholder="Відділення"
-                required={true}
-                bordered={true}
+                className="mini:w-[80%] my-[20px] m-auto"
+                inputType="select"
+                placeholder="Оберіть відділення"
+                options={departments.map((department) => ({
+                  value: department.Ref,
+                  label: department.Description,
+                }))}
                 {...form.getInputProps("department")}
-                onChange={handleDepartmentChange}
-                errorType="critical"
-                fullWidth
-                className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
+                scrollable
+                onSelect={handleDepartmentSelect}
               />
-
-              {validationErrors && (
-                <p className="text-darkBurgundy text-[14px]">
-                  {validationErrors}
-                </p>
-              )}
-
-              {departments.length > 0 && (
-                <Input
-                  className="mini:w-[100%] lg:w-[85%] m-auto"
-                  inputType="select"
-                  placeholder="Оберіть відділення"
-                  options={departments.map((department) => ({
-                    value: department.Ref,
-                    label: department.Description,
-                  }))}
-                  onSelect={handleSelectChange}
-                  scrollable
-                />
-              )}
             </>
           )}
+
+          {validationErrors && (
+            <p className="text-darkBurgundy text-[14px] m-auto">
+              {validationErrors}
+            </p>
+          )}
         </Checkbox>
+
         <Checkbox
           label="Кур'єр Нової Пошти"
           description="Середній термін доставки 2 дні"
@@ -337,32 +310,19 @@ const ShippingSection: FC<{
           {selectedOption == "Courier" && (
             <>
               <Input
-                inputType="input"
-                placeholder="Вулиця"
-                required={true}
-                bordered={true}
+                className="mini:w-[80%] my-[10px] m-auto"
+                inputType="select"
+                placeholder="Оберіть вулицю"
+                options={streets.map((street) => ({
+                  value: street.SettlementStreetRef,
+                  label: street.Present,
+                }))}
                 {...form.getInputProps("street")}
-                onChange={handleStreetChange}
-                errorType="critical"
-                fullWidth
-                className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
+                onSelect={handleStreetSelect}
+                scrollable
               />
 
-              {streets.length > 0 && (
-                <Input
-                  className="mini:w-[100%] lg:w-[85%] m-auto"
-                  inputType="select"
-                  placeholder="Оберіть вулицю"
-                  options={streets.map((street) => ({
-                    value: street.SettlementStreetRef,
-                    label: street.Present,
-                  }))}
-                  onSelect={handleSelectChange}
-                  scrollable
-                />
-              )}
-
-              <div className="flex flex-col m-auto gap-[15px] w-full lg:w-[85%] mini:flex-row my-[10px]">
+              <div className="flex flex-col m-auto gap-[15px] w-full mini:w-[80%] md:flex-row">
                 <Input
                   inputType="input"
                   placeholder="Будинок"
@@ -372,7 +332,7 @@ const ShippingSection: FC<{
                   {...form.getInputProps("house")}
                   errorType="critical"
                   fullWidth
-                  className="mini:w-3/6"
+                  className="md:w-3/6"
                 />
 
                 <Input
@@ -384,7 +344,7 @@ const ShippingSection: FC<{
                   {...form.getInputProps("flat")}
                   errorType="critical"
                   fullWidth
-                  className="mini:w-3/6"
+                  className="md:w-3/6"
                 />
               </div>
 
@@ -396,6 +356,7 @@ const ShippingSection: FC<{
             </>
           )}
         </Checkbox>
+
         <Checkbox
           label="Поштоматів Нової Пошти"
           description="Середній термін доставки 2 дні"
@@ -406,35 +367,22 @@ const ShippingSection: FC<{
           {selectedOption == "Postomat" && (
             <>
               <Input
-                inputType="input"
-                placeholder="Поштомат"
-                required={true}
-                bordered={true}
+                className="mini:w-[80%] my-[10px] m-auto"
+                inputType="select"
+                placeholder="Оберіть поштомат"
+                options={postomates.map((postomat) => ({
+                  value: postomat.Ref,
+                  label: postomat.Description,
+                }))}
                 {...form.getInputProps("postomat")}
-                onChange={handlePostomatChange}
-                errorType="critical"
-                fullWidth
-                className="mini:w-[100%] lg:w-[85%] my-[20px] m-auto"
+                onSelect={handlePostomatSelect}
+                scrollable
               />
 
               {validationErrors && (
                 <p className="text-darkBurgundy text-[14px]">
                   {validationErrors}
                 </p>
-              )}
-
-              {postomates.length > 0 && (
-                <Input
-                  className="mini:w-[100%] lg:w-[85%] m-auto"
-                  inputType="select"
-                  placeholder="Оберіть поштомат"
-                  options={postomates.map((postomat) => ({
-                    value: postomat.Ref,
-                    label: postomat.Description,
-                  }))}
-                  onSelect={handleSelectChange}
-                  scrollable
-                />
               )}
             </>
           )}

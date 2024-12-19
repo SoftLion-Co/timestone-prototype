@@ -94,16 +94,19 @@ const InputComponent: FC<InputProps> = ({
   }, [value]);
 
   const handleSelect = (value: string) => {
+    const label = options.find((option) => option.value === value)?.label || "";
     setSelected(value);
-    onSelect?.(value);
+    setInputValue(label);
     setIsOpen(false);
+    if (onSelect) onSelect(value);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    console.log(options)
-    console.log("n", value, selected, options?.find((option) => option.value === selected)?.label )
-    if (value === "" ||  options?.find((option) => option.value === selected)?.label)  {
+    if (
+      value === "" ||
+      options?.find((option) => option.value === selected)?.label
+    ) {
       setSelected(null);
     }
     setInputValue(value);

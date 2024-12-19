@@ -24,6 +24,7 @@ const BasicInfoSection: FC<{
 }) => {
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isStart, setIsStart] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -44,15 +45,11 @@ const BasicInfoSection: FC<{
   });
 
   useEffect(() => {
-    const getCity = async () => {};
-    getCity();
-  }, [form.values.city]);
-
-  useEffect(() => {
     const localValues = localStorage.getItem("basicInfo");
     if (localValues) {
       const result = JSON.parse(localValues);
       form.setValues(result);
+      setIsStart(true);
     }
   }, []);
 
@@ -69,32 +66,26 @@ const BasicInfoSection: FC<{
   }, [form.values]);
 
   const handleSelect = async (value: string) => {
-    console.log("fef", form.values.city);
-    console.log(value);
-    const selectedCity = cities.find(({ Ref }) => Ref === value);
-    const selectedCity2 = cities.find(({ Present }) => Present === value);
-    console.log(selectedCity, selectedCity2);
+    if (!value.trim()) {
+      setCities([]);
+      setError(null);
+      return;
+    }
 
+    const selectedCity = cities.find(({ Ref }) => Ref === value);
     if (selectedCity) {
-      console.log("3");
       form.setFieldValue("city", selectedCity.Present);
       setSettlementRef(selectedCity.Ref);
       setCityRef(selectedCity.DeliveryCity);
       setCities([]);
     } else {
-      if (!value.trim()) {
-        setCities([]);
-        setError(null);
-        return;
-      }
-
       const city = await getCities(value);
       if (city.length === 0) {
         setError("Населений пункт не знайдено!");
       } else {
         setError(null);
+        setCities(city);
       }
-      setCities(city);
     }
   };
 
@@ -117,18 +108,23 @@ const BasicInfoSection: FC<{
         toggleOpen={toggleOpen}
         closeText={form.values.firstName + " " + form.values.lastName}
       >
-        <Input
-          className="mini:w-[80%] mb-[10px]"
-          inputType="select"
-          placeholder="Оберіть населений пункт"
-          options={cities.map((city) => ({
-            value: city.Ref,
-            label: city.Present,
-          }))}
-          {...form.getInputProps("city")}
-          scrollable
-          onSelect={handleSelect}
-        />
+        {isStart && (
+          <>
+            <Input
+              className="mini:w-[80%] mb-[10px]"
+              inputType="select"
+              placeholder="Оберіть населений пункт"
+              options={cities.map((city) => ({
+                value: city.Ref,
+                label: city.Present,
+              }))}
+              {...form.getInputProps("city")}
+              onSelect={handleSelect}
+              scrollable
+            />
+            {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
+          </>
+        )}
         <p className="mini:w-[80%] md:w-[85%] lg:w-[91%] mx-[25px] font-semibold text-silver">
           Дані отримувача
         </p>
@@ -177,8 +173,6 @@ const BasicInfoSection: FC<{
           fullWidth
           className="mini:w-[80%]"
         />
-
-        {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
 
         <Button
           text="Продовжити"
