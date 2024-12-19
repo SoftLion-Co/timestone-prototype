@@ -259,7 +259,7 @@ const MyAccountSection = () => {
         text: "Oops! A server error occurred!",
       });
     }
-	 
+
     setTimeout(() => {
       setInfoMessage(null);
     }, 5000);
@@ -350,60 +350,53 @@ const MyAccountSection = () => {
               Моя інформація
             </h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Ім'я"
-                  type="text"
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  fullWidth
-                  {...form.getInputProps("name")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full lg:w-[45%]"
+                placeholder="Ім'я"
+                type="text"
+                error={true}
+                errorType="critical"
+                bordered
+                fullWidth
+                {...form.getInputProps("name")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Прізвище"
-                  type="text"
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  fullWidth
-                  {...form.getInputProps("fullname")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full  lg:w-[45%] "
+                placeholder="Прізвище"
+                type="text"
+                error={true}
+                errorType="critical"
+                bordered
+                fullWidth
+                {...form.getInputProps("fullname")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Електрона пошта"
-                  type="email"
-                  fullWidth
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  {...form.getInputProps("email")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full lg:w-[45%]"
+                placeholder="Електрона пошта"
+                type="email"
+                fullWidth
+                error={true}
+                errorType="critical"
+                bordered
+                {...form.getInputProps("email")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  placeholder="Номер телефону"
-                  type="text"
-                  className="w-full"
-                  bordered
-                  errorType="critical"
-                  fullWidth
-                  {...form.getInputProps("phone")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                placeholder="Номер телефону"
+                type="text"
+                className="w-full lg:w-[45%]"
+                bordered
+                errorType="critical"
+                fullWidth
+                {...form.getInputProps("phone")}
+              />
+
               <Input
                 placeholder="Місяць"
                 inputType="select"
@@ -441,7 +434,7 @@ const MyAccountSection = () => {
               {isStart && (
                 <>
                   <Input
-                    className="mini:w-full lg:w-[45%]"
+                    className="w-full lg:w-[45%]"
                     inputType="select"
                     error={true}
                     bordered
@@ -456,17 +449,15 @@ const MyAccountSection = () => {
                   />
                 </>
               )}
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  name="address2"
-                  placeholder="Вулиця, будинок/квартира"
-                  type="text"
-                  bordered
-                  className="w-full"
-                  {...form.getInputProps("address2")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                name="address2"
+                placeholder="Вулиця, будинок/квартира"
+                type="text"
+                bordered
+                className="w-full lg:w-[45%]"
+                {...form.getInputProps("address2")}
+              />
             </div>
           </div>
           <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
@@ -492,38 +483,35 @@ const MyAccountSection = () => {
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
             <h2 className="mb-[20px] text-[24px] text-silver">Новий пароль</h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="password"
-                  type="password"
-                  name="password"
-                  visible={visible}
-                  onVisibilityChange={toggle}
-                  placeholder="Ваш пароль"
-                  bordered
-                  error={true}
-                  errorType="critical"
-                  fullWidth
-                  className="w-full"
-                  {...formWithPass.getInputProps("password")}
-                />
-              </div>
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="password"
-                  visible={visible}
-                  onVisibilityChange={toggle}
-                  type="password"
-                  name="Confirm password"
-                  placeholder="Підтвердіть пароль"
-                  bordered
-                  error={true}
-                  errorType="critical"
-                  fullWidth
-                  className="w-full"
-                  {...formWithPass.getInputProps("verify")}
-                />
-              </div>
+              <Input
+                inputType="password"
+                type="password"
+                name="password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                placeholder="Ваш пароль"
+                bordered
+                error={true}
+                errorType="critical"
+                fullWidth
+                className="w-full lg:w-[45%]"
+                {...formWithPass.getInputProps("password")}
+              />
+
+              <Input
+                inputType="password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                type="password"
+                name="Confirm password"
+                placeholder="Підтвердіть пароль"
+                bordered
+                error={true}
+                errorType="critical"
+                fullWidth
+                className="w-full lg:w-[45%]"
+                {...formWithPass.getInputProps("verify")}
+              />
             </div>
           </div>
           <Button text="Оновити" type="submit" />

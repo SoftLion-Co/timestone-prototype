@@ -254,7 +254,6 @@ const RegistrationFormSection = () => {
         />
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-          <div>
             <Input
               inputType="input"
               placeholder="Email"
@@ -266,9 +265,7 @@ const RegistrationFormSection = () => {
               errorType="critical"
               required={true}
             />
-          </div>
 
-          <div>
             <Input
               inputType="input"
               placeholder="Confirm Email"
@@ -280,11 +277,10 @@ const RegistrationFormSection = () => {
               errorType="critical"
               required={true}
             />
-          </div>
+
         </div>
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-          <div>
             <Input
               inputType="password"
               placeholder="Password"
@@ -298,9 +294,7 @@ const RegistrationFormSection = () => {
               errorType="critical"
               required={true}
             />
-          </div>
 
-          <div>
             <Input
               inputType="password"
               placeholder="Confirm Password"
@@ -314,7 +308,6 @@ const RegistrationFormSection = () => {
               errorType="critical"
               required={true}
             />
-          </div>
         </div>
 
         <div className="flex text-silver gap-[10px] mt-[10px] text-left">
