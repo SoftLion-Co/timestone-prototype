@@ -8,7 +8,7 @@ import Profile from "@/images/vectors/profile.svg";
 import GoogleIcon from "@/images/authorization-page/google-icon.svg";
 import FacebookIcon from "@/images/authorization-page/facebook-icon.svg";
 interface ButtonProps {
-  text: string;
+  text?: string;
   className?: string;
   href?: string;
   target?: string;

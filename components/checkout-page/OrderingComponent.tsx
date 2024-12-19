@@ -14,10 +14,7 @@ interface OrderingComponentProps {
   message: string;
 }
 
-const OrderingComponent: React.FC<OrderingComponentProps> = ({
-  message,
-  title,
-}) => {
+const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title}) =>{
   const [opened, { open, close }] = useDisclosure(true);
   useEffect(() => {
     if (opened) {
@@ -46,7 +43,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({
           body: "p-0",
         }}>
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">
-          <h1 className="font-spaceage text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
+          <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
             {title}
           </h1>
           <p className="text-center text-[#424551] font-poppins text-default text-[silver] px-[10px] mt-[5px] md:mt-0">
@@ -58,11 +55,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({
             text="Return to Homepage"
             className="mt-[20px] md:mt-[40px] mb-[10px] focus:outline-none focus:ring-0"
           />
-          <Image
-            src={Thanks}
-            alt="thanks"
-            className="object-cover rounded-[32px]"
-          />
+          <Image src={Thanks} alt="thanks" className="object-cover rounded-[32px]" />
         </div>
       </Modal>
     </MantineProvider>,

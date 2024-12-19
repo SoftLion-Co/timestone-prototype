@@ -17,7 +17,7 @@ const CartComponent = () => {
         isOpen ? "fixed" : "hidden"
       }`}>
       <div className="bg-pearl flex items-center text-[20px] p-5">
-        <h3 className="text-black font-spaceage flex-1 text-center">
+        <h3 className="text-black font-frontrunner flex-1 text-center">
           Your Cart
         </h3>
         <button
@@ -53,10 +53,19 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href={products.length > 0 ? "/checkout" : "/catalog"}
+          href={products.length > 0 ? "/checkout/#info" : "/catalog"}
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300"
           onClick={() => {
             changeOpenState(false);
+            setTimeout(() => {
+              const info = document.getElementById("info");
+              if (info) {
+                info.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+            }, 300);
           }}>
           {products.length > 0 ? " Go To Checkout" : " Go To Catalog"}
         </Link>
