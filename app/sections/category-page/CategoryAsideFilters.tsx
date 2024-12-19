@@ -353,7 +353,7 @@ const CategoryAsideFilters = ({
                   />
                 </div>
               ) : (
-                <h2 className="font-spaceage text-[28px] leading-[25px]">
+                <h2 className="font-frontrunner text-[28px] leading-[25px]">
                   Filters
                 </h2>
               )}

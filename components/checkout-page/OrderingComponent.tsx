@@ -43,7 +43,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
           body: "p-0",
         }}>
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">
-          <h1 className="font-spaceage text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
+          <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
             {title}
           </h1>
           <p className="text-center text-[#424551] font-poppins text-default text-[silver] px-[10px] mt-[5px] md:mt-0">

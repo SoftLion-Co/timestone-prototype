@@ -17,7 +17,7 @@ const CartComponent = () => {
         isOpen ? "fixed" : "hidden"
       }`}>
       <div className="bg-pearl flex items-center text-[20px] p-5">
-        <h3 className="text-black font-spaceage flex-1 text-center">
+        <h3 className="text-black font-frontrunner flex-1 text-center">
           Your Cart
         </h3>
         <button

@@ -113,6 +113,7 @@ const BasicInfoSection: FC<{
             <Input
               className="mini:w-[80%] mb-[10px]"
               inputType="select"
+              bordered
               placeholder="Оберіть населений пункт"
               options={cities.map((city) => ({
                 value: city.Ref,

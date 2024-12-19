@@ -60,7 +60,7 @@ const InputComponent: FC<InputProps> = ({
 }) => {
   const textClass = bordered ? "text-black" : "text-silver";
 
-  const borderClass = bordered ? "border border-whisper border-solid" : "";
+  const borderClass = bordered ? "border border-solid border-gray-300" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const [inputValue, setInputValue] = useState<string>(value || "");
@@ -126,9 +126,7 @@ const InputComponent: FC<InputProps> = ({
           ref={selectRef}
         >
           <input
-            className={`${
-              bordered ? "border border-solid border-gray-300" : ""
-            } py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
+            className={`${borderClass} py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
             type={type}
             placeholder={placeholder}
             value={

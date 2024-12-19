@@ -288,6 +288,7 @@ const ShippingSection: FC<{
                 }))}
                 {...form.getInputProps("department")}
                 scrollable
+                bordered
                 onSelect={handleDepartmentSelect}
               />
             </>
@@ -320,6 +321,7 @@ const ShippingSection: FC<{
                 {...form.getInputProps("street")}
                 onSelect={handleStreetSelect}
                 scrollable
+                bordered
               />
 
               <div className="flex flex-col m-auto gap-[15px] w-full mini:w-[80%] md:flex-row">
@@ -377,6 +379,7 @@ const ShippingSection: FC<{
                 {...form.getInputProps("postomat")}
                 onSelect={handlePostomatSelect}
                 scrollable
+                bordered
               />
 
               {validationErrors && (

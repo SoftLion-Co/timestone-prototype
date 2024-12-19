@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import Button from "@/components/ButtonComponent";
 
-import TestImgWoman from "@/images/our-mission/1.jpg";
+import TestImgWoman from "@/images/our-mission/our-mission.jpg";
 
 const OurMissionSection = () => {
   return (

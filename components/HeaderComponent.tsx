@@ -10,7 +10,7 @@ import { Modal, Button, ActionIcon } from "@mantine/core";
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
 
-import Logo from "@/images/1.svg";
+import Logo from "@/images/logo.svg";
 
 // import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
