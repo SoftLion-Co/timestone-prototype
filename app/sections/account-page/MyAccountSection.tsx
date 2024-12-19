@@ -6,7 +6,7 @@ import { useForm } from "@mantine/form";
 import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
@@ -16,8 +16,6 @@ import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
 //! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
-  const countries = [{ value: "Ukraine", label: "Україна" }];
-
   const cities = [
     { value: "kyiv", label: "Київ" },
     { value: "lviv", label: "Львів" },
@@ -43,18 +41,18 @@ const MyAccountSection = () => {
   ];
 
   const months = [
-    { value: "january", label: "January" },
-    { value: "february", label: "February" },
-    { value: "march", label: "March" },
-    { value: "april", label: "April" },
-    { value: "may", label: "May" },
-    { value: "june", label: "June" },
-    { value: "july", label: "July" },
-    { value: "august", label: "August" },
-    { value: "september", label: "September" },
-    { value: "october", label: "October" },
-    { value: "november", label: "November" },
-    { value: "december", label: "December" },
+    { value: "january", label: "Січень" },
+    { value: "february", label: "Лютий" },
+    { value: "march", label: "Березень" },
+    { value: "april", label: "Квітень" },
+    { value: "may", label: "Травень" },
+    { value: "june", label: "Червень" },
+    { value: "july", label: "Липень" },
+    { value: "august", label: "Серпень" },
+    { value: "september", label: "Вересень" },
+    { value: "october", label: "Жовтень" },
+    { value: "november", label: "Листопад" },
+    { value: "december", label: "Грудень" },
   ];
 
   const getDaysInMonth = (
@@ -87,7 +85,7 @@ const MyAccountSection = () => {
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [address1, setAddress1] = useState("");
   const [visible, { toggle }] = useDisclosure(false);
   const dayOptions = getDaysInMonth(month);
   const [infoMessage, setInfoMessage] = useState<{
@@ -102,7 +100,7 @@ const MyAccountSection = () => {
         setUserName(`${user.firstName} ${user.lastName}` || "");
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
-
+        const userAddress1 = user.address?.split("&")[0]?.trim() || "";
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
@@ -110,12 +108,16 @@ const MyAccountSection = () => {
           phone: user.phone || "",
           month: userMonth,
           date: userDay,
-          address1: user.address?.split("&")[0]?.trim() || "",
+          address1: userAddress1,
           address2: user.address?.split("&")[1]?.trim() || "",
         });
         if (userMonth && userDay) {
           setMonth(userMonth);
           setDay(userDay);
+        }
+
+        if (userAddress1) {
+          setAddress1(userAddress1);
         }
 
         setSubscribe(subscribe);
@@ -253,12 +255,14 @@ const MyAccountSection = () => {
 
   const handleSubmitPassword = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
+
     const values2 = formWithPass.values;
     const errors = formWithPass.validate();
+    setLoading(true);
     const response = await updatePassword(values2.password);
     console.log(response);
     if (Object.keys(errors.errors).length > 0) {
+      setLoading(false);
       return;
     }
     if (response.status === 201) {
@@ -309,11 +313,11 @@ const MyAccountSection = () => {
       <>
         <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
           <h1 className="text-black text-[32px] md:text-[46px] font-medium">
-            Hey, {userName}
+            Привіт, {userName}
           </h1>
           <p className="text-[12px] text-silver md:text-[14px] text-center">
-            Welcome to your dashboard, your one-stop-shop for all your recent
-            Timestone account activity.
+            Ласкаво просимо до вашої панелі управління — універсального центру
+            для всіх ваших останніх дій у обліковому записі.
           </p>
         </div>
         <form
@@ -321,13 +325,15 @@ const MyAccountSection = () => {
           onSubmit={handleSubmit}
         >
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-            <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">
+              Моя інформація
+            </h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="First Name"
+                  placeholder="Ім'я"
                   type="text"
                   error={true}
                   errorType="critical"
@@ -341,7 +347,7 @@ const MyAccountSection = () => {
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="Last Name"
+                  placeholder="Прізвище"
                   type="text"
                   error={true}
                   errorType="critical"
@@ -355,7 +361,7 @@ const MyAccountSection = () => {
                 <Input
                   inputType="input"
                   className="w-full"
-                  placeholder="Email"
+                  placeholder="Електрона пошта"
                   type="email"
                   fullWidth
                   error={true}
@@ -368,7 +374,7 @@ const MyAccountSection = () => {
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
-                  placeholder="Phone Number"
+                  placeholder="Номер телефону"
                   type="text"
                   className="w-full"
                   bordered
@@ -378,62 +384,55 @@ const MyAccountSection = () => {
                 />
               </div>
               <Input
-                placeholder="Month"
+                placeholder="Місяць"
                 inputType="select"
                 value={month}
                 scrollable={true}
-                onSelect={(value) => setMonth(value)}
+                onSelect={(value) => {setMonth(value);
+                  form.setFieldValue("month", value); 
+                }}
                 options={months}
                 bordered={true}
                 className="mini:w-full lg:w-[45%]"
               />
 
               <Input
-                placeholder="Date"
+                placeholder="Дата"
                 inputType="select"
                 bordered={true}
                 value={day}
                 options={dayOptions}
                 scrollable={true}
-                onSelect={(value) => setDay(value)}
+                onSelect={(value) => {setDay(value);
+                  form.setFieldValue("date", value); 
+                }}
                 className="mini:w-full lg:w-[45%]"
               />
             </div>
           </div>
 
           <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-            <h2 className="mb-[20px] text-[24px] text-silver">Address Book</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">Моя адреса</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              {/* <Select
-                className=""
-                classNames={{
-                  root: "w-full lg:w-[45%] ",
-                  wrapper: "w-full",
-                  input:
-                    "w-full border border-[1px] border-solid rounded-lg py-[15px] px-[30px] cursor-pointer bg-snow text-silver focus:outline-none focus:border-[1px] focus:border-darkBurgundy",
-                }}
-                searchable
-                name="address1"
-                rightSectionPointerEvents="none"
-                rightSection={
-                  <Image
-                    src={Arrow}
-                    alt="Arrow"
-                    width={14}
-                    className={`absolute right-[25px] top-[25px] transition-transform ${
-                      isOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
-                }
+              <Input
                 placeholder="Населений пункт"
-                {...form.getInputProps("address")}
-              /> */}
+                inputType="select"
+                bordered={true}
+                value={address1}
+                options={cities}
+                scrollable={true}
+                onSelect={(value) => {setAddress1(value);
+                  form.setFieldValue("address1", value); 
+                }}
+                
+                className="mini:w-full lg:w-[45%]"
+              />
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
                   inputType="input"
                   name="address2"
-                  placeholder="Вулиця,будинок,квартира"
+                  placeholder="Вулиця, будинок/квартира"
                   type="text"
                   bordered
                   className="w-full"
@@ -451,21 +450,11 @@ const MyAccountSection = () => {
                 className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
               />
               <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
-                Sign-up to receive the latest updates and promotions
+                Отримувати найсвіжіші оновлення та акції
               </label>
             </div>
           </div>
-          <Button
-            text="Update"
-            className="mt-[-20px]"
-            type="submit"
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
-          />
+          <Button text="Оновити" className="mt-[-20px]" type="submit" />
         </form>
 
         <form
@@ -473,7 +462,7 @@ const MyAccountSection = () => {
           onSubmit={handleSubmitPassword}
         >
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-            <h2 className="mb-[20px] text-[24px] text-silver">New password</h2>
+            <h2 className="mb-[20px] text-[24px] text-silver">Новий пароль</h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <div className="w-full lg:w-[45%] flex flex-col">
                 <Input
@@ -482,7 +471,7 @@ const MyAccountSection = () => {
                   name="password"
                   visible={visible}
                   onVisibilityChange={toggle}
-                  placeholder="Your password"
+                  placeholder="Ваш пароль"
                   bordered
                   error={true}
                   errorType="critical"
@@ -498,7 +487,7 @@ const MyAccountSection = () => {
                   onVisibilityChange={toggle}
                   type="password"
                   name="Confirm password"
-                  placeholder="Confirm password"
+                  placeholder="Підтвердіть пароль"
                   bordered
                   error={true}
                   errorType="critical"
@@ -509,16 +498,7 @@ const MyAccountSection = () => {
               </div>
             </div>
           </div>
-          <Button
-            text="Update"
-            type="submit"
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
-          />
+          <Button text="Оновити" type="submit" />
         </form>
       </>
     </>

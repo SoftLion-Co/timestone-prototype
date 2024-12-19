@@ -57,8 +57,8 @@ const RegistrationFormSection = () => {
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [month, setMonth] = useState("february");
-  const [day, setDay] = useState("1");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
   const dayOptions = getDaysInMonth(month);
   const [visible, { toggle }] = useDisclosure(false);
 
@@ -68,6 +68,8 @@ const RegistrationFormSection = () => {
       lastName: "",
       phone: "",
       email: "",
+      month: "",
+      date: "",
       confirmEmail: "",
       password: "",
       confirmPassword: "",
@@ -118,7 +120,7 @@ const RegistrationFormSection = () => {
         if (receiveUpdates === true) {
           await addNewReceiver(name, email);
         }
-        const dateOfBirth = `${month}, ${day}`;
+        const dateOfBirth = `${registrationForm.values.month}, ${registrationForm.values.date}`;
         const response = await registrateNewUser(
           firstName,
           lastName,
@@ -213,25 +215,31 @@ const RegistrationFormSection = () => {
         <p className="text-start text-silver mt-[6px]">Date of birth</p>
         <div className="flex flex-col lg:flex-row gap-[10px] text-left">
           <Input
-            placeholder="January"
+            placeholder="Місяць"
             inputType="select"
             className="!w-full"
             bordered={true}
             options={months}
             value={month}
             scrollable={true}
-            onSelect={(value) => setMonth(value)}
+            onSelect={(value) => {
+              setMonth(value);
+              registrationForm.setFieldValue("moth", value);
+            }}
           />
 
           <Input
-            placeholder="01"
+            placeholder="Дата"
             inputType="select"
             className="!w-full"
             bordered={true}
             options={dayOptions}
             value={day}
             scrollable={true}
-            onSelect={(value) => setDay(value)}
+            onSelect={(value) => {
+              setDay(value);
+              registrationForm.setFieldValue("date", value);
+            }}
           />
         </div>
         <Input

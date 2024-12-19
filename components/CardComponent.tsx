@@ -1,11 +1,12 @@
 "use client";
-
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import React, { FC } from "react";
-import Basket from "@/images/vectors/basket.svg";
+
 import { CardProps } from "@/config/types";
 import { useCart } from "@/hooks/useCart";
+
+import Basket from "@/images/card-component/busket.svg";
 
 const CardComponent: FC<CardProps> = ({
   id,
@@ -55,13 +56,14 @@ const CardComponent: FC<CardProps> = ({
         </Link>
         <button
           onClick={(e) => handleAddToBasket(e, id)}
-          className="absolute group font-default rounded-full border border-darkBurgundy w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300">
+          className="absolute group bg-[#eae1e6] border border-[#ccc0c2] font-default rounded-full w-[50px] h-[50px] z-10 bottom-2 right-2 flex justify-center items-center hover:bg-darkBurgundy duration-300"
+        >
           <Image
             src={Basket}
-            width={33}
-            height={33}
+            width={30}
+            height={30}
             alt="basket image"
-            className="w-[33px] h-[33px] group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300"
+            className="w-[28px] h-[28px] group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300"
           />
         </button>
       </div>
