@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { activateAccount } from "@/services/AuthService";
 
-//!зробити  window.addEventListener("storage", handleStorageChange);
-
 const ActivatedSection = ({ activatedToken }: { activatedToken: string }) => {
   const router = useRouter();
 
@@ -13,7 +11,7 @@ const ActivatedSection = ({ activatedToken }: { activatedToken: string }) => {
     const activate = async () => {
       try {
         await activateAccount(activatedToken);
-        router.push("/account")
+        router.push("/account");
       } catch (error) {
         console.error("Failed to activate", error);
       }

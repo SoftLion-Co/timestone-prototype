@@ -91,20 +91,17 @@ const Header = () => {
             ))}
           </nav>
 
-          <MainButton text="Watches" tag="a" href="/catalog" />
+          <MainButton text="Watches" tag="a" href="/catalog" onClick={close} />
         </div>
 
         <div className="flex gap-[25px]">
-          {/* <Link href="/">
-            <Image src={Basket} alt="Basket" />
-          </Link> */}
           <button
             className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
               e.preventDefault();
               changeOpenState(true);
-            }}
-          >
+              close();
+            }}>
             {products.length > 0 && (
               <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-[red] text-white -right-3.5 -top-[3.2px]">
                 {products.length}
@@ -117,6 +114,7 @@ const Header = () => {
               text="Log in"
               tag="a"
               href="/auth"
+              onClick={close}
               background="transparent"
               className="!px-[0px] !py-[6px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
             />
@@ -180,16 +178,14 @@ const Header = () => {
             header: {
               backgroundColor: "#ffffff",
             },
-          }}
-        >
+          }}>
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]"
-            >
+              className="w-[24px] h-[24px]">
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>

@@ -26,17 +26,20 @@ const CardComponent: FC<CardProps> = ({
 
     !isOpen && changeOpenState(true);
 
-    addToCart({
-      id: id,
-      handle: handle,
-      title: title,
-      price: +price,
-      image: image,
-      quantity: 1,
-      maxQuantity: quantity,
-      caseColor: "red",
-      strapColor: "red",
-    });
+    addToCart(
+      {
+        id: id,
+        handle: handle,
+        title: title,
+        price: +price,
+        image: image,
+        quantity: 1,
+        maxQuantity: quantity,
+        caseColor: "red",
+        strapColor: "red",
+      },
+      1
+    );
   };
 
   return (

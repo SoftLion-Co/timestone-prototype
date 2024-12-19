@@ -2,31 +2,26 @@
 
 import React, { FC, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-// import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
   title: string;
 
-  //text
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   clearSearchQuery?: () => void;
 
-  //checkbox
   items?: string[];
   selectedItems?: string[];
   onItemChange?: (item: string) => void;
 
-  //price
   rangeValue?: [number, number];
   limit?: [number, number];
   step?: number;
   onApplyClick?: () => void;
   onRangeChange?: (value: [number, number]) => void;
 
-  // buttons
   activeButton?: string;
   onChangeButton?: (value: string) => void;
 };
@@ -113,37 +108,6 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
         {type === "price" && (
           <>
             <div className="flex flex-col gap-4">
-              {/* <RangeSlider
-                value={rangeValue}
-                onChange={onRangeChange}
-                min={rangeValue[0]}
-                max={rangeValue[1]}
-                step={step}
-                marks={[
-                  { value: 0, label: "$0" },
-                  { value: 1000, label: "$1000" },
-                ]}
-                styles={{
-                  bar: {
-                    backgroundColor: "#1971c2", // Синя лінія
-                  },
-                  thumb: {
-                    borderColor: "#1971c2", // Синя рамка для повзунка
-                    backgroundColor: "#ffffff", // Білий повзунок
-                  },
-                  mark: {
-                    backgroundColor: "#1971c2", // Сині мітки
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                  },
-                  markLabel: {
-                    color: "#1971c2", // Синій текст міток
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                  },
-                }}
-              /> */}
               <div className="flex gap-[5px] justify-between items-center">
                 <input
                   type="number"

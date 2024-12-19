@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Image from "next/image";
 
-import Back from"@/images/vectors/back.svg";
+import Back from "@/images/vectors/back.svg";
 import Cube from "@/images/vectors/cube.svg";
 import Logout from "@/images/vectors/logout.svg";
 import Profile from "@/images/vectors/profile.svg";
@@ -130,7 +130,7 @@ const Button: FC<ButtonProps> = ({
           alt="Back arrow icon"
           width={20}
           height={20}
-          className="mr-2 inline-block inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300 ease-in-out"
+          className="mr-2 inline-block w-[15px] filter group-hover:brightness-0 group-hover:invert group-active:brightness-0 group-active:invert transition duration-300 ease-in-out"
         />
       );
     }
@@ -144,8 +144,7 @@ const Button: FC<ButtonProps> = ({
       target={target}
       href={href}
       disabled={disabled}
-      onClick={onClick}
-    >
+      onClick={onClick}>
       {renderIcon()}
       {text}
     </Tag>

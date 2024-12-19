@@ -8,7 +8,7 @@ import { registrateNewUser } from "@/services/AuthService";
 import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
-
+import { useDisclosure } from "@mantine/hooks";
 const months = [
   { value: "january", label: "January" },
   { value: "february", label: "February" },
@@ -50,7 +50,6 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
@@ -61,6 +60,7 @@ const RegistrationFormSection = () => {
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
   const dayOptions = getDaysInMonth(month);
+  const [visible, { toggle }] = useDisclosure(false);
 
   const registrationForm = useForm({
     initialValues: {
@@ -82,7 +82,19 @@ const RegistrationFormSection = () => {
       email: isEmail("Invalid email"),
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
-      password: hasLength({ min: 6 }, "Must be at least 6 characters"),
+      password: (value) => {
+        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/[\u0400-\u04FF]/.test(value))
+          return "Cyrillic characters are not allowed";
+        if (value.length < 6) return "Minimum 6 characters required";
+        if (value.length > 20) return "Maximum 20 characters allowed";
+        if (!/[a-z]/.test(value))
+          return "Password must contain lowercase letter";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain digit";
+        return null;
+      },
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
       phone: (value) =>
@@ -170,8 +182,8 @@ const RegistrationFormSection = () => {
         />
       )}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?
         </h2>
         <p className="text-silver">Create a new account</p>
@@ -274,9 +286,11 @@ const RegistrationFormSection = () => {
         <div className="flex flex-col lg:flex-row gap-[10px]">
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               fullWidth={true}
               bordered={true}
               className="lg:min-w-[314px]"
@@ -288,9 +302,11 @@ const RegistrationFormSection = () => {
 
           <div>
             <Input
-              inputType="input"
+              inputType="password"
               placeholder="Confirm Password"
               type="password"
+              visible={visible}
+              onVisibilityChange={toggle}
               bordered={true}
               fullWidth={true}
               className="lg:min-w-[314px]"
@@ -309,9 +325,9 @@ const RegistrationFormSection = () => {
             onChange={(e) =>
               registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="sign-up-update">
+          <label htmlFor="sign-up-update" className="cursor-pointer">
             Sign-up to receive the latest updates and promotions
           </label>
         </div>
@@ -324,10 +340,12 @@ const RegistrationFormSection = () => {
           )}
         </div>
 
-        <div className=" mt-[16px]">
+        <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center text-darkBurgundy`}>
+              <span
+                className={`block text-center  text-[16px] text-darkBurgundy`}
+              >
                 {registrationMessage}
               </span>
             )}
@@ -336,7 +354,7 @@ const RegistrationFormSection = () => {
           <Button
             text="Create Account"
             type="button"
-            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            className="!w-[208px] mx-auto mt-[8px] mb-[24px] lg:mb-[56px]"
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({

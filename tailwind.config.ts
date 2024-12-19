@@ -1,10 +1,10 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -15,12 +15,12 @@ const config: Config = {
         frontrunner:['Frontrunner', 'sans-serif']
       },
       fontSize: {
-        default: ['14px', { lineHeight: '18px' }],
-        xs: ['16px', { lineHeight: '22px' }],
-        xl: ['22px', { lineHeight: '32px' }],
+        default: ["14px", { lineHeight: "18px" }],
+        xs: ["16px", { lineHeight: "22px" }],
+        xl: ["22px", { lineHeight: "32px" }],
       },
       backgroundImage: {
-        'news-section': "url('/images/news-section/bg-news-section.svg')",
+        "news-section": "url('/images/news-section/bg-news-section.svg')",
       },
       boxShadow: {},
       dropShadow: {},
@@ -34,14 +34,11 @@ const config: Config = {
         snow: '#ffffff',
         charcoal: '#202020',
         whisper: '#EAECF5',
-
-        //new colors
-
-        darkBurgundy: '#680A0A',
-        darkBurgundyOpacity: '#680A0A60',
-        darkMaroon: '#420808',
-        vividRed: '#EF2A2A',
-        cream: '#F2DEBA',
+        darkBurgundy: "#680A0A",
+        darkBurgundyOpacity: "#680A0A60",
+        darkMaroon: "#420808",
+        vividRed: "#EF2A2A",
+        cream: "#F2DEBA",
       },
       keyframes: {
         pulse: {},
@@ -49,19 +46,19 @@ const config: Config = {
       
     },
     screens: {
-      mini: '520px',
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1440px',
+      mini: "520px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1440px",
     },
     container: {
       center: true,
       padding: {
-        DEFAULT: '15px',
-        sm: '20px',
-        lg: '40px',
-        xl: '60px',
+        DEFAULT: "15px",
+        sm: "20px",
+        lg: "40px",
+        xl: "60px",
       },
     },
   },

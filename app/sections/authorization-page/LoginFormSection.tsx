@@ -2,7 +2,7 @@
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+import { useDisclosure } from "@mantine/hooks";
 import Button from "@/components/ButtonComponent";
 import Input from "@/components/InputComponent";
 import LoaderComponent from "@/components/LoaderComponent";
@@ -10,9 +10,13 @@ import { loginUser } from "@/services/AuthService";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
+  // const [value, setValue] = useState("");
   const router = useRouter();
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [visible, { toggle }] = useDisclosure(false);
+
   const loginForm = useForm({
     initialValues: {
       email: "",
@@ -20,16 +24,27 @@ const LoginFormSection = () => {
     },
     validate: {
       email: isEmail("Invalid email"),
-      password: hasLength({ min: 6 }, "Password must be at least 6 characters"),
+      password: (value) => {
+        if (/\s/.test(value)) return "Password can not contain spaces";
+        if (value.length < 6) return "Password must be at least 6 characters";
+        if (value.length > 20)
+          return "Password must not be more than 20 characters";
+      },
     },
   });
 
   useEffect(() => {
- const tokenAccess = localStorage.getItem("accessToken");
+    const tokenAccess = localStorage.getItem("accessToken");
     const tokenRefresh = localStorage.getItem("refreshToken");
 
     if (tokenAccess || tokenRefresh) {
       router.push("/account");
+    }
+
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      loginForm.setFieldValue("email", savedEmail);
+      setRememberMe(true);
     }
   }, []);
 
@@ -38,10 +53,17 @@ const LoginFormSection = () => {
     if (!errors.hasErrors) {
       setIsLoading(true);
       const { email, password } = loginForm.values;
+
+      if (!rememberMe) {
+        localStorage.removeItem("rememberedEmail");
+      }
       const response = await loginUser(email, password);
 
       setIsLoading(false);
       if (response === 200) {
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        }
         loginForm.reset();
         router.push("/account");
         setLoginMessage(null);
@@ -52,25 +74,17 @@ const LoginFormSection = () => {
       } else if (response == "User not activated") {
         setLoginMessage("Your acc not activated. Check email box.");
       } else {
-        setLoginMessage("Unexpected server error");
+        setLoginMessage("Error with server.");
       }
     }
   };
-
-  //   const handleSignUpFacebook = () => {
-  //     console.log("facebook");
-  //   };
-
-  //   const handleSignUpGoogle = () => {
-  //     console.log("google");
-  //   };
 
   return (
     <>
       {isLoading && <LoaderComponent />}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           WELCOME BACK
         </h2>
         <p className="leading-[2] text-silver">
@@ -91,7 +105,9 @@ const LoginFormSection = () => {
       />
 
       <Input
-        inputType="input"
+        inputType="password"
+        visible={visible}
+        onVisibilityChange={toggle}
         placeholder="Password"
         type="password"
         bordered={true}
@@ -107,15 +123,26 @@ const LoginFormSection = () => {
           <input
             type="checkbox"
             id="rememberMe"
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="rememberMe">Remember me</label>
+          <label htmlFor="rememberMe" className="cursor-pointer">
+            Remember me
+          </label>
+        </div>
+        <div
+          className="cursor-pointer hover:underline"
+          onClick={() => router.push("/auth/forgot-me")}
+        >
+          Forgot Password
         </div>
       </div>
+
       <div className=" mt-[16px]">
         <div>
           {loginMessage && (
-            <span className={`block text-center text-darkBurgundy`}>
+            <span className={`block text-center text-[16px] text-darkBurgundy`}>
               {loginMessage}
             </span>
           )}
@@ -124,29 +151,10 @@ const LoginFormSection = () => {
         <Button
           text="Sign In"
           type="button"
-          className="!w-[208px] mx-auto mt-[2px] mb-[46px]"
+          className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
           onClick={handleSignIn}
         />
       </div>
-
-      {/* <p className="mt-[38px] font-bold text-[20px]">Express sing in</p> */}
-
-      {/* <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
-              <Button
-                text="Sign in"
-                type="button"
-                className="!w-[312px] h-[56px] mx-auto"
-                icon="facebook"
-                onClick={handleSignUpFacebook}
-              />
-              <Button
-                text="Sign In"
-                type="button"
-                className="!w-[312px] h-[56px] mx-auto"
-                icon="google"
-                onClick={handleSignUpGoogle}
-              />
-            </div> */}
     </>
   );
 };

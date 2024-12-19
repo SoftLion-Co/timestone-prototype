@@ -66,7 +66,6 @@ const CategoryMain = () => {
   return (
     <>
       <PaginationProvider>
-        {/* <FiltersProvider> */}
         <ProductsContext.Provider value={products}>
           <TitleComponents
             text="Products"
@@ -95,7 +94,6 @@ const CategoryMain = () => {
             />
           </div>
         </ProductsContext.Provider>
-        {/* </FiltersProvider> */}
       </PaginationProvider>
     </>
   );
