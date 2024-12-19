@@ -43,12 +43,26 @@ const ContactUsSection = () => {
 
   useEffect(() => {
     const savedAttempts = localStorage.getItem("contactUsAttempts");
-    if (savedAttempts) {
+    const savedTime = localStorage.getItem("contactUsTime");
+
+    if (savedAttempts && savedTime) {
       const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
+      const lastAttemptTime = Number(savedTime);
+      const currentTime = new Date().getTime();
+      const timeElapsed = currentTime - lastAttemptTime;
+
+      if (timeElapsed > 96 * 60 * 60 * 1000) {
+        setAttempts(0);
+        localStorage.setItem("contactUsAttempts", "0");
+      } else {
+        setAttempts(parsedAttempts);
+      }
+
       if (parsedAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
       }
+    } else {
+      setAttempts(0);
     }
   }, []);
 
@@ -85,6 +99,8 @@ const ContactUsSection = () => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       localStorage.setItem("contactUsAttempts", newAttempts.toString());
+      localStorage.setItem("contactUsTime", new Date().getTime().toString()); 
+
       if (newAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
       }

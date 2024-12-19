@@ -112,6 +112,10 @@ const RegistrationFormSection = () => {
           "inputRegistrationAttempts",
           newAttempts.toString()
         );
+        localStorage.setItem(
+          "inputRegistrationTime",
+          new Date().getTime().toString()
+        );
         setIsLoading(true);
         const address = "";
         const { firstName, lastName, email, phone, password, receiveUpdates } =
@@ -150,14 +154,31 @@ const RegistrationFormSection = () => {
   };
 
   useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
+    useEffect(() => {
+      const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+      const savedTime = localStorage.getItem("inputRegistrationTime");
+
+      if (savedAttempts && savedTime) {
+        const parsedAttempts = Number(savedAttempts);
+        const lastAttemptTime = Number(savedTime);
+        const currentTime = new Date().getTime();
+        const timeElapsed = currentTime - lastAttemptTime;
+
+        if (timeElapsed > 96 * 60 * 60 * 1000) {
+          setAttempts(0);
+          localStorage.setItem("inputRegistrationAttempts", "0");
+        } else {
+          setAttempts(parsedAttempts);
+        }
+
+        if (parsedAttempts >= MAX_ATTEMPTS) {
+          setIsDisabled(true);
+        }
+      } else {
+        setAttempts(0);
       }
-    }
+    }, []);
+
     if (
       registrationForm.values.phone &&
       !registrationForm.values.phone.startsWith("+38")
@@ -254,60 +275,59 @@ const RegistrationFormSection = () => {
         />
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-            <Input
-              inputType="input"
-              placeholder="Email"
-              type="email"
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              bordered={true}
-              {...registrationForm.getInputProps("email")}
-              errorType="critical"
-              required={true}
-            />
+          <Input
+            inputType="input"
+            placeholder="Email"
+            type="email"
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            bordered={true}
+            {...registrationForm.getInputProps("email")}
+            errorType="critical"
+            required={true}
+          />
 
-            <Input
-              inputType="input"
-              placeholder="Confirm Email"
-              type="email"
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              bordered={true}
-              {...registrationForm.getInputProps("confirmEmail")}
-              errorType="critical"
-              required={true}
-            />
-
+          <Input
+            inputType="input"
+            placeholder="Confirm Email"
+            type="email"
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            bordered={true}
+            {...registrationForm.getInputProps("confirmEmail")}
+            errorType="critical"
+            required={true}
+          />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-            <Input
-              inputType="password"
-              placeholder="Password"
-              type="password"
-              visible={visible}
-              onVisibilityChange={toggle}
-              fullWidth={true}
-              bordered={true}
-              className="lg:min-w-[314px]"
-              {...registrationForm.getInputProps("password")}
-              errorType="critical"
-              required={true}
-            />
+          <Input
+            inputType="password"
+            placeholder="Password"
+            type="password"
+            visible={visible}
+            onVisibilityChange={toggle}
+            fullWidth={true}
+            bordered={true}
+            className="lg:min-w-[314px]"
+            {...registrationForm.getInputProps("password")}
+            errorType="critical"
+            required={true}
+          />
 
-            <Input
-              inputType="password"
-              placeholder="Confirm Password"
-              type="password"
-              visible={visible}
-              onVisibilityChange={toggle}
-              bordered={true}
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              {...registrationForm.getInputProps("confirmPassword")}
-              errorType="critical"
-              required={true}
-            />
+          <Input
+            inputType="password"
+            placeholder="Confirm Password"
+            type="password"
+            visible={visible}
+            onVisibilityChange={toggle}
+            bordered={true}
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            {...registrationForm.getInputProps("confirmPassword")}
+            errorType="critical"
+            required={true}
+          />
         </div>
 
         <div className="flex text-silver gap-[10px] mt-[10px] text-left">
