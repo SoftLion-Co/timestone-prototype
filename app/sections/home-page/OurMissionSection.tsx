@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import Button from "@/components/ButtonComponent";
 
-import TestImgWoman from "@/images/our-mission/our-mission.jpg";
+import ImgWoman from "@/images/our-mission/our-mission.jpg";
 
 const OurMissionSection = () => {
   return (
@@ -11,7 +11,7 @@ const OurMissionSection = () => {
       <div className="flex flex-col items-center md:flex-row md:gap-[100px] lg:gap-[20%] md:mr-[15px]">
         <div className="relative w-full md:w-auto">
           <Image
-            src={TestImgWoman}
+            src={ImgWoman}
             alt="Woman"
             className="object-cover w-full h-[574px] md:w-auto lg:h-[668px]"
             loading="lazy"

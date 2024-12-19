@@ -53,7 +53,6 @@ export const checkResetToken = async (token: string): Promise<any> => {
     });
     return true;
   } catch (error) {
-    console.log("ddddddd");
     if (axios.isAxiosError(error)) {
     return error;
     }
