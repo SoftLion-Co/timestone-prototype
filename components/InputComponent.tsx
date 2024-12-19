@@ -5,8 +5,7 @@ import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 
 import Eyes from "@/images/vectors/eyes.svg";
 import Arrow from "@/images/news-section/arrow.svg";
-import ClosedEyes from "@/images/vectors/closed-eye.svg"
-
+import ClosedEyes from "@/images/vectors/closed-eye.svg";
 interface InputProps {
   placeholder?: string;
   className?: string;
@@ -61,7 +60,7 @@ const InputComponent: FC<InputProps> = ({
 }) => {
   const textClass = bordered ? "text-black" : "text-silver";
 
-  const borderClass = bordered ? "border border-whisper border-solid" : "";
+  const borderClass = bordered ? "border border-solid border-gray-300" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const [inputValue, setInputValue] = useState<string>(value || "");
@@ -87,23 +86,32 @@ const InputComponent: FC<InputProps> = ({
   useEffect(() => {
     if (typeof value === "string") {
       setSelected(value);
+      if (inputType === "select" && onSelect) {
+        onSelect(value);
+      }
     }
   }, [value]);
 
   const handleSelect = (value: string) => {
+    const label = options.find((option) => option.value === value)?.label || "";
     setSelected(value);
-    onSelect?.(value);
+    setInputValue(label);
     setIsOpen(false);
+    if (onSelect) onSelect(value);
   };
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === "") {
+    if (
+      value === "" ||
+      options?.find((option) => option.value === selected)?.label
+    ) {
       setSelected(null);
     }
-    
     setInputValue(value);
     onChange?.(e);
   };
+
   const inputContent = () => {
     if (inputType === "select") {
       const filteredOptions = inputValue
@@ -118,14 +126,13 @@ const InputComponent: FC<InputProps> = ({
           ref={selectRef}
         >
           <input
-            className={`${
-              bordered ? "border border-solid border-gray-300" : ""
-            } py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
+            className={`${borderClass} py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
             type={type}
             placeholder={placeholder}
             value={
-              selected && !inputValue
+              selected
                 ? options?.find((option) => option.value === selected)?.label ||
+                  inputValue ||
                   ""
                 : inputValue || ""
             }
@@ -148,8 +155,8 @@ const InputComponent: FC<InputProps> = ({
           </div>
           {isOpen && options.length > 0 && (
             <motion.ul
-              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white z-10 ${
-                scrollable ? "max-h-[160px] overflow-y-auto" : ""
+              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white ${
+                scrollable ? "max-h-[150px] overflow-y-auto z-[10]" : ""
               }`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}

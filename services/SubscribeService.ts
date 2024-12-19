@@ -35,6 +35,7 @@ export const sendEmailToUs = async (
     return response.status;
   } catch (error) {
     console.error("Error sending email to us:", error);
+    // throw error;
   }
 };
 
@@ -52,6 +53,7 @@ export const sendEmailNewsletter = async (
     return response.status;
   } catch (error) {
     console.error("Error sending email newsletter:", error);
+    // throw error;
   }
 };
 
@@ -63,5 +65,6 @@ export const removeReceiver = async (email: string): Promise<any> => {
     return response.status;
   } catch (error) {
     console.error("Error removing receiver:", error);
+    // throw error;
   }
 };

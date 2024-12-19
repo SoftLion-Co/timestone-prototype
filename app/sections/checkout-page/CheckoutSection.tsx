@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import TitleComponents from "@/components/TitleComponents";
 import PaymentSection from "@/app/sections/checkout-page/PaymentSection";
@@ -15,6 +15,10 @@ const CheckoutSection = () => {
 
   const [basicInfo, setBasicInfo] = useState({});
   const [shippingValue, setShippingValue] = useState({});
+  const [addressInfo, setAddressInfo] = useState({});
+  const [paymentInfo, setPaymentInfo] = useState<string>("");
+  const [settlementRef, setSettlementRef] = useState<string>("");
+  const [cityRef, setCityRef] = useState<string>("");
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
@@ -33,12 +37,13 @@ const CheckoutSection = () => {
   const handleCompletePayment = (isValid: boolean) => {
     if (isValid) {
       setPaymentOpen(false);
+      console.log(paymentInfo);
     }
   };
 
   return (
-    <>
-      <TitleComponents text="CHECKOUT" />
+    <section>
+      <TitleComponents text="Оформлення замовлення" />
 
       <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
         <Button
@@ -57,6 +62,8 @@ const CheckoutSection = () => {
           <ProductsSection
             basicInfo={basicInfo}
             shippingValue={shippingValue}
+            addressInfo={addressInfo}
+            paymentInfo={paymentInfo}
           />
         </div>
 
@@ -66,21 +73,30 @@ const CheckoutSection = () => {
             toggleOpen={() => setBasicInfoOpen(!BasicInfoOpen)}
             onContinue={handleBasicInfoContinue}
             setBasicInfo={setBasicInfo}
+            setSettlementRef={setSettlementRef}
+            setCityRef={setCityRef}
           />
+
           <ShippingSection
             isOpen={ShippingOpen}
             toggleOpen={() => setShippingOpen(!ShippingOpen)}
             onContinue={handleShippingContinue}
             setShippingValue={setShippingValue}
+            setAddressInfo={setAddressInfo}
+            settlementRef={settlementRef}
+            cityRef={cityRef}
           />
+
           <PaymentSection
             isOpen={PaymentOpen}
             toggleOpen={() => setPaymentOpen(!PaymentOpen)}
             completePayment={handleCompletePayment}
+            setPaymentInfo={setPaymentInfo}
+            paymentInfo={paymentInfo}
           />
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

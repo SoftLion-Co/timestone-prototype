@@ -30,7 +30,8 @@ export const getProducts = async (
       });
       if (response.status === 200) {
         return response.data;
-      }}
+      }
+    }
     await delay(1000);
     attempts++;
   } catch (error) {

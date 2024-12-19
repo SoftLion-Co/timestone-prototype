@@ -92,7 +92,8 @@ const LoginFormSection = () => {
           and more
         </p>
       </div>
-      <Input
+      <div className="flex flex-col gap-[10px]">
+        <Input
         inputType="input"
         placeholder="Email"
         type="email"
@@ -115,8 +116,10 @@ const LoginFormSection = () => {
         required={true}
         errorType="critical"
         {...loginForm.getInputProps("password")}
-        className="!w-full mt-[10px]"
+        className="!w-full"
       />
+      </div>
+      
 
       <div className="mt-[20px] flex justify-between text-silver">
         <div className="flex gap-[10px]">

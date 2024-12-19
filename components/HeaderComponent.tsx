@@ -10,7 +10,7 @@ import { Modal, Button, ActionIcon } from "@mantine/core";
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
 
-import Logo from "@/images/1.svg";
+import Logo from "@/images/logo.svg";
 
 // import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
@@ -29,22 +29,6 @@ const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -91,17 +75,21 @@ const Header = () => {
             ))}
           </nav>
 
-          <MainButton text="Watches" tag="a" href="/catalog" onClick={close} />
+          <MainButton text="Watches" tag="a" href="/catalog" />
         </div>
 
         <div className="flex gap-[25px]">
+          {/* <Link href="/">
+            <Image src={Basket} alt="Basket" />
+          </Link> */}
           <button
             className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
               e.preventDefault();
+              close(); 
               changeOpenState(true);
-              close();
-            }}>
+            }}
+          >
             {products.length > 0 && (
               <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-[red] text-white -right-3.5 -top-[3.2px]">
                 {products.length}
@@ -114,17 +102,17 @@ const Header = () => {
               text="Log in"
               tag="a"
               href="/auth"
-              onClick={close}
               background="transparent"
               className="!px-[0px] !py-[6px] text-onyx font-semibold hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105"
             />
           ) : (
-            <Link
+            <MainButton
+              tag="a"
+              icon="profile"
+              background="transparent"
               href="/account"
-              className="block px-4 py-2 transition-transform duration-300 hover:scale-125"
-            >
-              <Image src={Profile} alt="profile" />
-            </Link>
+              className="!px-[4px] !py-[2px] block transition-transform duration-300 hover:scale-125"
+            />
           )}
         </div>
       </div>
@@ -141,8 +129,7 @@ const Header = () => {
 
   return (
     <header
-      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out
-      ${isScrolled ? "sticky top-0 shadow-lg" : ""}`}
+      className={`px-[20px] lg:px-[60px] relative z-30 bg-white transition-transform transition-opacity duration-300 ease-in-out`}
     >
       <div className="flex justify-between items-center py-[20px] gap-[30px]">
         <HeaderLogo />
@@ -178,14 +165,16 @@ const Header = () => {
             header: {
               backgroundColor: "#ffffff",
             },
-          }}>
+          }}
+        >
           <div className="container flex justify-between items-center py-[20px] mb-[40px]">
             <HeaderLogo />
 
             <ActionIcon
               variant="transparent"
               onClick={close}
-              className="w-[24px] h-[24px]">
+              className="w-[24px] h-[24px]"
+            >
               <Image src={Close} alt="Close" />
             </ActionIcon>
           </div>

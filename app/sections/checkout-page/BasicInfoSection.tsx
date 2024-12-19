@@ -1,26 +1,38 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
+import { getCities } from "@/services/ShippingService";
+import { City } from "@/config/types";
 
 const BasicInfoSection: FC<{
   isOpen: boolean;
   toggleOpen: () => void;
   onContinue: (isValid: boolean) => void;
   setBasicInfo: any;
-}> = ({ onContinue, setBasicInfo, toggleOpen, isOpen }) => {
+  setSettlementRef: any;
+  setCityRef: any;
+}> = ({
+  onContinue,
+  setBasicInfo,
+  toggleOpen,
+  isOpen,
+  setSettlementRef,
+  setCityRef,
+}) => {
+  const [cities, setCities] = useState<City[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isStart, setIsStart] = useState(false);
+
   const form = useForm({
     initialValues: {
       email: "",
       firstName: "",
       lastName: "",
       phone: "",
-      address1: "",
-      address2: "",
       city: "",
-      zipCode: "",
     },
     validate: {
       email: isEmail("Invalid email"),
@@ -28,12 +40,54 @@ const BasicInfoSection: FC<{
       lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
       phone: (value) =>
         /^\d{10}$/.test(value) ? null : "Invalid phone number",
-      address1: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      address2: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      city: hasLength({ min: 2 }, "Invalid"),
-      zipCode: (value) => (/^\d{5}$/.test(value) ? null : "Invalid"),
+      city: (value) => (value.trim() ? null : "City is required"),
     },
   });
+
+  useEffect(() => {
+    const localValues = localStorage.getItem("basicInfo");
+    if (localValues) {
+      const result = JSON.parse(localValues);
+      form.setValues(result);
+      setIsStart(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      form.values.city != "" ||
+      form.values.email != "" ||
+      form.values.firstName != "" ||
+      form.values.lastName != "" ||
+      form.values.phone != ""
+    ) {
+      localStorage.setItem("basicInfo", JSON.stringify(form.values));
+    }
+  }, [form.values]);
+
+  const handleSelect = async (value: string) => {
+    if (!value.trim()) {
+      setCities([]);
+      setError(null);
+      return;
+    }
+
+    const selectedCity = cities.find(({ Ref }) => Ref === value);
+    if (selectedCity) {
+      form.setFieldValue("city", selectedCity.Present);
+      setSettlementRef(selectedCity.Ref);
+      setCityRef(selectedCity.DeliveryCity);
+      setCities([]);
+    } else {
+      const city = await getCities(value);
+      if (city.length === 0) {
+        setError("Населений пункт не знайдено!");
+      } else {
+        setError(null);
+        setCities(city);
+      }
+    }
+  };
 
   const handleContinue = () => {
     const errors = form.validate();
@@ -46,12 +100,36 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    <section>
+    <>
       <FormComponent
-        title="Basic Info"
+        title="Інформація"
         className="items-center"
         isOpen={isOpen}
-        toggleOpen={toggleOpen}>
+        toggleOpen={toggleOpen}
+        closeText={form.values.firstName + " " + form.values.lastName}
+      >
+        {isStart && (
+          <>
+            <Input
+              className="mini:w-[80%] mb-[10px]"
+              inputType="select"
+              bordered
+              placeholder="Оберіть населений пункт"
+              options={cities.map((city) => ({
+                value: city.Ref,
+                label: city.Present,
+              }))}
+              {...form.getInputProps("city")}
+              onSelect={handleSelect}
+              scrollable
+            />
+            {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
+          </>
+        )}
+        <p className="mini:w-[80%] md:w-[85%] lg:w-[91%] mx-[25px] font-semibold text-silver">
+          Дані отримувача
+        </p>
+
         <Input
           inputType="input"
           placeholder="Email"
@@ -66,7 +144,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Fist Name"
+          placeholder="Ім'я"
           required={true}
           bordered={true}
           {...form.getInputProps("firstName")}
@@ -77,7 +155,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Last Name"
+          placeholder="Прізвище"
           required={true}
           bordered={true}
           {...form.getInputProps("lastName")}
@@ -88,7 +166,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Phone Number"
+          placeholder="Номер телефону"
           required={true}
           bordered={true}
           {...form.getInputProps("phone")}
@@ -97,60 +175,14 @@ const BasicInfoSection: FC<{
           className="mini:w-[80%]"
         />
 
-        <Input
-          inputType="input"
-          placeholder="Address 1"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("address1")}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%]"
-        />
-
-        <Input
-          inputType="input"
-          placeholder="Address 2"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("address2")}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%]"
-        />
-
-        <div className="flex gap-[10px] items-center mini:w-[80%]">
-          <Input
-            inputType="input"
-            placeholder="City"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("city")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[60%]"
-          />
-
-          <Input
-            inputType="input"
-            placeholder="Zip Code"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("zipCode")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[40%]"
-          />
-        </div>
-
         <Button
-          text="Continue"
+          text="Продовжити"
           className="mini:w-[80%] w-[100%]"
           type="button"
           onClick={handleContinue}
         />
       </FormComponent>
-    </section>
+    </>
   );
 };
 

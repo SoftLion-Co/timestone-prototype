@@ -36,7 +36,7 @@ const AccountSection = () => {
     return (
       <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px] min-h-screen">
         <h1 className="text-black text-[24px] md:text-[32px] font-medium">
-          Not authorized. Please log in.
+          Ви не авторизовані. Увійдіть, щоб продовжити.
         </h1>
         <Button
           text="Log in"
@@ -62,7 +62,7 @@ const AccountSection = () => {
   return (
     <>
       <section className="bg-pearl bg-opacity-50 min-h-screen">
-        <TitleComponents text="Ваш акаунт" />
+        <TitleComponents text="Особистий кабінет" />
         <ProfileSideBarComponent
           className="container pt-[20px] xl:pt-[40px]"
           setActiveSection={setActiveSection}
