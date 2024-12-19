@@ -74,7 +74,18 @@ const PaymentSection: FC<{
           <Button
             text="Complete Payment"
             className="my-[30px] mini:w-[80%] w-[100%]"
-            onClick={handleCompletePayment}
+            onClick={() => {
+              handleCompletePayment();
+              const buttonContainer = document.getElementById(
+                "payment-button-container"
+              );
+              if (buttonContainer) {
+                buttonContainer.scrollIntoView({
+                  behavior: "smooth",
+                  block: "end", 
+                });
+              }
+            }}
           />
           <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
             By placing your order you agree to our

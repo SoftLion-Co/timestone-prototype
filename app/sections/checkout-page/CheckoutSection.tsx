@@ -19,6 +19,7 @@ const CheckoutSection = () => {
   const [paymentInfo, setPaymentInfo] = useState<string>("");
   const [settlementRef, setSettlementRef] = useState<string>("");
   const [cityRef, setCityRef] = useState<string>("");
+  
 
   const handleBasicInfoContinue = (isValid: boolean) => {
     if (isValid) {
@@ -49,7 +50,7 @@ const CheckoutSection = () => {
         <Button
           bordered
           className="flex !items-start text-[12px] py-[8px] px-[9px]"
-          text="Back"
+          text="Назад"
           href="/catalog"
           icon="back"
           background="transparent"

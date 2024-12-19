@@ -102,6 +102,7 @@ const ProductsSection = ({
         <div
           className="flex flex-col bg-darkBurgundy py-[25px] rounded-[10px] text-white text-center items-center gap-[8px]"
           onClick={handleSubmit}
+          id="payment-button-container"
         >
           <h2 className="text-[20px] md:text-[25px]">${totalAmount}</h2>
           <p className="text-[16px] md:text-[15px]">Grand Total</p>

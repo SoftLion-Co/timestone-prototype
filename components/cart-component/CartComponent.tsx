@@ -53,10 +53,19 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href={products.length > 0 ? "/checkout" : "/catalog"}
+          href={products.length > 0 ? "/checkout/#info" : "/catalog"}
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300"
           onClick={() => {
             changeOpenState(false);
+            setTimeout(() => {
+              const info = document.getElementById("info");
+              if (info) {
+                info.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+            }, 300);
           }}>
           {products.length > 0 ? " Go To Checkout" : " Go To Catalog"}
         </Link>

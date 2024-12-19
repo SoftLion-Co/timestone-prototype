@@ -54,6 +54,15 @@ const BasicInfoSection: FC<{
   }, []);
 
   useEffect(() => {
+    if (form.values.phone && !form.values.phone.startsWith("+38")) {
+      form.setFieldValue("phone", `+38${form.values.phone}`);
+    }
+    if (form.values.phone.length === 2) {
+      form.setFieldValue("phone", "");
+    }
+  }, [form.values.phone]);
+
+  useEffect(() => {
     if (
       form.values.city != "" ||
       form.values.email != "" ||
@@ -100,8 +109,10 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    <>
+    
+    <div id="info">
       <FormComponent
+      
         title="Інформація"
         className="items-center"
         isOpen={isOpen}
@@ -182,7 +193,7 @@ const BasicInfoSection: FC<{
           onClick={handleContinue}
         />
       </FormComponent>
-    </>
+    </div>
   );
 };
 
