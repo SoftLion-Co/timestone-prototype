@@ -1,7 +1,10 @@
+import ResetPasswordFormSection from "@/app/sections/authorization-page/ResetPasswordFormSection";
+
 const Page = ({ params }: { params: any }) => {
-	const activatedToken = params.resetToken;
+	const resetPasswordToken = params.resetToken;
   return (
     <>
+    <ResetPasswordFormSection resetPasswordToken={resetPasswordToken}/>
     </>
   );
 };

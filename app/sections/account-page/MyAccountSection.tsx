@@ -162,9 +162,11 @@ const MyAccountSection = () => {
     },
     validate: {
       password: (value) => {
-        if (value.length < 6) {
-          return "Password must have at least 6 characters";
-        }
+        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/[\u0400-\u04FF]/.test(value))
+          return "Cyrillic characters are not allowed";
+        if (value.length < 6) return "Minimum 6 characters required";
+        if (value.length > 20) return "Maximum 20 characters allowed";
         if (!/[a-z]/.test(value)) {
           return "Password must contain at least one lowercase letter";
         }
@@ -250,7 +252,7 @@ const MyAccountSection = () => {
         text: "Oops! A server error occurred!",
       });
     }
-
+	 
     setTimeout(() => {
       setInfoMessage(null);
     }, 5000);
@@ -323,7 +325,6 @@ const MyAccountSection = () => {
             для всіх ваших останніх дій у обліковому записі.
           </p>
         </div>
-
         <form
           className="flex flex-col  items-center gap-[46px] lg:items-end"
           onSubmit={handleSubmit}

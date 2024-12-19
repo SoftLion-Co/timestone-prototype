@@ -34,14 +34,11 @@ const config: Config = {
         snow: '#ffffff',
         charcoal: '#202020',
         whisper: '#EAECF5',
-
-        //new colors
-
-        darkBurgundy: '#680A0A',
-        darkBurgundyOpacity: '#680A0A60',
-        darkMaroon: '#420808',
-        vividRed: '#EF2A2A',
-        cream: '#F2DEBA',
+        darkBurgundy: "#680A0A",
+        darkBurgundyOpacity: "#680A0A60",
+        darkMaroon: "#420808",
+        vividRed: "#EF2A2A",
+        cream: "#F2DEBA",
       },
       keyframes: {
         pulse: {},

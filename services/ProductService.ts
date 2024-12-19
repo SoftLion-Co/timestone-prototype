@@ -11,15 +11,6 @@ export const getProducts = async (
   pagination?: boolean
 ): Promise<any> => {
   try {
-    console.log(
-      "f " + JSON.stringify(filters),
-      "o " + optionsString,
-      "l " + limit,
-      "p " + pageCursor,
-      "s " + sortKey,
-      "r " + reverse,
-      "pg " + pagination
-    );
     let attempts = 0;
     while (attempts < 3) {
       console.log(attempts);
