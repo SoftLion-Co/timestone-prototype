@@ -156,7 +156,6 @@ const CategoryAsideFilters = ({
         false
       );
     }
-    console.log(data);
     setPreviousPage(currentPage);
     setPageInfo(data.pageInfo);
     setTotalPages(data.count === 0 ? 1 : Math.ceil(data.count / limit));

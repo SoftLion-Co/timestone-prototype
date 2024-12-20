@@ -65,14 +65,11 @@ const CategorySection = ({
   });
 
   useEffect(() => {
-    console.log("k", allProducts)
     if (allProducts.length != 0) {
-      console.log("p")
       setTimeout(() => {
         setIsLoading(false);
       }, 1500);
     } else {
-      console.log("j")
       setTimeout(() => {
         setIsLoading(false);
       }, 21000);

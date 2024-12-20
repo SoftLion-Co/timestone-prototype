@@ -46,11 +46,18 @@ const BasicInfoSection: FC<{
 
   useEffect(() => {
     const localValues = localStorage.getItem("basicInfo");
-    if (localValues) {
-      const result = JSON.parse(localValues);
-      form.setValues(result);
-      setIsStart(true);
-    }
+    const result = localValues
+      ? JSON.parse(localValues)
+      : {
+          email: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          city: "",
+        };
+    form.setValues(result);
+    setIsStart(true);
+    
   }, []);
 
   useEffect(() => {
@@ -109,10 +116,8 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    
     <div id="info">
       <FormComponent
-      
         title="Інформація"
         className="items-center"
         isOpen={isOpen}

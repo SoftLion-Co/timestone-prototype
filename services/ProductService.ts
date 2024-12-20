@@ -14,7 +14,6 @@ export const getProducts = async (
 
   while (attempts < 3) {
     try {
-      console.log("h");
       const response = await axios.get(`${BASE_URL}/product`, {
         params: {
           filters,
@@ -48,7 +47,6 @@ export const getProductByHandle = async (handle: string): Promise<any> => {
   try {
     let attempts = 0;
     while (attempts < 3) {
-      console.log(attempts);
       const response = await axios.get(`${BASE_URL}/product/${handle}`);
       if (response.status === 200) {
         return response.data;
@@ -66,7 +64,6 @@ export const getFilters = async (): Promise<any> => {
 
   while (attempts < 3) {
     try {
-      console.log(`Attempt ${attempts + 1}`);
       const response = await axios.get(`${BASE_URL}/filter`);
       if (response.status === 200) {
         return response.data;

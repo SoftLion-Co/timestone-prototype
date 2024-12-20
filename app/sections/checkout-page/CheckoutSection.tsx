@@ -38,7 +38,6 @@ const CheckoutSection = () => {
   const handleCompletePayment = (isValid: boolean) => {
     if (isValid) {
       setPaymentOpen(false);
-      // console.log(paymentInfo);
     }
   };
 
