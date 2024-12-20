@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import React, { FC, useState} from "react";
 
+import Plus from "@/images/vectors/plus.svg";
+
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
   title: string;
@@ -64,7 +66,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
               animate={{ rotate: isOpen ? 45 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              <span className="text-4xl text-darkBurgundy">+</span>
+              <span className="text-4xl text-darkBurgundy !select-none">+</span>
             </motion.div>
           )}
         </div>
