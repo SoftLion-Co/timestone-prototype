@@ -46,7 +46,7 @@ const PaymentSection: FC<{
   return (
     <>
       <FormComponent
-        title="Payment"
+        title="Оплата"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
         closeText={closeText}
@@ -72,7 +72,7 @@ const PaymentSection: FC<{
 
         <div className="flex flex-col items-center gap-y-[15px]">
           <Button
-            text="Complete Payment"
+            text="Оплатити"
             className="my-[30px] mini:w-[80%] w-[100%]"
             onClick={() => {
               handleCompletePayment();
@@ -82,21 +82,22 @@ const PaymentSection: FC<{
               if (buttonContainer) {
                 buttonContainer.scrollIntoView({
                   behavior: "smooth",
-                  block: "end", 
+                  block: "end",
                 });
               }
             }}
           />
           <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
-            By placing your order you agree to our
+            Оформлюючи замовлення, Ви погоджуюєтеся з нашими
             <span> </span>
             <a href="/legal" className="underline text-darkBurgundy">
-              Terms & Conditions
+              Положеннями та Умовами
             </a>
-            and you understand that we will process your personal data on the
-            basis of our<span> </span>
+            <span> </span>
+            та надаєте згоду на обробку вашої персональної інфомації на основі
+            нашої<span> </span>
             <a href="/privacy" className="text-darkBurgundy underline">
-              Privacy Policy
+              Політики Конфіденційності
             </a>
             .
           </p>

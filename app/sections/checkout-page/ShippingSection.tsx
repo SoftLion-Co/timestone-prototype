@@ -84,7 +84,7 @@ const ShippingSection: FC<{
   const handleStreetSelect = async (value: string) => {
     if (!value.trim() || !settlementRef) {
       setStreets([]);
-      setValidationErrors(null);
+      setValidationErrors("Вулицю не вибрано!");
       return;
     }
 
@@ -263,7 +263,7 @@ const ShippingSection: FC<{
   return (
     <>
       <FormComponent
-        title="Shipping"
+        title="Доставка"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
         className="items-center"
@@ -394,7 +394,7 @@ const ShippingSection: FC<{
           <p className="text-[14px] text-darkBurgundy text-center">{error}</p>
         )}
         <Button
-          text="Continue"
+          text="Продовжити"
           className="mini:w-[80%] w-[100%]"
           type="button"
           onClick={handleContinue}

@@ -6,6 +6,7 @@ import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 import { getCities } from "@/services/ShippingService";
 import { City } from "@/config/types";
+import { getUser } from "@/services/AuthService";
 
 const BasicInfoSection: FC<{
   isOpen: boolean;
@@ -25,6 +26,7 @@ const BasicInfoSection: FC<{
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isStart, setIsStart] = useState(false);
+  const [isToken, setIsToken] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -35,18 +37,44 @@ const BasicInfoSection: FC<{
       city: "",
     },
     validate: {
-      email: isEmail("Invalid email"),
-      firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
+      email: isEmail("Некоректний емейл"),
+      firstName: hasLength({ min: 2 }, "Некоректне ім'я"),
+      lastName: hasLength({ min: 2 }, "Некоректне прізвище"),
       phone: (value) =>
-        /^\d{10}$/.test(value) ? null : "Invalid phone number",
-      city: (value) => (value.trim() ? null : "City is required"),
+        /^\+38\d{10}$/.test(value) ? null : "Некоректний номер телефону",
+      city: (value) => (value.trim() ? null : "Оберіть місто"),
     },
   });
 
   useEffect(() => {
+    const tokenAccess = localStorage.getItem("accessToken");
+    const tokenRefresh = localStorage.getItem("refreshToken");
+
+    if (tokenAccess || tokenRefresh) {
+      setIsToken(true);
+      
+      const fetchUserData = async () => {
+        try {
+          const { user } = await getUser();
+          const userAddress1 = user.address?.split("&")[0]?.trim() || "";
+          form.setValues({
+            city: userAddress1,
+            email: user.email || "",
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            phone: user.phone || "",
+          });
+        } catch (error) {
+          console.error("Failed to fetch user data", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, []);
+
+  useEffect(() => {
     const localValues = localStorage.getItem("basicInfo");
-    const result = localValues
+      const result = localValues
       ? JSON.parse(localValues)
       : {
           email: "",
@@ -55,9 +83,15 @@ const BasicInfoSection: FC<{
           phone: "",
           city: "",
         };
-    form.setValues(result);
-    setIsStart(true);
-    
+      form.setValues(result);
+
+      if (result.settlementRef) {
+        setSettlementRef(result.settlementRef);
+      }
+      if (result.cityRef) {
+        setCityRef(result.cityRef);
+      }
+      setIsStart(true);
   }, []);
 
   useEffect(() => {
@@ -94,6 +128,14 @@ const BasicInfoSection: FC<{
       setSettlementRef(selectedCity.Ref);
       setCityRef(selectedCity.DeliveryCity);
       setCities([]);
+
+      const basicInfo = {
+        ...form.values,
+        settlementRef: selectedCity.Ref,
+        cityRef: selectedCity.DeliveryCity,
+      };
+      localStorage.setItem("basicInfo", JSON.stringify(basicInfo));
+      console.log(basicInfo);
     } else {
       const city = await getCities(value);
       if (city.length === 0) {
@@ -106,6 +148,10 @@ const BasicInfoSection: FC<{
   };
 
   const handleContinue = () => {
+    if (error) {
+      onContinue(false);
+      return;
+    }
     const errors = form.validate();
     if (!errors.hasErrors) {
       onContinue(true);
@@ -137,6 +183,7 @@ const BasicInfoSection: FC<{
               }))}
               {...form.getInputProps("city")}
               onSelect={handleSelect}
+              errorType="critical"
               scrollable
             />
             {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
@@ -148,7 +195,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Email"
+          placeholder="Емейл"
           type="email"
           required={true}
           bordered={true}
