@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 import { CardProps } from "@/config/types";
+import FiltersSkeleton from "./FilterSceleton";
 import Button from "@/components/ButtonComponent";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
@@ -44,6 +45,7 @@ const CategoryAsideFilters = ({
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isFilter) {
@@ -65,7 +67,7 @@ const CategoryAsideFilters = ({
 
   useEffect(() => {
     if (isFilter) {
-    setPriceRangeFromObject(filtersData.priceRange.value);
+      setPriceRangeFromObject(filtersData.priceRange.value);
     }
   }, [filtersData]);
 
@@ -199,73 +201,80 @@ const CategoryAsideFilters = ({
 
   return (
     <>
-      {isFilter && (
-        <aside className="hidden w-[480px] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
-          <form
-            onSubmit={handleSubmitFormForPc}
-            className="pb-5 flex flex-col gap-5 font-poppins "
-          >
-            {filtersData.search.title && (
-              <CustomFilterComponent
-                title={filtersData.search.title}
-                type="search"
-                searchQuery={searchText}
-                onSearchChange={newHandleSearchText}
-                clearSearchQuery={() => setSearchText("")}
-                onApplyClick={handleSubmitFilters}
-              />
-            )}
-            {filtersData.buttons.title && (
-              <CustomFilterComponent
-                title={filtersData.buttons.title}
-                type="buttons"
-                items={filtersData.buttons.value}
-                activeButton={productType}
-                onChangeButton={changeProductType}
-              />
-            )}
-            {filtersData.priceRange.title && (
-              <CustomFilterComponent
-                title={filtersData.priceRange.title}
-                type="price"
-                limit={filtersData.priceRange.value}
-                rangeValue={priceRangeFromObject}
-                step={1}
-                onRangeChange={handlePriceChange}
-                onApplyClick={handleSubmitFilters}
-              />
-            )}
-            {filtersData.checkboxes.length > 0 &&
-              filtersData.checkboxes.map((item: any) => (
-                <CustomFilterComponent
-                  key={item.title}
-                  title={item.title}
-                  type="checkboxes"
-                  items={item.value}
-                  selectedItems={checkboxes[item.title]}
-                  onItemChange={(value: string) =>
-                    handleCheckboxChange(item.title, value)
-                  }
-                />
-              ))}
-            <div className="flex flex-row gap-[10px]">
-              <Button
-                text="Скидання"
-                className="w-[30%] text-[16px] font-medium"
-                type="submit"
-                background="white"
-                bordered
-                onClick={handleResetFilters}
-              />
-              <Button
-                text="Підтверження"
-                className="w-[70%] text-[16px] font-medium"
-                type="submit"
-              />
-            </div>
-          </form>
-        </aside>
+      {isLoading ? (
+        <FiltersSkeleton />
+      ) : (
+        <>
+          {isFilter && (
+            <aside className="hidden w-[480px] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+              <form
+                onSubmit={handleSubmitFormForPc}
+                className="pb-5 flex flex-col gap-5 font-poppins "
+              >
+                {filtersData.search.title && (
+                  <CustomFilterComponent
+                    title={filtersData.search.title}
+                    type="search"
+                    searchQuery={searchText}
+                    onSearchChange={newHandleSearchText}
+                    clearSearchQuery={() => setSearchText("")}
+                    onApplyClick={handleSubmitFilters}
+                  />
+                )}
+                {filtersData.buttons.title && (
+                  <CustomFilterComponent
+                    title={filtersData.buttons.title}
+                    type="buttons"
+                    items={filtersData.buttons.value}
+                    activeButton={productType}
+                    onChangeButton={changeProductType}
+                  />
+                )}
+                {filtersData.priceRange.title && (
+                  <CustomFilterComponent
+                    title={filtersData.priceRange.title}
+                    type="price"
+                    limit={filtersData.priceRange.value}
+                    rangeValue={priceRangeFromObject}
+                    step={1}
+                    onRangeChange={handlePriceChange}
+                    onApplyClick={handleSubmitFilters}
+                  />
+                )}
+                {filtersData.checkboxes.length > 0 &&
+                  filtersData.checkboxes.map((item: any) => (
+                    <CustomFilterComponent
+                      key={item.title}
+                      title={item.title}
+                      type="checkboxes"
+                      items={item.value}
+                      selectedItems={checkboxes[item.title]}
+                      onItemChange={(value: string) =>
+                        handleCheckboxChange(item.title, value)
+                      }
+                    />
+                  ))}
+                <div className="flex flex-row gap-[10px]">
+                  <Button
+                    text="Скидання"
+                    className="w-[30%] text-[16px] font-medium"
+                    type="submit"
+                    background="white"
+                    bordered
+                    onClick={handleResetFilters}
+                  />
+                  <Button
+                    text="Підтверження"
+                    className="w-[70%] text-[16px] font-medium"
+                    type="submit"
+                  />
+                </div>
+              </form>
+            </aside>
+          )}
+        </>
       )}
+
       {isFilter && (
         <div className="z-20 top-0 xl:hidden bg-pearl">
           <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
