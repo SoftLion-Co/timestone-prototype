@@ -154,31 +154,31 @@ const RegistrationFormSection = () => {
   };
 
   useEffect(() => {
-    useEffect(() => {
-      const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
-      const savedTime = localStorage.getItem("inputRegistrationTime");
+    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+    const savedTime = localStorage.getItem("inputRegistrationTime");
 
-      if (savedAttempts && savedTime) {
-        const parsedAttempts = Number(savedAttempts);
-        const lastAttemptTime = Number(savedTime);
-        const currentTime = new Date().getTime();
-        const timeElapsed = currentTime - lastAttemptTime;
+    if (savedAttempts && savedTime) {
+      const parsedAttempts = Number(savedAttempts);
+      const lastAttemptTime = Number(savedTime);
+      const currentTime = new Date().getTime();
+      const timeElapsed = currentTime - lastAttemptTime;
 
-        if (timeElapsed > 96 * 60 * 60 * 1000) {
-          setAttempts(0);
-          localStorage.setItem("inputRegistrationAttempts", "0");
-        } else {
-          setAttempts(parsedAttempts);
-        }
-
-        if (parsedAttempts >= MAX_ATTEMPTS) {
-          setIsDisabled(true);
-        }
-      } else {
+      if (timeElapsed > 96 * 60 * 60 * 1000) {
         setAttempts(0);
+        localStorage.setItem("inputRegistrationAttempts", "0");
+      } else {
+        setAttempts(parsedAttempts);
       }
-    }, []);
 
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    } else {
+      setAttempts(0);
+    }
+  }, []);
+
+  useEffect(() => {
     if (
       registrationForm.values.phone &&
       !registrationForm.values.phone.startsWith("+38")

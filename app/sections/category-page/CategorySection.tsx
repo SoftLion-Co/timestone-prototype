@@ -65,10 +65,19 @@ const CategorySection = ({
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  }, []);
+    console.log("k", allProducts)
+    if (allProducts.length != 0) {
+      console.log("p")
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    } else {
+      console.log("j")
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 21000);
+    }
+  }, [allProducts]);
 
   useEffect(() => {
     if (currentPage === 1) {
@@ -109,12 +118,12 @@ const CategorySection = ({
             { value: "BEST_SELLING", label: "Best Sellers" },
           ]}
           onSelect={handleChangeSorting}
-			 sort={sort}
+          sort={sort}
         />
       </div>
 
       {isLoading ? (
-        <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6  ">
+        <div className="mt-[32px] grid grid-cols-1 justify-center place-items-center mx-[30px] md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ">
           {Array.from({ length: limit }, (_, index) => (
             <ProductSceleton key={index} />
           ))}

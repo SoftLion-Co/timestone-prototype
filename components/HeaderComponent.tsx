@@ -16,7 +16,6 @@ import Logo from "@/images/logo.svg";
 import Close from "@/images/vectors/close.svg";
 import Burger from "@/images/vectors/burger.svg";
 import Basket from "@/images/vectors/basket.svg";
-import Profile from "@/images/vectors/profile.svg";
 
 const navData = [
   { link: "/#about-us", text: "About Us" },
@@ -59,7 +58,7 @@ const Header = () => {
   const HeaderNavigation: FC<{ className?: string }> = ({ className }) => {
     return (
       <div
-        className={`${className} flex flex-col gap-[25px] items-center xl:flex-row `}
+        className={`${className} flex flex-col gap-[25px] items-center justify-center xl:flex-row `}
       >
         <div className="flex flex-col xl:flex-row gap-[40px] items-center">
           <nav className="flex flex-col text-silver text-center xl:flex-row ">
@@ -70,7 +69,7 @@ const Header = () => {
                 key={index}
                 text={item.text}
                 href={item.link}
-                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105 pr-0"
+                className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105 xl:pr-0"
               />
             ))}
           </nav>
@@ -79,9 +78,6 @@ const Header = () => {
         </div>
 
         <div className="flex gap-[25px]">
-          {/* <Link href="/">
-            <Image src={Basket} alt="Basket" />
-          </Link> */}
           <button
             className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
