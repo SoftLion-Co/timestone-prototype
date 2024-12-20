@@ -25,7 +25,6 @@ export const sendEmailToUs = async (
   text: string
 ): Promise<any> => {
   try {
-    console.log(fullName, email, text);
     const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
       fullName,
       email,
@@ -35,7 +34,6 @@ export const sendEmailToUs = async (
     return response.status;
   } catch (error) {
     console.error("Error sending email to us:", error);
-    // throw error;
   }
 };
 

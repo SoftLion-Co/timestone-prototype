@@ -272,7 +272,6 @@ const MyAccountSection = () => {
     const errors = formWithPass.validate();
     setLoading(true);
     const response = await updatePassword(values2.password);
-    console.log(response);
     if (Object.keys(errors.errors).length > 0) {
       setLoading(false);
       return;

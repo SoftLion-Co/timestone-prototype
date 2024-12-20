@@ -25,8 +25,7 @@ const ProductsSection = ({
 
   const handleSubmit = async () => {
     if (paymentInfo === "" || products.length == 0) {
-      console.log("Error");
-      throw new Error("oops!");
+      console.error("Error");
     }
     if (paymentInfo === "Post") {
       const lineItems = products.map((product) => ({
