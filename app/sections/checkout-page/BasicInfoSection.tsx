@@ -26,7 +26,6 @@ const BasicInfoSection: FC<{
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isStart, setIsStart] = useState(false);
-  const [isToken, setIsToken] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -35,6 +34,8 @@ const BasicInfoSection: FC<{
       lastName: "",
       phone: "",
       city: "",
+      cityRef: "",
+      settlementRef: "",
     },
     validate: {
       email: isEmail("Некоректний емейл"),
@@ -48,17 +49,32 @@ const BasicInfoSection: FC<{
 
   useEffect(() => {
     const tokenAccess = localStorage.getItem("accessToken");
-    const tokenRefresh = localStorage.getItem("refreshToken");
+    const localValues = localStorage.getItem("basicInfo");
+    const result = localValues
+      ? JSON.parse(localValues)
+      : {
+          email: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          city: "",
+          cityRef: "",
+          settlementRef: "",
+        };
+    form.setValues(result);
 
-    if (tokenAccess || tokenRefresh) {
-      setIsToken(true);
-      
+    if (result.settlementRef) {
+      setSettlementRef(result.settlementRef);
+    }
+    if (result.cityRef) {
+      setCityRef(result.cityRef);
+    }
+
+    if (tokenAccess && tokenAccess != "") {
       const fetchUserData = async () => {
         try {
           const { user } = await getUser();
-          const userAddress1 = user.address?.split("&")[0]?.trim() || "";
           form.setValues({
-            city: userAddress1,
             email: user.email || "",
             firstName: user.firstName || "",
             lastName: user.lastName || "",
@@ -70,28 +86,7 @@ const BasicInfoSection: FC<{
       };
       fetchUserData();
     }
-  }, []);
-
-  useEffect(() => {
-    const localValues = localStorage.getItem("basicInfo");
-      const result = localValues
-      ? JSON.parse(localValues)
-      : {
-          email: "",
-          firstName: "",
-          lastName: "",
-          phone: "",
-          city: "",
-        };
-      form.setValues(result);
-
-      if (result.settlementRef) {
-        setSettlementRef(result.settlementRef);
-      }
-      if (result.cityRef) {
-        setCityRef(result.cityRef);
-      }
-      setIsStart(true);
+    setIsStart(true);
   }, []);
 
   useEffect(() => {
@@ -124,18 +119,13 @@ const BasicInfoSection: FC<{
 
     const selectedCity = cities.find(({ Ref }) => Ref === value);
     if (selectedCity) {
-      form.setFieldValue("city", selectedCity.Present);
       setSettlementRef(selectedCity.Ref);
       setCityRef(selectedCity.DeliveryCity);
+      form.setFieldValue("city", selectedCity.Present);
+      form.setFieldValue("settlementRef", selectedCity.Ref);
+      form.setFieldValue("cityRef", selectedCity.DeliveryCity);
       setCities([]);
 
-      const basicInfo = {
-        ...form.values,
-        settlementRef: selectedCity.Ref,
-        cityRef: selectedCity.DeliveryCity,
-      };
-      localStorage.setItem("basicInfo", JSON.stringify(basicInfo));
-      console.log(basicInfo);
     } else {
       const city = await getCities(value);
       if (city.length === 0) {

@@ -57,8 +57,8 @@ const CheckoutSection = () => {
         />
       </div>
 
-      <div className="container flex flex-col gap-[30px] py-[50px] lg:flex-row lg:flex-row-reverse lg:gap-[50px]">
-        <div className="lg:flex lg:flex-1 lg:justify-end">
+      <div className="container flex flex-col gap-[30px] py-[50px] lg:flex-row lg:flex-row-reverse lg:gap-[80px] xl:gap-[100px] justify-between">
+        <div className="lg:flex">
           <ProductsSection
             basicInfo={basicInfo}
             shippingValue={shippingValue}
