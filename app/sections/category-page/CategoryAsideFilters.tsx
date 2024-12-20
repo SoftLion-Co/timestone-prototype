@@ -200,7 +200,7 @@ const CategoryAsideFilters = ({
   return (
     <>
       {isFilter && (
-        <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+        <aside className="hidden w-[480px] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
           <form
             onSubmit={handleSubmitFormForPc}
             className="pb-5 flex flex-col gap-5 font-poppins "
