@@ -44,7 +44,7 @@ const CartComponent = () => {
 
       <div className="py-6 px-5 bg-pearl flex flex-col gap-[16px] mt-auto">
         <ul className="flex flex-col text-silver gap-2">
-          <li className="border-b border-[##ECEDF1] flex items-center justify-between">
+          <li className="border-b border-[#ECEDF1] flex items-center justify-between">
             <p className="text-[12px]">Grand Total</p>
             <span className="text-[20px] text-black font-normal">
               ${totalAmount}

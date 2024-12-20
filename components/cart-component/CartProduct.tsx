@@ -51,7 +51,7 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
         alt={`${card.title} - photo`}
         width={88}
         height={103}
-        className="object-fit rounded-md w-[88px] h-[103px]"
+        className="object-cover rounded-md w-[88px] h-[103px]"
       />
 
       <div className="flex-1 flex flex-col">
@@ -70,22 +70,26 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
 
         <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
           <button
+            disabled={card.quantity <= 1}
             onClick={(e) => onHandleClickRemoveQuantity(e, card.id)}
-            className={`w-8 h-8 rounded-sm border-r-2 ${
-              card.quantity > 1 ? "hover:bg-white bg-gray-200" : "bg-white"
-            }`}>
+            className={`w-8 h-8 rounded-sm border-r-2 
+              ${
+                card.quantity > 1 ? "hover:bg-darkBurgundy hover:text-snow bg-snow" : "bg-gray-200 bg-opacity-80 cursor-not-allowed text-[gray]"
+              }`}
+          >
             -
           </button>
           <span className="w-8 h-8 rounded-sm  flex items-center justify-center">
             {card.quantity}
           </span>
           <button
+          disabled={card.quantity >= card.maxQuantity}
             onClick={(e) => onHandleClickAddQuantity(e, card.id)}
             className={`w-8 h-8 rounded-sm border-l-2  ${
               card.quantity < card.maxQuantity
-                ? "hover:bg-white bg-gray-200"
-                : "bg-white"
-            }`}>
+                ? "hover:bg-darkBurgundy hover:text-snow bg-snow" : "bg-gray-200 bg-opacity-80 cursor-not-allowed text-[gray]"
+            }`}
+          >
             +
           </button>
         </div>
