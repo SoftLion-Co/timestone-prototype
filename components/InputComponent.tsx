@@ -121,59 +121,62 @@ const InputComponent: FC<InputProps> = ({
         : options;
 
       return (
-        <div
-          className={`${className} relative w-full mini:w-[320px]`}
-          ref={selectRef}
-        >
-          <input
-            className={`${borderClass} py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
-            type={type}
-            placeholder={placeholder}
-            value={
-              selected
-                ? options?.find((option) => option.value === selected)?.label ||
-                  inputValue ||
-                  ""
-                : inputValue || ""
-            }
-            name={name}
-            required={required}
-            disabled={disabled}
-            onChange={handleInputChange}
-            onFocus={() => setIsOpen(true)}
-            maxLength={maxLength}
-          />
-          <div className="absolute right-[25px] top-[50%] transform -translate-y-[50%] cursor-pointer">
-            <Image
-              src={Arrow}
-              alt="Arrow"
-              width={14}
-              className={`transition-transform ${
-                isOpen ? "rotate-180" : "rotate-0"
-              }`}
+        <div className={`${className} flex flex-col w-full mini:w-[320px]`}>
+          <div
+            className={` relative`}
+            ref={selectRef}
+          >
+            <input
+              className={`${borderClass} py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
+              type={type}
+              placeholder={placeholder}
+              value={
+                selected
+                  ? options?.find((option) => option.value === selected)
+                      ?.label ||
+                    inputValue ||
+                    ""
+                  : inputValue || ""
+              }
+              name={name}
+              required={required}
+              disabled={disabled}
+              onChange={handleInputChange}
+              onFocus={() => setIsOpen(true)}
+              maxLength={maxLength}
             />
+            <div className="absolute right-[25px] top-[50%] transform -translate-y-[50%] cursor-pointer">
+              <Image
+                src={Arrow}
+                alt="Arrow"
+                width={14}
+                className={`transition-transform ${
+                  isOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </div>
+            {isOpen && options.length > 0 && (
+              <motion.ul
+                className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white ${
+                  scrollable ? "max-h-[150px] overflow-y-auto z-[10]" : ""
+                }`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                {filteredOptions.map((option) => (
+                  <li
+                    key={option.value}
+                    className="p-2 hover:bg-gray-200 cursor-pointer text-gray-700 rounded-lg"
+                    onClick={() => handleSelect(option.value)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </motion.ul>
+            )}
           </div>
-          {isOpen && options.length > 0 && (
-            <motion.ul
-              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white ${
-                scrollable ? "max-h-[150px] overflow-y-auto z-[10]" : ""
-              }`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              {filteredOptions.map((option) => (
-                <li
-                  key={option.value}
-                  className="p-2 hover:bg-gray-200 cursor-pointer text-gray-700 rounded-lg"
-                  onClick={() => handleSelect(option.value)}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </motion.ul>
-          )}
           {error && (
             <p
               className={`text-[14px] ${
