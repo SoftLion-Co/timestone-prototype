@@ -24,7 +24,7 @@ const ProductsSection = ({
   const { products, totalAmount } = useCart();
 
   const handleSubmit = async () => {
-    if (paymentInfo === "" || products.length == 0) {
+    if (paymentInfo === "" || products.length === 0) {
       console.error("Error");
     }
     if (paymentInfo === "Post") {
@@ -82,7 +82,7 @@ const ProductsSection = ({
 
   return (
     <>
-      <div className="flex flex-col mini:mx-auto lg:mx-0 mini:w-[420px] md:w-[500px] lg:w-[350px] xl:w-[450px] sticky top-[15px] ">
+      <div className="flex flex-col sticky top-[15px] mini:mx-auto mini:w-[420px] md:w-[500px] lg:mx-0 lg:w-[350px] xl:w-[450px]">
         <motion.div
           className="bordered-[10px] shadow-lg rounded-lg px-[20px]"
           initial={{ opacity: 0, height: 0 }}
@@ -90,15 +90,15 @@ const ProductsSection = ({
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ul className="flex flex-col gap-3 mb-[30px]">
+          <ul className="flex flex-col gap-[12px] mb-[30px]">
             {products.map((product) => (
               <CartProduct key={product.id} card={product} />
             ))}
-            {products.length == 0 && (
+            {products.length === 0 && (
               <div className="flex my-[10px]">
                 <Image src={Shipping} alt={Shipping} />
                 <div className="flex flex-col justify-center ml-[20px]">
-                  <p className="text-[13px] md:text-[15px] text-silver">
+                  <p className="text-[13px] text-silver md:text-[15px]">
                     У вас немає товарів у кошику
                   </p>
                 </div>

@@ -27,7 +27,7 @@ const PaymentSection: FC<{
 
   const handleCompletePayment = () => {
     if (!paymentInfo) {
-      setError("Please select a payment method");
+      setError("Оберіть спосіб оплати!");
       completePayment(false);
     } else {
       setPaymentInfo(paymentInfo);
@@ -37,9 +37,9 @@ const PaymentSection: FC<{
   };
 
   const closeText =
-    paymentInfo == "LiqPay"
+    paymentInfo === "LiqPay"
       ? "LiqPay - оплата на картку"
-      : paymentInfo == "Post"
+      : paymentInfo === "Post"
       ? "Накладний платіж"
       : "";
 
@@ -73,7 +73,7 @@ const PaymentSection: FC<{
         <div className="flex flex-col items-center gap-y-[15px]">
           <Button
             text="Оплатити"
-            className="my-[30px] mini:w-[80%] w-[100%]"
+            className="my-[30px] w-[100%] mini:w-[80%]"
             onClick={() => {
               handleCompletePayment();
               const buttonContainer = document.getElementById(
@@ -87,7 +87,7 @@ const PaymentSection: FC<{
               }
             }}
           />
-          <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
+          <p className="text-[12px] text-silver text-center w-[100%] mini:w-[80%]">
             Оформлюючи замовлення, Ви погоджуюєтеся з нашими
             <span> </span>
             <a href="/legal" className="underline text-darkBurgundy">

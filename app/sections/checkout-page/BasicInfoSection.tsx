@@ -110,7 +110,7 @@ const BasicInfoSection: FC<{
     }
   }, [form.values]);
 
-  const handleSelect = async (value: string) => {
+  const handleCitySelect = async (value: string) => {
     if (!value.trim()) {
       setCities([]);
       setError(null);
@@ -172,14 +172,14 @@ const BasicInfoSection: FC<{
                 label: city.Present,
               }))}
               {...form.getInputProps("city")}
-              onSelect={handleSelect}
+              onSelect={handleCitySelect}
               errorType="critical"
               scrollable
             />
             {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
           </>
         )}
-        <p className="mini:w-[80%] md:w-[85%] lg:w-[91%] mx-[25px] font-semibold text-silver">
+        <p className="mx-[25px] font-semibold text-silver mini:w-[80%] md:w-[85%] lg:w-[91%]">
           Дані отримувача
         </p>
 
@@ -230,7 +230,7 @@ const BasicInfoSection: FC<{
 
         <Button
           text="Продовжити"
-          className="mini:w-[80%] w-[100%]"
+          className="w-[100%] mini:w-[80%]"
           type="button"
           onClick={handleContinue}
         />
