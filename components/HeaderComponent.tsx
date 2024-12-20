@@ -69,6 +69,9 @@ const Header = () => {
                 key={index}
                 text={item.text}
                 href={item.link}
+                onClick={() => {
+                  close();
+                }}
                 className="hover:text-onyx hover:font-bold transition-all duration-300 transform hover:scale-105 xl:pr-0"
               />
             ))}
@@ -82,7 +85,7 @@ const Header = () => {
             className="relative transition-transform duration-300 hover:scale-125"
             onClick={(e) => {
               e.preventDefault();
-              close(); 
+              close();
               changeOpenState(true);
             }}
           >
