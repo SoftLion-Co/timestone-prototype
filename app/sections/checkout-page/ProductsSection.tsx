@@ -1,12 +1,14 @@
 "use client";
 import React from "react";
-import CartProduct from "@/components/cart-component/CartProduct";
-import { useCart } from "@/hooks/useCart";
-import { motion } from "framer-motion";
-import { CreateOrder } from "@/services/OrderService";
 import Image from "next/image";
+import { motion } from "framer-motion";
+
+import { useCart } from "@/hooks/useCart";
+import { CreateOrder } from "@/services/OrderService";
+import CartProduct from "@/components/cart-component/CartProduct";
+
 import Shipping from "@/images/checkout-section/shipping.svg";
-import { error } from "console";
+import { CreatePayment } from "@/services/PaymentService";
 
 const ProductsSection = ({
   basicInfo,
@@ -22,7 +24,7 @@ const ProductsSection = ({
   const { products, totalAmount } = useCart();
 
   const handleSubmit = async () => {
-    if (paymentInfo === "") {
+    if (paymentInfo === "" || products.length == 0) {
       console.log("Error");
       throw new Error("oops!");
     }
@@ -43,7 +45,7 @@ const ProductsSection = ({
         currency: "UAH",
         customerId: "",
         email: basicInfo.email,
-        phone: "+38" + basicInfo.phone,
+        phone: basicInfo.phone,
         shippingAddress: {
           firstName: basicInfo.firstName,
           lastName: basicInfo.lastName,
@@ -67,8 +69,15 @@ const ProductsSection = ({
         sendFulfillmentReceipt: "true",
         inventoryBehaviour: "BYPASS",
       });
-    } else {
-      //! LiqPay
+
+    } else if (paymentInfo === "LiqPay") {
+		// const result = await CreatePayment(products,totalAmount);
+		// if (result.paymentUrl) {
+		// 	window.location.href = result.paymentUrl;
+		// 	console.log("yes", result)
+		//  } else {
+		// 	console.error("Error creating payment session", result);
+		//  }
     }
   };
 
@@ -104,8 +113,8 @@ const ProductsSection = ({
           onClick={handleSubmit}
           id="payment-button-container"
         >
-          <h2 className="text-[20px] md:text-[25px]">${totalAmount}</h2>
-          <p className="text-[16px] md:text-[15px]">Grand Total</p>
+          <h2 className="text-[20px] md:text-[25px]">{totalAmount}₴</h2>
+          <p className="text-[16px] md:text-[15px]">Сума</p>
         </div>
       </div>
     </>
