@@ -35,16 +35,30 @@ const NewsSection = () => {
     },
   });
 
-  // useEffect(() => {
-  //   const savedAttempts = localStorage.getItem("inputAttempts");
-  //   if (savedAttempts) {
-  //     const parsedAttempts = Number(savedAttempts);
-  //     setAttempts(parsedAttempts);
-  //     if (parsedAttempts >= MAX_ATTEMPTS) {
-  //       setIsDisabled(true);
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("inputAttempts");
+    const savedTime = localStorage.getItem("inputAttemptsTime");
+
+    if (savedAttempts && savedTime) {
+      const parsedAttempts = Number(savedAttempts);
+      const lastAttemptTime = Number(savedTime);
+      const currentTime = new Date().getTime();
+      const timeElapsed = currentTime - lastAttemptTime;
+
+      if (timeElapsed >  96 * 60 * 60 * 1000) {
+        setAttempts(0);
+        localStorage.setItem("inputAttempts", "0");
+      } else {
+        setAttempts(parsedAttempts);
+      }
+
+      if (parsedAttempts >= MAX_ATTEMPTS) {
+        setIsDisabled(true);
+      }
+    } else {
+      setAttempts(0);
+    }
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,6 +76,10 @@ const NewsSection = () => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       localStorage.setItem("inputAttempts", newAttempts.toString());
+      localStorage.setItem(
+        "inputAttemptsTime",
+        new Date().getTime().toString()
+      );
       if (newAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
       }

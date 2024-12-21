@@ -94,6 +94,7 @@ export const updateRefreshToken = async (): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
     const res = await axios.post(`${BASE_URL}/auth/refresh`, {refreshToken});
+	 
     return res.data;
   } catch (error) {
     console.error("Error refreshing token:", error);

@@ -8,37 +8,39 @@ import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState, useEffect, useRef } from "react";
 
+import { City } from "@/config/types";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
+import { getCities } from "@/services/ShippingService";
 import LoaderComponent from "@/components/LoaderComponent";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
 //! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
-  const cities = [
-    { value: "kyiv", label: "Київ" },
-    { value: "lviv", label: "Львів" },
-    { value: "kharkiv", label: "Харків" },
-    { value: "odesa", label: "Одеса" },
-    { value: "dnipro", label: "Дніпро" },
-    { value: "zaporizhzhia", label: "Запоріжжя" },
-    { value: "vinnytsia", label: "Вінниця" },
-    { value: "chernihiv", label: "Чернігів" },
-    { value: "sumy", label: "Суми" },
-    { value: "poltava", label: "Полтава" },
-    { value: "chernivtsi", label: "Чернівці" },
-    { value: "ivano-frankivsk", label: "Івано-Франківськ" },
-    { value: "uzhhorod", label: "Ужгород" },
-    { value: "ternopil", label: "Тернопіль" },
-    { value: "khmelnytskyi", label: "Хмельницький" },
-    { value: "mykolaiv", label: "Миколаїв" },
-    { value: "rivne", label: "Рівне" },
-    { value: "zhytomyr", label: "Житомир" },
-    { value: "cherkasy", label: "Черкаси" },
-    { value: "kropyvnytskyi", label: "Кропивницький" },
-    { value: "lutsk", label: "Луцьк" },
-  ];
+  // const cities = [
+  //   { value: "kyiv", label: "Київ" },
+  //   { value: "lviv", label: "Львів" },
+  //   { value: "kharkiv", label: "Харків" },
+  //   { value: "odesa", label: "Одеса" },
+  //   { value: "dnipro", label: "Дніпро" },
+  //   { value: "zaporizhzhia", label: "Запоріжжя" },
+  //   { value: "vinnytsia", label: "Вінниця" },
+  //   { value: "chernihiv", label: "Чернігів" },
+  //   { value: "sumy", label: "Суми" },
+  //   { value: "poltava", label: "Полтава" },
+  //   { value: "chernivtsi", label: "Чернівці" },
+  //   { value: "ivano-frankivsk", label: "Івано-Франківськ" },
+  //   { value: "uzhhorod", label: "Ужгород" },
+  //   { value: "ternopil", label: "Тернопіль" },
+  //   { value: "khmelnytskyi", label: "Хмельницький" },
+  //   { value: "mykolaiv", label: "Миколаїв" },
+  //   { value: "rivne", label: "Рівне" },
+  //   { value: "zhytomyr", label: "Житомир" },
+  //   { value: "cherkasy", label: "Черкаси" },
+  //   { value: "kropyvnytskyi", label: "Кропивницький" },
+  //   { value: "lutsk", label: "Луцьк" },
+  // ];
 
   const months = [
     { value: "january", label: "Січень" },
@@ -85,50 +87,14 @@ const MyAccountSection = () => {
   const [subscribe, setSubscribe] = useState(false);
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
-  const [address1, setAddress1] = useState("");
   const [visible, { toggle }] = useDisclosure(false);
   const dayOptions = getDaysInMonth(month);
+  const [isStart, setIsStart] = useState(false);
+  const [cities, setCities] = useState<City[]>([]);
   const [infoMessage, setInfoMessage] = useState<{
     type: string;
     text: string;
   } | null>(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { user, subscribe } = await getUser();
-        setUserName(`${user.firstName} ${user.lastName}` || "");
-        const userMonth = user.dateOfBirth?.split(",")[0] || "";
-        const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
-        const userAddress1 = user.address?.split("&")[0]?.trim() || "";
-        form.setValues({
-          name: user.firstName || "",
-          fullname: user.lastName || "",
-          email: user.email || "",
-          phone: user.phone || "",
-          month: userMonth,
-          date: userDay,
-          address1: userAddress1,
-          address2: user.address?.split("&")[1]?.trim() || "",
-        });
-        if (userMonth && userDay) {
-          setMonth(userMonth);
-          setDay(userDay);
-        }
-
-        if (userAddress1) {
-          setAddress1(userAddress1);
-        }
-
-        setSubscribe(subscribe);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const form = useForm({
     initialValues: {
@@ -181,6 +147,48 @@ const MyAccountSection = () => {
         value !== values.password ? "Passwords did not match" : null,
     },
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { user, subscribe } = await getUser();
+        setUserName(`${user.firstName} ${user.lastName}` || "");
+        const userMonth = user.dateOfBirth?.split(",")[0] || "";
+        const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
+        const userAddress1 = user.address?.split("&")[0]?.trim() || "";
+        form.setValues({
+          name: user.firstName || "",
+          fullname: user.lastName || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          month: userMonth,
+          date: userDay,
+          address1: userAddress1,
+          address2: user.address?.split("&")[1]?.trim() || "",
+        });
+        if (userMonth && userDay) {
+          setMonth(userMonth);
+          setDay(userDay);
+        }
+        setSubscribe(subscribe);
+        setLoading(false);
+        setIsStart(true);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (form.values.phone && !form.values.phone.startsWith("+38")) {
+      form.setFieldValue("phone", `+38${form.values.phone}`);
+    }
+    if (form.values.phone.length === 2) {
+      form.setFieldValue("phone", "");
+    }
+  }, [form.values.phone]);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -251,6 +259,10 @@ const MyAccountSection = () => {
         text: "Oops! A server error occurred!",
       });
     }
+
+    setTimeout(() => {
+      setInfoMessage(null);
+    }, 5000);
   };
 
   const handleSubmitPassword = async (event: any) => {
@@ -260,7 +272,6 @@ const MyAccountSection = () => {
     const errors = formWithPass.validate();
     setLoading(true);
     const response = await updatePassword(values2.password);
-    console.log(response);
     if (Object.keys(errors.errors).length > 0) {
       setLoading(false);
       return;
@@ -286,14 +297,23 @@ const MyAccountSection = () => {
     formWithPass.reset();
   };
 
-  useEffect(() => {
-    if (form.values.phone && !form.values.phone.startsWith("+38")) {
-      form.setFieldValue("phone", `+38${form.values.phone}`);
+  const handleSelect = async (value: string) => {
+    if (!value.trim()) {
+      setCities([]);
+      // setError(null);
+      return;
     }
-    if (form.values.phone.length === 2) {
-      form.setFieldValue("phone", "");
+
+    const selectedCity = cities.find(({ Ref }) => Ref === value);
+    if (selectedCity) {
+      form.setFieldValue("address1", selectedCity.Present);
+      setCities([]);
+    } else {
+      const city = (await getCities(value)) || [];
+
+      setCities(city);
     }
-  }, [form.values.phone]);
+  };
 
   return (
     <>
@@ -329,67 +349,61 @@ const MyAccountSection = () => {
               Моя інформація
             </h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Ім'я"
-                  type="text"
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  fullWidth
-                  {...form.getInputProps("name")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full lg:w-[45%]"
+                placeholder="Ім'я"
+                type="text"
+                error={true}
+                errorType="critical"
+                bordered
+                fullWidth
+                {...form.getInputProps("name")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Прізвище"
-                  type="text"
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  fullWidth
-                  {...form.getInputProps("fullname")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full  lg:w-[45%] "
+                placeholder="Прізвище"
+                type="text"
+                error={true}
+                errorType="critical"
+                bordered
+                fullWidth
+                {...form.getInputProps("fullname")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  className="w-full"
-                  placeholder="Електрона пошта"
-                  type="email"
-                  fullWidth
-                  error={true}
-                  errorType="critical"
-                  bordered
-                  {...form.getInputProps("email")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                className="w-full lg:w-[45%]"
+                placeholder="Електрона пошта"
+                type="email"
+                fullWidth
+                error={true}
+                errorType="critical"
+                bordered
+                {...form.getInputProps("email")}
+              />
 
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  placeholder="Номер телефону"
-                  type="text"
-                  className="w-full"
-                  bordered
-                  errorType="critical"
-                  fullWidth
-                  {...form.getInputProps("phone")}
-                />
-              </div>
+              <Input
+                inputType="input"
+                placeholder="Номер телефону"
+                type="text"
+                className="w-full lg:w-[45%]"
+                bordered
+                errorType="critical"
+                fullWidth
+                {...form.getInputProps("phone")}
+              />
+
               <Input
                 placeholder="Місяць"
                 inputType="select"
                 value={month}
                 scrollable={true}
-                onSelect={(value) => {setMonth(value);
-                  form.setFieldValue("month", value); 
+                onSelect={(value) => {
+                  setMonth(value);
+                  form.setFieldValue("month", value);
                 }}
                 options={months}
                 bordered={true}
@@ -403,8 +417,9 @@ const MyAccountSection = () => {
                 value={day}
                 options={dayOptions}
                 scrollable={true}
-                onSelect={(value) => {setDay(value);
-                  form.setFieldValue("date", value); 
+                onSelect={(value) => {
+                  setDay(value);
+                  form.setFieldValue("date", value);
                 }}
                 className="mini:w-full lg:w-[45%]"
               />
@@ -415,30 +430,33 @@ const MyAccountSection = () => {
             <h2 className="mb-[20px] text-[24px] text-silver">Моя адреса</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+              {isStart && (
+                <>
+                  <Input
+                    className="w-full lg:w-[45%]"
+                    inputType="select"
+                    error={true}
+                    bordered
+                    placeholder="Оберіть населений пункт"
+                    options={cities.map((city) => ({
+                      value: city.Ref,
+                      label: city.Present,
+                    }))}
+                    {...form.getInputProps("address1")}
+                    onSelect={handleSelect}
+                    scrollable
+                  />
+                </>
+              )}
               <Input
-                placeholder="Населений пункт"
-                inputType="select"
-                bordered={true}
-                value={address1}
-                options={cities}
-                scrollable={true}
-                onSelect={(value) => {setAddress1(value);
-                  form.setFieldValue("address1", value); 
-                }}
-                
-                className="mini:w-full lg:w-[45%]"
+                inputType="input"
+                name="address2"
+                placeholder="Вулиця, будинок/квартира"
+                type="text"
+                bordered
+                className="w-full lg:w-[45%]"
+                {...form.getInputProps("address2")}
               />
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="input"
-                  name="address2"
-                  placeholder="Вулиця, будинок/квартира"
-                  type="text"
-                  bordered
-                  className="w-full"
-                  {...form.getInputProps("address2")}
-                />
-              </div>
             </div>
           </div>
           <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
@@ -464,38 +482,35 @@ const MyAccountSection = () => {
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
             <h2 className="mb-[20px] text-[24px] text-silver">Новий пароль</h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="password"
-                  type="password"
-                  name="password"
-                  visible={visible}
-                  onVisibilityChange={toggle}
-                  placeholder="Ваш пароль"
-                  bordered
-                  error={true}
-                  errorType="critical"
-                  fullWidth
-                  className="w-full"
-                  {...formWithPass.getInputProps("password")}
-                />
-              </div>
-              <div className="w-full lg:w-[45%] flex flex-col">
-                <Input
-                  inputType="password"
-                  visible={visible}
-                  onVisibilityChange={toggle}
-                  type="password"
-                  name="Confirm password"
-                  placeholder="Підтвердіть пароль"
-                  bordered
-                  error={true}
-                  errorType="critical"
-                  fullWidth
-                  className="w-full"
-                  {...formWithPass.getInputProps("verify")}
-                />
-              </div>
+              <Input
+                inputType="password"
+                type="password"
+                name="password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                placeholder="Ваш пароль"
+                bordered
+                error={true}
+                errorType="critical"
+                fullWidth
+                className="w-full lg:w-[45%]"
+                {...formWithPass.getInputProps("password")}
+              />
+
+              <Input
+                inputType="password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                type="password"
+                name="Confirm password"
+                placeholder="Підтвердіть пароль"
+                bordered
+                error={true}
+                errorType="critical"
+                fullWidth
+                className="w-full lg:w-[45%]"
+                {...formWithPass.getInputProps("verify")}
+              />
             </div>
           </div>
           <Button text="Оновити" type="submit" />

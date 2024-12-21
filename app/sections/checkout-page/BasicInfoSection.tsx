@@ -1,41 +1,147 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
 import { hasLength, isEmail, useForm } from "@mantine/form";
+import { getCities } from "@/services/ShippingService";
+import { City } from "@/config/types";
+import { getUser } from "@/services/AuthService";
 
 const BasicInfoSection: FC<{
   isOpen: boolean;
   toggleOpen: () => void;
   onContinue: (isValid: boolean) => void;
   setBasicInfo: any;
-}> = ({ onContinue, setBasicInfo, toggleOpen, isOpen }) => {
+  setSettlementRef: any;
+  setCityRef: any;
+}> = ({
+  onContinue,
+  setBasicInfo,
+  toggleOpen,
+  isOpen,
+  setSettlementRef,
+  setCityRef,
+}) => {
+  const [cities, setCities] = useState<City[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isStart, setIsStart] = useState(false);
+
   const form = useForm({
     initialValues: {
       email: "",
       firstName: "",
       lastName: "",
       phone: "",
-      address1: "",
-      address2: "",
       city: "",
-      zipCode: "",
+      cityRef: "",
+      settlementRef: "",
     },
     validate: {
-      email: isEmail("Invalid email"),
-      firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
+      email: isEmail("Некоректний емейл"),
+      firstName: hasLength({ min: 2 }, "Некоректне ім'я"),
+      lastName: hasLength({ min: 2 }, "Некоректне прізвище"),
       phone: (value) =>
-        /^\d{10}$/.test(value) ? null : "Invalid phone number",
-      address1: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      address2: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      city: hasLength({ min: 2 }, "Invalid"),
-      zipCode: (value) => (/^\d{5}$/.test(value) ? null : "Invalid"),
+        /^\+38\d{10}$/.test(value) ? null : "Некоректний номер телефону",
+      city: (value) => (value.trim() ? null : "Оберіть місто"),
     },
   });
 
+  useEffect(() => {
+    const tokenAccess = localStorage.getItem("accessToken");
+    const localValues = localStorage.getItem("basicInfo");
+    const result = localValues
+      ? JSON.parse(localValues)
+      : {
+          email: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          city: "",
+          cityRef: "",
+          settlementRef: "",
+        };
+    form.setValues(result);
+
+    if (result.settlementRef) {
+      setSettlementRef(result.settlementRef);
+    }
+    if (result.cityRef) {
+      setCityRef(result.cityRef);
+    }
+
+    if (tokenAccess && tokenAccess != "") {
+      const fetchUserData = async () => {
+        try {
+          const { user } = await getUser();
+          form.setValues({
+            email: user.email || "",
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            phone: user.phone || "",
+          });
+        } catch (error) {
+          console.error("Failed to fetch user data", error);
+        }
+      };
+      fetchUserData();
+    }
+    setIsStart(true);
+  }, []);
+
+  useEffect(() => {
+    if (form.values.phone && !form.values.phone.startsWith("+38")) {
+      form.setFieldValue("phone", `+38${form.values.phone}`);
+    }
+    if (form.values.phone.length === 2) {
+      form.setFieldValue("phone", "");
+    }
+  }, [form.values.phone]);
+
+  useEffect(() => {
+    if (
+      form.values.city != "" ||
+      form.values.email != "" ||
+      form.values.firstName != "" ||
+      form.values.lastName != "" ||
+      form.values.phone != ""
+    ) {
+      localStorage.setItem("basicInfo", JSON.stringify(form.values));
+    }
+  }, [form.values]);
+
+  const handleCitySelect = async (value: string) => {
+    if (!value.trim()) {
+      setCities([]);
+      setError(null);
+      return;
+    }
+
+    const selectedCity = cities.find(({ Ref }) => Ref === value);
+    if (selectedCity) {
+      setSettlementRef(selectedCity.Ref);
+      setCityRef(selectedCity.DeliveryCity);
+      form.setFieldValue("city", selectedCity.Present);
+      form.setFieldValue("settlementRef", selectedCity.Ref);
+      form.setFieldValue("cityRef", selectedCity.DeliveryCity);
+      setCities([]);
+
+    } else {
+      const city = await getCities(value);
+      if (city.length === 0) {
+        setError("Населений пункт не знайдено!");
+      } else {
+        setError(null);
+        setCities(city);
+      }
+    }
+  };
+
   const handleContinue = () => {
+    if (error) {
+      onContinue(false);
+      return;
+    }
     const errors = form.validate();
     if (!errors.hasErrors) {
       onContinue(true);
@@ -46,15 +152,40 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    <section>
+    <div id="info">
       <FormComponent
-        title="Basic Info"
+        title="Інформація"
         className="items-center"
         isOpen={isOpen}
-        toggleOpen={toggleOpen}>
+        toggleOpen={toggleOpen}
+        closeText={form.values.firstName + " " + form.values.lastName}
+      >
+        {isStart && (
+          <>
+            <Input
+              className="mini:w-[80%] mb-[10px]"
+              inputType="select"
+              bordered
+              placeholder="Оберіть населений пункт"
+              options={cities.map((city) => ({
+                value: city.Ref,
+                label: city.Present,
+              }))}
+              {...form.getInputProps("city")}
+              onSelect={handleCitySelect}
+              errorType="critical"
+              scrollable
+            />
+            {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
+          </>
+        )}
+        <p className="mx-[25px] font-semibold text-silver mini:w-[80%] md:w-[85%] lg:w-[91%]">
+          Дані отримувача
+        </p>
+
         <Input
           inputType="input"
-          placeholder="Email"
+          placeholder="Емейл"
           type="email"
           required={true}
           bordered={true}
@@ -66,7 +197,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Fist Name"
+          placeholder="Ім'я"
           required={true}
           bordered={true}
           {...form.getInputProps("firstName")}
@@ -77,7 +208,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Last Name"
+          placeholder="Прізвище"
           required={true}
           bordered={true}
           {...form.getInputProps("lastName")}
@@ -88,7 +219,7 @@ const BasicInfoSection: FC<{
 
         <Input
           inputType="input"
-          placeholder="Phone Number"
+          placeholder="Номер телефону"
           required={true}
           bordered={true}
           {...form.getInputProps("phone")}
@@ -97,60 +228,14 @@ const BasicInfoSection: FC<{
           className="mini:w-[80%]"
         />
 
-        <Input
-          inputType="input"
-          placeholder="Address 1"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("address1")}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%]"
-        />
-
-        <Input
-          inputType="input"
-          placeholder="Address 2"
-          required={true}
-          bordered={true}
-          {...form.getInputProps("address2")}
-          errorType="critical"
-          fullWidth
-          className="mini:w-[80%]"
-        />
-
-        <div className="flex gap-[10px] items-center mini:w-[80%]">
-          <Input
-            inputType="input"
-            placeholder="City"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("city")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[60%]"
-          />
-
-          <Input
-            inputType="input"
-            placeholder="Zip Code"
-            required={true}
-            bordered={true}
-            {...form.getInputProps("zipCode")}
-            errorType="critical"
-            fullWidth
-            className="mini:w-[40%]"
-          />
-        </div>
-
         <Button
-          text="Continue"
-          className="mini:w-[80%] w-[100%]"
+          text="Продовжити"
+          className="w-[100%] mini:w-[80%]"
           type="button"
           onClick={handleContinue}
         />
       </FormComponent>
-    </section>
+    </div>
   );
 };
 

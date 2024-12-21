@@ -1,7 +1,8 @@
 import axios from "axios";
 import { updateRefreshToken } from "@/services/AuthService";
 
-export const BASE_URL = "http://localhost:4001";
+// export const BASE_URL = "http://localhost:4001";
+export const BASE_URL = "https://wellness.markets";
 export const CLIENT_URL = "https://timestone.com";
 
 export const api = axios.create({
@@ -32,12 +33,10 @@ api.interceptors.response.use(
 
       try {
         const tokens = await updateRefreshToken();
-        console.log(tokens);
 
         if (tokens?.newAccessToken) {
           localStorage.setItem("accessToken", tokens.newAccessToken);
           localStorage.setItem("refreshToken", tokens.newRefreshToken);
-        console.log( tokens.newAccessToken);
 
           originalRequest.headers[
             "Authorization"

@@ -25,7 +25,6 @@ export const sendEmailToUs = async (
   text: string
 ): Promise<any> => {
   try {
-    console.log(fullName, email, text);
     const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
       fullName,
       email,
@@ -52,6 +51,7 @@ export const sendEmailNewsletter = async (
     return response.status;
   } catch (error) {
     console.error("Error sending email newsletter:", error);
+    // throw error;
   }
 };
 
@@ -63,5 +63,6 @@ export const removeReceiver = async (email: string): Promise<any> => {
     return response.status;
   } catch (error) {
     console.error("Error removing receiver:", error);
+    // throw error;
   }
 };

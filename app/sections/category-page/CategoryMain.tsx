@@ -11,38 +11,14 @@ import { PaginationProvider } from "@/hooks/useCustomPagination";
 import { getFilters } from "@/services/ProductService";
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 2;
-
-const filter = {
-  search: {
-    title: "Search",
-  },
-  buttons: {
-    title: "Types",
-    value: ["Wathes", "Other"],
-  },
-  priceRange: {
-    title: "Price",
-    value: [0, 10],
-  },
-  checkboxes: [
-    {
-      title: "example",
-      value: ["1", "2", "3"],
-    },
-    {
-      title: "example2",
-      value: ["1", "2", "3"],
-    },
-  ],
-};
+const LIMIT = 12; //24
 
 const CategoryMain = () => {
-  const [filters, setFilters] = useState(filter);
+  const [filters, setFilters] = useState({});
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [products, setProducts] = useState<CardProps[]>([]);
   const [isStart, setIsStart] = useState<boolean>(true);
-
+  const [isFilter, setIsFilter] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("RELEVANCE");
   const [reverse, setReverse] = useState<boolean>(true);
 
@@ -50,6 +26,7 @@ const CategoryMain = () => {
     const fetchFilters = async () => {
       const data = await getFilters();
       setFilters(data);
+      setIsFilter(true);
     };
 
     fetchFilters();
@@ -73,12 +50,13 @@ const CategoryMain = () => {
           />
           <div className="xl:flex xl:px-[75px]">
             <CategoryAsideFilters
+              isFilter={isFilter}
               handleUpdateProducts={handleUpdateProducts}
               handleChangeTotalProducts={handleChangeTotalProducts}
               limit={LIMIT}
               filtersData={filters}
               sort={sort}
-				  setSort={setSort}
+              setSort={setSort}
               reverse={reverse}
               setReverse={setReverse}
               setIsStart={setIsStart}
@@ -89,8 +67,8 @@ const CategoryMain = () => {
               limit={LIMIT}
               setSort={setSort}
               setReverse={setReverse}
-				  reverse={reverse}
-				  sort={sort}
+              reverse={reverse}
+              sort={sort}
             />
           </div>
         </ProductsContext.Provider>

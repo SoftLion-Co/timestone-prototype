@@ -17,7 +17,7 @@ const CartComponent = () => {
         isOpen ? "fixed" : "hidden"
       }`}>
       <div className="bg-pearl flex items-center text-[20px] p-5">
-        <h3 className="text-black font-spaceage flex-1 text-center">
+        <h3 className="text-black font-frontrunner flex-1 text-center">
           Your Cart
         </h3>
         <button
@@ -44,7 +44,7 @@ const CartComponent = () => {
 
       <div className="py-6 px-5 bg-pearl flex flex-col gap-[16px] mt-auto">
         <ul className="flex flex-col text-silver gap-2">
-          <li className="border-b border-[##ECEDF1] flex items-center justify-between">
+          <li className="border-b border-[#ECEDF1] flex items-center justify-between">
             <p className="text-[12px]">Grand Total</p>
             <span className="text-[20px] text-black font-normal">
               ${totalAmount}
@@ -53,10 +53,19 @@ const CartComponent = () => {
         </ul>
 
         <Link
-          href={products.length > 0 ? "/checkout" : "/catalog"}
+          href={products.length > 0 ? "/checkout/#info" : "/catalog"}
           className="bg-darkBurgundy w-full rounded-[6px] focus:bg-darkMaroon text-center text-white py-[22px] hover:bg-darkMaroon transition-colors duration-300"
           onClick={() => {
             changeOpenState(false);
+            setTimeout(() => {
+              const info = document.getElementById("info");
+              if (info) {
+                info.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+            }, 300);
           }}>
           {products.length > 0 ? " Go To Checkout" : " Go To Catalog"}
         </Link>

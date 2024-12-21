@@ -1,11 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode } from "react";
 
 interface checkboxProps {
   className?: string;
   label: string;
   description: string;
-  price: string;
+  price?: string;
   checked?: boolean;
+  children?: ReactNode;
   onChange?: () => void;
 }
 
@@ -15,36 +16,29 @@ const CheckboxComponent: FC<checkboxProps> = ({
   description,
   price,
   checked,
+  children,
   onChange,
 }) => {
   return (
-    <div
-      className="flex items-center my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-whisper rounded cursor-pointer mini:w-[80%] w-[100%]"
-      onClick={onChange}
-    >
-      <input
-        type="checkbox"
-        className="hidden"
-        checked={checked}
-        onChange={onChange}
-      />
+    <div className="flex flex-col my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-silver rounded cursor-pointer mini:w-[80%] w-[100%]">
+      <div className="flex items-center" onClick={onChange}>
+        <input
+          type="radio"
+          className="w-[25px] h-[25px] accent-darkBurgundy"
+          checked={checked}
+          onChange={onChange}
+        />
 
-      <div
-        className={`min-w-[15px] h-[15px] border-[1px] rounded transition-all duration-0.3 
-            ${
-              checked ? "bg-darkBurgundy border-darkBurgundy" : "border-whisper"
-            }`}
-      ></div>
-      <div>
-        <div className="ml-[15px] md:text-[14px] text-[11px]">
-          <p>{label}</p>
-          <p className="text-silver">{description}</p>
+        <div className="flex flex-col gap-[7px] ml-[15px] mini:flex-row mini:items-center mini:justify-between w-full">
+          <div className="md:text-[14px] text-[11px]">
+            <p className="whitespace-nowrap">{label}</p>
+            <p className="text-silver mini:whitespace-nowrap">{description}</p>
+          </div>
+
+          <p className="whitespace-nowrap">{price}</p>
         </div>
       </div>
-
-      <p className="md:text-[18px] ml-[50px] lg:ml-[100px] xl:ml-[200px]">
-        {price}
-      </p>
+      {children}
     </div>
   );
 };

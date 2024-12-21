@@ -1,5 +1,4 @@
 import axios from "axios";
-import { api } from "@/config/config";
 import { BASE_URL } from "@/config/config";
 
 export const sendResetPasswordEmail = async (email: string): Promise<any> => {
@@ -9,8 +8,7 @@ export const sendResetPasswordEmail = async (email: string): Promise<any> => {
     });
     return response.status;
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     if (axios.isAxiosError(error)) {
       if (error.status === 409 || error.status === 400) {
         return error.response?.data;
@@ -32,8 +30,7 @@ export const resetForgetPassword = async (
     });
     return response.status;
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     if (axios.isAxiosError(error)) {
       if (error.status === 409 || error.status === 400) {
         return error.response?.data;
@@ -53,7 +50,7 @@ export const checkResetToken = async (token: string): Promise<any> => {
     });
     return true;
   } catch (error) {
-    console.log("ddddddd");
+	console.error(error);
     if (axios.isAxiosError(error)) {
     return error;
     }

@@ -1,16 +1,16 @@
 "use client";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import Button from "@/components/ButtonComponent";
-import Input from "@/components/InputComponent";
-import LoaderComponent from "@/components/LoaderComponent";
-import { loginUser } from "@/services/AuthService";
 import { isEmail, hasLength } from "@mantine/form";
+import React, { useEffect, useState } from "react";
+
+import Input from "@/components/InputComponent";
+import Button from "@/components/ButtonComponent";
+import { loginUser } from "@/services/AuthService";
+import LoaderComponent from "@/components/LoaderComponent";
 
 const LoginFormSection = () => {
-  // const [value, setValue] = useState("");
   const router = useRouter();
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -92,7 +92,8 @@ const LoginFormSection = () => {
           and more
         </p>
       </div>
-      <Input
+      <div className="flex flex-col gap-[10px]">
+        <Input
         inputType="input"
         placeholder="Email"
         type="email"
@@ -115,8 +116,10 @@ const LoginFormSection = () => {
         required={true}
         errorType="critical"
         {...loginForm.getInputProps("password")}
-        className="!w-full mt-[10px]"
+        className="!w-full"
       />
+      </div>
+      
 
       <div className="mt-[20px] flex justify-between text-silver">
         <div className="flex gap-[10px]">

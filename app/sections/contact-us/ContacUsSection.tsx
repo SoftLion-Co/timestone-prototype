@@ -12,7 +12,7 @@ import LoaderComponent from "@/components/LoaderComponent";
 import { sendEmailToUs } from "@/services/SubscribeService";
 
 import Message from "@/images/contact-us/message.svg";
-import ContactUsImage from "@/images/contact-us/image1.png";
+import ContactUsImage from "@/images/contact-us/contact-us.jpg";
 
 const ContactUsSection = () => {
   const MAX_ATTEMPTS = 3;
@@ -43,22 +43,37 @@ const ContactUsSection = () => {
 
   useEffect(() => {
     const savedAttempts = localStorage.getItem("contactUsAttempts");
-    if (savedAttempts) {
+    const savedTime = localStorage.getItem("contactUsTime");
+
+    if (savedAttempts && savedTime) {
       const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
+      const lastAttemptTime = Number(savedTime);
+      const currentTime = new Date().getTime();
+      const timeElapsed = currentTime - lastAttemptTime;
+
+      if (timeElapsed > 96 * 60 * 60 * 1000) {
+        setAttempts(0);
+        localStorage.setItem("contactUsAttempts", "0");
+      } else {
+        setAttempts(parsedAttempts);
+      }
+
       if (parsedAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
       }
+    } else {
+      setAttempts(0);
     }
   }, []);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    setIsLoading(true);
+
     const errors = form.validate();
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
+    setIsLoading(true);
     const values = form.values;
     const response = await sendEmailToUs(
       values.fullName,
@@ -84,6 +99,8 @@ const ContactUsSection = () => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       localStorage.setItem("contactUsAttempts", newAttempts.toString());
+      localStorage.setItem("contactUsTime", new Date().getTime().toString()); 
+
       if (newAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
       }
@@ -115,8 +132,8 @@ const ContactUsSection = () => {
         <div className="container relative flex flex-col items-center mt-[30px] mb-[60px] gap-[50px] lg:gap-0 lg:justify-between lg:flex-row">
           <div className="flex flex-col gap-[30px] items-center justify-center lg:w-[45%] xl:w-[55%]">
             <div>
-              <h1 className="font-spaceage text-center text-black text-[28px] mb-[15px] md:text-[32px] md:mb-[20px] lg:text-start lg:text-[42px] lg:mb-[25px]">
-                Contact us
+              <h1 className="font-frontrunner text-center text-black text-[28px] mb-[15px] md:text-[32px] md:mb-[20px] lg:text-start lg:text-[42px] lg:mb-[25px]">
+                Зв'яжіться з нами
               </h1>
               <p className="text-center text-[#424551] font-poppins text-default text-silver lg:text-start">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim
@@ -137,28 +154,31 @@ const ContactUsSection = () => {
               <div className="w-full flex flex-col gap-[14px]">
                 <Input
                   inputType="input"
-                  placeholder="Full name"
+                  placeholder="І'мя"
                   required={true}
                   bordered={true}
-                  className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
-                  {...form.getInputProps("fullName")}
+                  className=" lg:w-[90%] xl:w-[70%] "
                   errorType="critical"
                   disabled={isDisabled}
+                  {...form.getInputProps("fullName")}
                 />
+
                 <Input
                   inputType="input"
                   required={true}
                   bordered={true}
                   placeholder="Email"
                   type="email"
-                  className="rounded-[5px] border-[1px] lg:w-[90%] xl:w-[70%] "
-                  {...form.getInputProps("email")}
+                  className="lg:w-[90%] xl:w-[70%] "
                   errorType="critical"
                   disabled={isDisabled}
+                  {...form.getInputProps("email")}
                 />
+
                 <Input
                   inputType="textarea"
-                  placeholder="Message"
+                  type="text"
+                  placeholder="Повідомлення"
                   required={true}
                   bordered={true}
                   className="focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
@@ -168,7 +188,7 @@ const ContactUsSection = () => {
                 />
               </div>
               <Button
-                text="Send Message"
+                text="Відправити "
                 background="darkBurgundy"
                 disabled={isDisabled}
                 type="submit"
@@ -182,20 +202,20 @@ const ContactUsSection = () => {
               />
             </form>
           </div>
-          <div className="hidden absolute py-[11px] px-[17px] bg-darkBurgundy rounded-full left-[49%] top-[50%] lg:block xl:py-[21px] xl:px-[27px] xl:left-[55%] xl:top-[50%]">
+          <div className="hidden cursor-pointer absolute py-[11px] px-[17px] bg-darkBurgundy rounded-full left-[49%] top-[45%] lg:block xl:py-[21px] xl:px-[27px] xl:left-[58%] xl:top-[40%] hover:scale-110 transition-transform duration-300">
             <Image
               src={Message}
               alt="message"
-              className="lg:w-[45px] lg:h-[56px]"
+              className="lg:w-[45px] lg:h-[56px] transition-transform duration-300"
               width={60}
               height={71}
             />
           </div>
-          <div className="w-full lg:w-[47%] xl:w-[50%] flex justify-end">
+          <div className="w-[90%] lg:w-[47%] xl:w-[50%] flex justify-end">
             <Image
               src={ContactUsImage}
               alt="contact us"
-              className="object-cover w-[100%] lg:w-[500px] xl:w-[550px]"
+              className="object-cover w-[100%] lg:w-[500px] xl:w-[500px]"
               height={540}
               width={640}
               loading="lazy"

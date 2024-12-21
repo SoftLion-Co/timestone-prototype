@@ -1,172 +1,70 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import Button from "@/components/ButtonComponent";
 import FormComponent from "@/components/FormComponent";
-import Input from "@/components/InputComponent";
-import { useForm } from "@mantine/form";
+import Checkbox from "@/components/CheckboxComponent";
 
 const PaymentSection: FC<{
   isOpen: boolean;
   toggleOpen: () => void;
+  paymentInfo: any;
+  setPaymentInfo: any;
   completePayment: (isValid: boolean) => void;
-}> = ({ completePayment, isOpen, toggleOpen }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+}> = ({ completePayment, isOpen, toggleOpen, setPaymentInfo, paymentInfo }) => {
   const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: "cardNumber" | "expDate" | "cvv"
-  ) => {
-    let value = e.target.value.replace(/\D/g, "");
-
-    if (type === "cardNumber") {
-      value = value.slice(0, 16);
-      const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
-      form.setFieldValue("cardNumber", formattedValue);
+  useEffect(() => {
+    const localValues = localStorage.getItem("paymentInfo");
+    if (localValues) {
+      setPaymentInfo(JSON.parse(localValues));
     }
+  }, []);
 
-    if (type === "expDate") {
-      value = value.slice(0, 4);
-      if (value.length > 2) {
-        value = `${value.slice(0, 2)}/${value.slice(2)}`;
-      }
-      form.setFieldValue("expDate", value);
+  useEffect(() => {
+    if (paymentInfo) {
+      localStorage.setItem("paymentInfo", JSON.stringify(paymentInfo));
     }
-
-    if (type === "cvv") {
-      value = value.slice(0, 3);
-      form.setFieldValue("cvv", value);
-    }
-  };
-
-  const form = useForm({
-    initialValues: {
-      cardNumber: "",
-      expDate: "",
-      cvv: "",
-    },
-    validate: {
-      cardNumber: (value) =>
-        value.replace(/\s/g, "").length < 16 ? "Invalid" : null,
-      expDate: (value) => (!/^\d{2}\/\d{2}$/.test(value) ? "Invalid" : null),
-      cvv: (value) => (value.length < 3 ? "Invalid" : null),
-    },
-  });
-
-  const handlePay = () => {
-    const { errors } = form.validate();
-    if (Object.keys(errors).length > 0) {
-      return;
-    }
-  };
+  }, [paymentInfo]);
 
   const handleCompletePayment = () => {
-    if (!selectedOption) {
-      setError("Please select a payment method");
+    if (!paymentInfo) {
+      setError("Оберіть спосіб оплати!");
       completePayment(false);
     } else {
+      setPaymentInfo(paymentInfo);
       setError(null);
       completePayment(true);
     }
   };
 
+  const closeText =
+    paymentInfo === "LiqPay"
+      ? "LiqPay - оплата на картку"
+      : paymentInfo === "Post"
+      ? "Накладний платіж"
+      : "";
+
   return (
-    <section>
-      <FormComponent title="Payment" isOpen={isOpen} toggleOpen={toggleOpen}>
-        <div className="flex flex-col gap-[30px] font-semibold pl-[30px]">
-          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-            <input
-              type="radio"
-              value="creditCard"
-              checked={selectedOption === "creditCard"}
-              onChange={() => setSelectedOption("creditCard")}
-              className="w-[25px] h-[25px] accent-darkBurgundy"
-            />
-            Credit Card
-          </label>
+    <>
+      <FormComponent
+        title="Оплата"
+        isOpen={isOpen}
+        toggleOpen={toggleOpen}
+        closeText={closeText}
+        className="items-center"
+      >
+        <Checkbox
+          label="LiqPay - оплата на картку"
+          description="Visa, MasterCard, Apple Pay, Google Pay, PrivatPay"
+          checked={paymentInfo === "LiqPay"}
+          onChange={() => setPaymentInfo("LiqPay")}
+        />
 
-          {selectedOption === "creditCard" && (
-            <>
-              <div className="flex flex-col gap-[15px] mini:mx-[25px]">
-                <div>
-                  <p className="pb-[10px] text-silver">Card Number</p>
-                  <Input
-                    inputType="input"
-                    type="text"
-                    placeholder="xxxx xxxx xxxx xxxx"
-                    {...form.getInputProps("cardNumber")}
-                    onChange={(e) => handleInputChange(e, "cardNumber")}
-                    errorType="critical"
-                    fullWidth
-                    required
-                    bordered
-                    className=" mb-[5px] mini:w-[90%]"
-                  />
-                </div>
-
-                <div className="flex flex-row gap-[5px] justify-between">
-                  <div className="w-1/2">
-                    <p className="pb-[10px] text-silver">Expire Date</p>
-                    <Input
-                      inputType="input"
-                      type="text"
-                      placeholder="MM/YY"
-                      {...form.getInputProps("expDate")}
-                      onChange={(e) => handleInputChange(e, "expDate")}
-                      errorType="critical"
-                      fullWidth
-                      required
-                      bordered
-                      className="mb-[5px] mini:w-[80%]"
-                    />
-                  </div>
-
-                  <div className="w-1/2">
-                    <p className="pb-[10px] text-silver">CVV</p>
-                    <Input
-                      inputType="input"
-                      type="text"
-                      placeholder="xxx"
-                      {...form.getInputProps("cvv")}
-                      onChange={(e) => handleInputChange(e, "cvv")}
-                      errorType="critical"
-                      fullWidth
-                      required
-                      bordered
-                      className="mb-[5px] mini:w-[80%]"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  text="Pay"
-                  background="transparent"
-                  bordered
-                  className=" w-[100%] mini:w-[90%]"
-                  onClick={handlePay}
-                />
-              </div>
-            </>
-          )}
-
-          <label className="flex items-center gap-[10px] cursor-pointer font-semibold text-[14px]">
-            <input
-              type="radio"
-              value="paypal"
-              checked={selectedOption === "paypal"}
-              onChange={() => setSelectedOption("paypal")}
-              className="w-[25px] h-[25px] accent-darkBurgundy"
-            />
-            PayPal
-            {selectedOption === "paypal" && (
-              <Button
-                text="Pay"
-                background="transparent"
-                bordered
-                className="ml-[30px] mini:w-[50%] w-[100%]"
-              />
-            )}
-          </label>
-        </div>
+        <Checkbox
+          label="Накладний платіж"
+          description="Оплата при отриманні"
+          checked={paymentInfo === "Post"}
+          onChange={() => setPaymentInfo("Post")}
+        />
 
         {error && (
           <p className="text-[14px] text-darkBurgundy text-center">{error}</p>
@@ -174,26 +72,38 @@ const PaymentSection: FC<{
 
         <div className="flex flex-col items-center gap-y-[15px]">
           <Button
-            text="Complete Payment"
-            className="my-[30px] mini:w-[80%] w-[100%]"
-            onClick={handleCompletePayment}
+            text="Оплатити"
+            className="my-[30px] w-[100%] mini:w-[80%]"
+            onClick={() => {
+              handleCompletePayment();
+              const buttonContainer = document.getElementById(
+                "payment-button-container"
+              );
+              if (buttonContainer) {
+                buttonContainer.scrollIntoView({
+                  behavior: "smooth",
+                  block: "end",
+                });
+              }
+            }}
           />
-          <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
-            By placing your order you agree to our
+          <p className="text-[12px] text-silver text-center w-[100%] mini:w-[80%]">
+            Оформлюючи замовлення, Ви погоджуюєтеся з нашими
             <span> </span>
             <a href="/legal" className="underline text-darkBurgundy">
-              Terms & Conditions
+              Положеннями та Умовами
             </a>
-            and you understand that we will process your personal data on the
-            basis of our<span> </span>
+            <span> </span>
+            та надаєте згоду на обробку вашої персональної інфомації на основі
+            нашої<span> </span>
             <a href="/privacy" className="text-darkBurgundy underline">
-              Privacy Policy
+              Політики Конфіденційності
             </a>
             .
           </p>
         </div>
       </FormComponent>
-    </section>
+    </>
   );
 };
 

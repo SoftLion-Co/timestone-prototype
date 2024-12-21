@@ -58,7 +58,7 @@ const HeroSection: FC = () => {
       <div className="flex flex-col items-center mx-[20px] lg:mx-[0px] gap-[40px] lg:flex-row lg:gap-[0px] lg:items-center">
         <Links className="hidden lg:grid" />
 
-        <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start lg:mt-[52px] mini:w-[400px] lg:w-[500px] xl:w-[600px]">
+        <div className="text-center flex flex-col items-center lg:flex-col lg:text-left lg:items-start lg:mt-[52px] mini:w-[500px] lg:w-[46%] xl:w-[40%] lg:pr-[40px] xl:pr-0">
           <h1 className="font-frontrunner text-black leading-[50px] mb-4 md:mb-[20px] text-[40px] lg:text-[45px] lg:mb-[25px] xl:text-[60px] ">
             Знайди свій годинник мрії
           </h1>
@@ -86,7 +86,7 @@ const HeroSection: FC = () => {
         />
       </div>
       <Image
-        className="hidden object-contain right-0 lg:absolute lg:block lg:-z-10 lg:top-[15%] lg:h-[520px] lg:w-[600px] xl:w-auto"
+        className="hidden object-contain -right-7 lg:absolute lg:block lg:-z-10 lg:top-[5%] xl:top-[15%] lg:h-[520px] w-[50%]"
         src={Watch}
         alt="Watch"
       />

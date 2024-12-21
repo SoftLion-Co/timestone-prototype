@@ -5,8 +5,7 @@ import React, { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 
 import Eyes from "@/images/vectors/eyes.svg";
 import Arrow from "@/images/news-section/arrow.svg";
-import ClosedEyes from "@/images/vectors/closed-eye.svg"
-
+import ClosedEyes from "@/images/vectors/closed-eye.svg";
 interface InputProps {
   placeholder?: string;
   className?: string;
@@ -61,7 +60,7 @@ const InputComponent: FC<InputProps> = ({
 }) => {
   const textClass = bordered ? "text-black" : "text-silver";
 
-  const borderClass = bordered ? "border border-whisper border-solid" : "";
+  const borderClass = bordered ? "border border-solid border-gray-300" : "";
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const [inputValue, setInputValue] = useState<string>(value || "");
@@ -87,23 +86,32 @@ const InputComponent: FC<InputProps> = ({
   useEffect(() => {
     if (typeof value === "string") {
       setSelected(value);
+      if (inputType === "select" && onSelect) {
+        onSelect(value);
+      }
     }
   }, [value]);
 
   const handleSelect = (value: string) => {
+    const label = options.find((option) => option.value === value)?.label || "";
     setSelected(value);
-    onSelect?.(value);
+    setInputValue(label);
     setIsOpen(false);
+    if (onSelect) onSelect(value);
   };
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === "") {
+    if (
+      value === "" ||
+      options?.find((option) => option.value === selected)?.label
+    ) {
       setSelected(null);
     }
-    
     setInputValue(value);
     onChange?.(e);
   };
+
   const inputContent = () => {
     if (inputType === "select") {
       const filteredOptions = inputValue
@@ -113,60 +121,62 @@ const InputComponent: FC<InputProps> = ({
         : options;
 
       return (
-        <div
-          className={`${className} relative w-full mini:w-[320px]`}
-          ref={selectRef}
-        >
-          <input
-            className={`${
-              bordered ? "border border-solid border-gray-300" : ""
-            } py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
-            type={type}
-            placeholder={placeholder}
-            value={
-              selected && !inputValue
-                ? options?.find((option) => option.value === selected)?.label ||
-                  ""
-                : inputValue || ""
-            }
-            name={name}
-            required={required}
-            disabled={disabled}
-            onChange={handleInputChange}
-            onFocus={() => setIsOpen(true)}
-            maxLength={maxLength}
-          />
-          <div className="absolute right-[25px] top-[50%] transform -translate-y-[50%] cursor-pointer">
-            <Image
-              src={Arrow}
-              alt="Arrow"
-              width={14}
-              className={`transition-transform ${
-                isOpen ? "rotate-180" : "rotate-0"
-              }`}
+        <div className={`${className} flex flex-col w-full mini:w-[320px]`}>
+          <div
+            className={` relative`}
+            ref={selectRef}
+          >
+            <input
+              className={`${borderClass} py-[16px] px-[30px] rounded-[5px] w-full focus:outline-none focus:border-darkBurgundy`}
+              type={type}
+              placeholder={placeholder}
+              value={
+                selected
+                  ? options?.find((option) => option.value === selected)
+                      ?.label ||
+                    inputValue ||
+                    ""
+                  : inputValue || ""
+              }
+              name={name}
+              required={required}
+              disabled={disabled}
+              onChange={handleInputChange}
+              onFocus={() => setIsOpen(true)}
+              maxLength={maxLength}
             />
+            <div className="absolute right-[25px] top-[50%] transform -translate-y-[50%] cursor-pointer">
+              <Image
+                src={Arrow}
+                alt="Arrow"
+                width={14}
+                className={`transition-transform ${
+                  isOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </div>
+            {isOpen && options.length > 0 && (
+              <motion.ul
+                className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white ${
+                  scrollable ? "max-h-[150px] overflow-y-auto z-[10]" : ""
+                }`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                {filteredOptions.map((option) => (
+                  <li
+                    key={option.value}
+                    className="p-2 hover:bg-gray-200 cursor-pointer text-gray-700 rounded-lg"
+                    onClick={() => handleSelect(option.value)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </motion.ul>
+            )}
           </div>
-          {isOpen && options.length > 0 && (
-            <motion.ul
-              className={`absolute mt-2 w-full border border-gray-300 rounded-lg bg-white z-10 ${
-                scrollable ? "max-h-[160px] overflow-y-auto" : ""
-              }`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              {filteredOptions.map((option) => (
-                <li
-                  key={option.value}
-                  className="p-2 hover:bg-gray-200 cursor-pointer text-gray-700 rounded-lg"
-                  onClick={() => handleSelect(option.value)}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </motion.ul>
-          )}
           {error && (
             <p
               className={`text-[14px] ${
@@ -180,9 +190,9 @@ const InputComponent: FC<InputProps> = ({
       );
     } else if (inputType === "input") {
       return (
-        <>
+        <div className={`${className} flex flex-col w-full`}>
           <input
-            className={`${className} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
+            className={`${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
             type={type}
             placeholder={placeholder}
             pattern={pattern}
@@ -202,40 +212,38 @@ const InputComponent: FC<InputProps> = ({
               {error}
             </p>
           )}
-        </>
+        </div>
       );
     } else if (inputType === "password") {
       return (
-        <>
-          <div className="relative">
-            <input
-              className={`${className} ${borderClass} ${widthClass} ${textClass} py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
-              type={visible ? "text" : "password"}
-              placeholder={placeholder}
-              value={value}
-              name={name}
-              required={required}
-              disabled={disabled}
-              onChange={onChange}
-              maxLength={maxLength}
-            />
+        <div className={`${className} flex relative flex-col w-full`}>
+          <input
+            className={`${borderClass} ${widthClass} ${textClass} relative py-[16px] px-[30px] rounded-[5px] focus:outline-none focus:border-[1px] focus:border-darkBurgundy`}
+            type={visible ? "text" : "password"}
+            placeholder={placeholder}
+            value={value}
+            name={name}
+            required={required}
+            disabled={disabled}
+            onChange={onChange}
+            maxLength={maxLength}
+          />
 
-            <button
-              type="button"
-              className="absolute right-4 top-[50%] transform -translate-y-[50%] cursor-pointer"
-              onClick={() => {
-                if (onVisibilityChange) {
-                  onVisibilityChange(!visible);
-                }
-              }}
-            >
-              {visible ? (
-                <Image src={Eyes} alt="eyes" />
-              ) : (
-                <Image src={ClosedEyes} alt="eyes" />
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="absolute right-4 top-[50%] transform -translate-y-[50%] cursor-pointer"
+            onClick={() => {
+              if (onVisibilityChange) {
+                onVisibilityChange(!visible);
+              }
+            }}
+          >
+            {visible ? (
+              <Image src={Eyes} alt="eyes" />
+            ) : (
+              <Image src={ClosedEyes} alt="eyes" />
+            )}
+          </button>
           {error && (
             <p
               className={`text-[14px] ${
@@ -245,7 +253,7 @@ const InputComponent: FC<InputProps> = ({
               {error}
             </p>
           )}
-        </>
+        </div>
       );
     } else if (inputType === "textarea") {
       return (
