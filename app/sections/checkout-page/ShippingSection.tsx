@@ -82,12 +82,10 @@ const ShippingSection: FC<{
   }, [form.values, selectedOption]);
 
   const handleSelect = async (value: string) => {
-    let validationError = "";
     switch (selectedOption) {
       case "Courier":
         if (!value.trim() || !settlementRef) {
           setStreets([]);
-          setValidationErrors(null);
           return;
         }
 
@@ -106,27 +104,24 @@ const ShippingSection: FC<{
             setStreets(street);
           }
         }
-        if (!form.values.street || !form.values.house) {
-          validationError = "Введіть дані для доставки";
-          setValidationErrors(validationError);
-        }
         break;
 
       case "Postomat":
         if (!value.trim() || !cityRef) {
           setPostomates([]);
-          setValidationErrors(null);
           return;
         }
         const selectedPostomat = postomates.find(({ Ref }) => Ref === value);
         if (selectedPostomat) {
-          form.setFieldValue(
-            "postomat",
-            "№ " +
-              selectedPostomat.Number +
-              ", " +
-              selectedPostomat.ShortAddress
-          );
+          // form.setFieldValue(
+          //   "postomat",
+          //   "№ " +
+          //     selectedPostomat.Number +
+          //     ", " +
+          //     selectedPostomat.ShortAddress
+          // );
+
+          form.setFieldValue("postomat", selectedPostomat.Description);
           setPostomates([]);
           return;
         }
@@ -138,17 +133,11 @@ const ShippingSection: FC<{
           setValidationErrors(null);
           setPostomates(postomat);
         }
-
-        if (!form.values.postomat) {
-          validationError = "Введіть дані для доставки";
-          setValidationErrors(validationError);
-        }
         break;
 
       case "Department":
         if (!value.trim() || !cityRef) {
           setDepartments([]);
-          setValidationErrors(null);
           return;
         }
         const selectedDepartment = departments.find(({ Ref }) => Ref === value);
@@ -164,22 +153,46 @@ const ShippingSection: FC<{
             setDepartments(department);
           }
         }
+        break;
+    }
+  };
 
+  const handleContinue = () => {
+    let validationError = "";
+
+    switch (selectedOption) {
+      case "Courier":
+        if (!form.values.street || !form.values.house) {
+          validationError = "Введіть дані для доставки";
+          setValidationErrors(validationError);
+        }
+        break;
+      case "Postomat":
+        if (!form.values.postomat) {
+          validationError = "Введіть дані для доставки";
+          setValidationErrors(validationError);
+        }
+        break;
+      case "Department":
         if (!form.values.department) {
           setValidationErrors("Введіть дані для доставки");
           onContinue(false);
         }
         break;
     }
-  };
 
-  const handleContinue = () => {
+    if (validationError) {
+      setValidationErrors(validationError);
+      onContinue(false);
+      return;
+    }
+
     if (!selectedOption) {
       setError("Оберіть метод доставки!");
       onContinue(false);
       return;
     }
-    
+
     setError(null);
     setAddressInfo(form.values);
     onContinue(true);
